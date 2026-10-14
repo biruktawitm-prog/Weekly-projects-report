@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNOPS HAMCO - Weekly Project Updates</title>
+    <title>UNOPS HAMCO - Weekly Project Updates Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -21,68 +21,175 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-sans); min-height: 100vh; padding: 12px 18px; }
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-sans); min-height: 100vh; padding: 12px 18px; transition: background-color 0.2s ease; }
 
-        /* Top Theme Control Bar */
-        .theme-switcher-bar {
+        /* Top Studio Toolbar */
+        .studio-toolbar {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 8px 14px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #1e293b;
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 8px 16px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-
-        .theme-btn-group {
-            display: flex;
+            flex-wrap: wrap;
             gap: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
-        .theme-btn {
-            background: #0f172a;
-            color: #94a3b8;
-            border: 1px solid #334155;
-            padding: 6px 14px;
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-main);
+            padding: 6px 11px;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .theme-btn.active {
+        .btn:hover:not(:disabled) {
+            background: #334155;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-theme {
+            background: #0f172a;
+            color: #94a3b8;
+            border: 1px solid #334155;
+        }
+
+        .btn-theme.active {
             background: #2563eb;
             color: #ffffff;
             border-color: #3b82f6;
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
         }
 
-        .btn-action {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
+        .btn-primary { background: #2563eb; border-color: #3b82f6; color: white; }
+        .btn-primary:hover:not(:disabled) { background: #1d4ed8; }
 
-        /* Option 1: Dark View Styles */
+        .btn-amber { background: #d97706; border-color: #f59e0b; color: white; }
+        .btn-amber:hover:not(:disabled) { background: #b45309; }
+
+        .btn-green { background: #059669; border-color: #10b981; color: white; }
+        .btn-green:hover:not(:disabled) { background: #047857; }
+
+        /* Option Visibility Containers */
         .option-container { display: none; }
         .option-container.active { display: block; }
 
-        /* Option 1 Dark Layout */
-        .dark-header { display: flex; justify-content: space-between; align-items: center; height: 48px; border-bottom: 1px solid var(--panel-border); margin-bottom: 10px; }
+        /* Option 1: Dark View Styles */
+        .dark-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--panel-border); margin-bottom: 12px; }
         .brand-badges { display: flex; gap: 6px; }
-        .badge-unops { background: #2563eb; color: #fff; font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 4px; }
-        .badge-hamco { background: #0284c7; color: #fff; font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 4px; }
-        .dark-grid { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 10px; }
-        .dark-panel { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 12px; }
+        .badge-unops { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 4px; }
+        .badge-hamco { background: linear-gradient(135deg, #1e3a8a, #0f172a); border: 1px solid #3b82f6; color: #60a5fa; font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 4px; }
+        
+        .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: all 0.2s ease;
+        }
 
-        /* Option 2: Light Executive "Red Flag Report" Styles */
+        .layout-active .panel {
+            border: 1px dashed rgba(59, 130, 246, 0.6);
+            background: rgba(17, 24, 39, 0.85);
+        }
+
+        .panel-controls {
+            display: none;
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            gap: 4px;
+            z-index: 10;
+        }
+
+        .layout-active .panel-controls { display: flex; }
+
+        .pill-btn {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .pill-btn:hover { background: var(--accent-blue); }
+
+        .drag-handle {
+            display: none;
+            cursor: grab;
+            font-size: 14px;
+            color: var(--accent-blue);
+            margin-right: 6px;
+        }
+
+        .layout-active .drag-handle { display: inline-block; }
+
+        .panel-title {
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Helpers & Radial Gauges */
+        .metric-hero { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+        .metric-val { font-family: var(--font-mono); font-size: 22px; font-weight: 700; color: #fff; }
+        .metric-sub { font-size: 11px; color: var(--text-muted); }
+        .progress-bar-bg { background: rgba(255, 255, 255, 0.08); border-radius: 4px; height: 7px; width: 100%; overflow: hidden; margin: 6px 0; }
+        .progress-bar-fill { height: 100%; border-radius: 4px; }
+        .radial-container { display: flex; align-items: center; justify-content: space-around; padding: 4px 0; }
+        .radial-box { text-align: center; position: relative; }
+        .radial-svg { transform: rotate(-90deg); width: 72px; height: 72px; }
+        .radial-bg { fill: none; stroke: rgba(255, 255, 255, 0.08); stroke-width: 6; }
+        .radial-val { fill: none; stroke-width: 6; stroke-linecap: round; }
+        .radial-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: var(--font-mono); font-weight: 700; font-size: 12px; }
+
+        /* Tables & Column Spans */
+        .issue-table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+        .issue-table th { text-align: left; color: var(--text-muted); font-weight: 600; padding-bottom: 5px; border-bottom: 1px solid var(--panel-border); font-size: 9.5px; text-transform: uppercase; }
+        .issue-table td { padding: 6px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+        .badge-red { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+        .badge-amber { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+
+        .col-span-1 { grid-column: span 1; }
+        .col-span-2 { grid-column: span 2; }
+        .col-span-full { grid-column: 1 / -1; }
+
+        /* Option 2: Executive Light Theme */
         .light-theme {
             background-color: #f8fafc;
             color: #0f172a;
@@ -105,139 +212,59 @@
         .light-header-title h2 { font-size: 20px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
         .light-header-title p { font-size: 12px; opacity: 0.85; }
 
-        .light-kpi-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .light-kpi-card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 10px 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
+        .light-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+        .light-kpi-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .light-kpi-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
         .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
 
-        .light-main-grid {
-            display: grid;
-            grid-template-columns: 1.1fr 1fr;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
+        .light-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
+        .light-card-title { font-size: 11px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
 
-        .light-card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 12px;
-        }
+        .red-flag-item { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 11px; line-height: 1.35; }
+        .red-flag-num { background: #ef4444; color: white; font-weight: 800; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
 
-        .light-card-title {
-            font-size: 11px;
-            font-weight: 800;
-            color: #1e3a8a;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Numbered Red Flag List */
-        .red-flag-item {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-            padding: 6px 0;
-            border-bottom: 1px dashed #e2e8f0;
-            font-size: 11px;
-            line-height: 1.35;
-        }
-
-        .red-flag-num {
-            background: #ef4444;
-            color: white;
-            font-weight: 800;
-            font-size: 10px;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            margin-top: 1px;
-        }
-
-        /* Step Pipeline Chevron */
-        .pipeline-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-            margin-top: 8px;
-        }
-
-        .pipeline-step {
-            background: #f1f5f9;
-            padding: 8px 6px;
-            border-radius: 6px;
-            text-align: center;
-            border: 1px solid #cbd5e1;
-        }
-
-        .pipeline-step.active { background: #dbeafe; border-color: #3b82f6; }
+        .pipeline-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
+        .pipeline-step { background: #f1f5f9; padding: 8px 6px; border-radius: 6px; text-align: center; border: 1px solid #cbd5e1; }
         .pipeline-step.completed { background: #d1fae5; border-color: #10b981; }
-
+        .pipeline-step.active { background: #dbeafe; border-color: #3b82f6; }
         .pipeline-step-name { font-size: 10px; font-weight: 700; color: #0f172a; }
         .pipeline-step-status { font-size: 9px; color: #64748b; margin-top: 2px; }
 
-        /* Full Width Recommendation Footer */
-        .light-recommendation-bar {
-            background: #0f172a;
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .light-recommendation-bar { background: #0f172a; color: white; padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 12px; }
+        .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; }
 
-        .rec-tag {
-            background: #f59e0b;
-            color: #0f172a;
-            font-weight: 800;
-            font-size: 10px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        /* Contenteditable focus effect */
+        /* Editable Highlights */
+        [contenteditable="true"] { outline: none; border-radius: 2px; transition: background 0.2s; }
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
         [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
 
+        /* Modal Overlay */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+        .modal-card { background: #111827; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; width: 100%; max-width: 850px; max-height: 85vh; display: flex; flex-direction: column; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .code-area { background: #090d16; color: #34d399; font-family: var(--font-mono); font-size: 11px; padding: 12px; border-radius: 6px; flex-grow: 1; overflow: auto; white-space: pre; margin: 12px 0; border: 1px solid rgba(255,255,255,0.1); }
+
         @media print {
-            .theme-switcher-bar { display: none; }
+            .studio-toolbar, .modal-overlay, .panel-controls { display: none !important; }
             body { padding: 0; background: white; }
         }
     </style>
 </head>
-<body>
+<body class="layout-active">
 
-    <!-- Top Theme Switcher Controls -->
-    <div class="theme-switcher-bar">
-        <div class="theme-btn-group">
-            <button class="theme-btn active" id="btn-opt1" onclick="switchTheme('opt1')">OPTION 1: DARK STUDIO</button>
-            <button class="theme-btn" id="btn-opt2" onclick="switchTheme('opt2')">OPTION 2: EXECUTIVE LIGHT (RED FLAG REPORT)</button>
+    <!-- Top Toolbar Navigation -->
+    <div class="studio-toolbar no-print">
+        <div class="toolbar-group">
+            <button class="btn btn-theme active" id="btn-opt1" onclick="switchTheme('opt1')">Switch to Option 1 (Dark Studio)</button>
+            <button class="btn btn-theme" id="btn-opt2" onclick="switchTheme('opt2')">Switch to Option 2 (Light Red Flag Report)</button>
         </div>
-        <div>
-            <button class="btn-action" onclick="window.print()">🖨️ Export PDF / Print</button>
+
+        <div class="toolbar-group">
+            <button class="btn" id="btn-undo" onclick="triggerUndo()" disabled>↩️ Undo</button>
+            <button class="btn" id="btn-redo" onclick="triggerRedo()" disabled>↪️ Redo</button>
+            <button class="btn btn-amber" onclick="saveData()">💾 Save Layout</button>
+            <button class="btn btn-primary" onclick="exportCode()">📄 Export index.html Code</button>
+            <button class="btn btn-green" onclick="window.print()">🖨️ Export PDF / Print</button>
         </div>
     </div>
 
@@ -247,59 +274,202 @@
             <div style="display: flex; align-items: center; gap: 10px;">
                 <div class="brand-badges">
                     <span class="badge-unops">UNOPS</span>
-                    <span class="badge-hamco">HAMCO</span>
+                    <span class="badge-hamco" contenteditable="true">HAMCO</span>
                 </div>
                 <div>
-                    <h1 style="font-size: 14px; font-weight: 800;" contenteditable="true">WEEKLY PROJECT UPDATES</h1>
-                    <p style="font-size: 10px; color: var(--text-muted);" contenteditable="true">Nimule OSBP Construction Project • Executive Review</p>
+                    <h1 style="font-size: 15px; font-weight: 800; text-transform: uppercase;" contenteditable="true">WEEKLY PROJECT UPDATES</h1>
+                    <p style="font-size: 11px; color: var(--text-muted);" contenteditable="true">14 projects Executive Status Review • Nimule OSBP Construction</p>
                 </div>
             </div>
-            <div style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700;">
-                SCHEDULE DELAY: -5.5 MOS
+            <div style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700;">
+                <span contenteditable="true">SCHEDULE DELAY: -5.5 MOS</span>
             </div>
         </div>
 
-        <div class="dark-grid">
-            <div class="dark-panel">
-                <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">PROJECT TIMELINE & ELAPSED DAYS</div>
-                <div style="font-size: 20px; font-weight: 800; color: #fff;" contenteditable="true">1,067 Days Remaining</div>
-                <div style="font-size: 11px; color: var(--text-muted);" contenteditable="true">636 of 1,703 Days Elapsed (37.3%)</div>
-            </div>
-            <div class="dark-panel">
-                <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">FINANCIAL EXECUTION RATE</div>
-                <div style="font-size: 20px; font-weight: 800; color: #10b981;" contenteditable="true">18.53% Expensed</div>
-                <div style="font-size: 11px; color: var(--text-muted);" contenteditable="true">$2,009,685.02 of $10,845,990.00</div>
-            </div>
-            <div class="dark-panel" style="border-left: 3px solid #10b981;">
-                <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">IPMG DESIGN APPROVAL</div>
-                <div style="font-size: 14px; font-weight: 800; color: #10b981;" contenteditable="true">APPROVED / 100% DONE</div>
-                <div style="font-size: 10px; color: var(--text-muted);" contenteditable="true">Completed in Sept (~4 months duration, 2-month delay).</div>
-            </div>
-        </div>
+        <div class="dashboard-grid" id="grid-container">
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-            <div class="dark-panel">
-                <div style="font-size: 11px; font-weight: 700; color: #ef4444; margin-bottom: 4px;" contenteditable="true">🚨 Procurement Stage Active (Blocked)</div>
-                <p style="font-size: 11px; color: var(--text-muted);" contenteditable="true">Roofing works implementation scheduled for Sept 2026 has not commenced because procurement solicitation is still active (5.5-month variance).</p>
+            <!-- Card 1 -->
+            <div class="panel col-span-1" draggable="true" id="card-timeline">
+                <div class="panel-controls">
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-1')">1 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-2')">2 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-full')">Full</button>
+                </div>
+                <div class="panel-title">
+                    <span><span class="drag-handle">⠿</span>PROJECT TIMELINE & ELAPSED DAYS</span>
+                    <span style="color: var(--accent-blue);" font-family="var(--font-mono)">37.3% ELAPSED</span>
+                </div>
+                <div class="radial-container">
+                    <div class="radial-box">
+                        <svg class="radial-svg">
+                            <circle class="radial-bg" cx="36" cy="36" r="28"></circle>
+                            <circle class="radial-val" cx="36" cy="36" r="28" stroke="#3b82f6" stroke-dasharray="176" stroke-dashoffset="110"></circle>
+                        </svg>
+                        <div class="radial-text" style="color: #3b82f6;" contenteditable="true">37.3%</div>
+                    </div>
+                    <div style="flex-grow: 1; margin-left: 12px;">
+                        <div class="metric-hero">
+                            <span class="metric-val" contenteditable="true">1,067</span>
+                            <span class="metric-sub">Days Remaining</span>
+                        </div>
+                        <div style="font-size: 10.5px; color: var(--text-muted);" contenteditable="true">
+                            636 of 1,703 Days Elapsed
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 37.3%; background: #3b82f6;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 8.5px; color: var(--text-muted); margin-top: 1px;">
+                            <span>Jan 1, 2025</span>
+                            <span>Aug 31, 2029</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="dark-panel">
-                <div style="font-size: 11px; font-weight: 700; color: #f59e0b; margin-bottom: 4px;" contenteditable="true">⚠️ Data Tracking Discrepancies</div>
-                <p style="font-size: 11px; color: var(--text-muted);" contenteditable="true">All 21 inception phase activities are complete, but actual start/end dates remain blank. Discrepancy noted between dashboard and oneUNOPS schedule.</p>
-            </div>
-        </div>
 
-        <div class="dark-panel" style="margin-top: 10px; background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.3);">
-            <div style="font-size: 11px; font-weight: 800; color: #fbbf24; margin-bottom: 4px;">🎯 KEY RECOMMENDATION</div>
-            <p style="font-size: 11px; color: #e2e8f0; line-height: 1.4;" contenteditable="true">
-                It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.
-            </p>
+            <!-- Card 2 -->
+            <div class="panel col-span-1" draggable="true" id="card-financials">
+                <div class="panel-controls">
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-1')">1 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-2')">2 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-full')">Full</button>
+                </div>
+                <div class="panel-title">
+                    <span><span class="drag-handle">⠿</span>FINANCIAL EXECUTION RATE</span>
+                    <span style="color: var(--accent-green);" font-family="var(--font-mono)">18.53% EXPENSED</span>
+                </div>
+                <div class="radial-container">
+                    <div class="radial-box">
+                        <svg class="radial-svg">
+                            <circle class="radial-bg" cx="36" cy="36" r="28"></circle>
+                            <circle class="radial-val" cx="36" cy="36" r="28" stroke="#10b981" stroke-dasharray="176" stroke-dashoffset="143"></circle>
+                        </svg>
+                        <div class="radial-text" style="color: #10b981;" contenteditable="true">18.53%</div>
+                    </div>
+                    <div style="flex-grow: 1; margin-left: 12px;">
+                        <div style="font-size: 9.5px; color: var(--text-muted);">Total Budget</div>
+                        <div style="font-size: 14px; font-weight: 700; color: #fff; font-family: var(--font-mono)" contenteditable="true">$10,845,990.00</div>
+                        <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 3px;">Expensed Amount</div>
+                        <div style="font-size: 12.5px; font-weight: 700; color: #10b981; font-family: var(--font-mono)" contenteditable="true">$2,009,685.02</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="panel col-span-1" draggable="true" id="card-ipmg" style="border-left: 3px solid var(--accent-green);">
+                <div class="panel-controls">
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-1')">1 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-2')">2 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-full')">Full</button>
+                </div>
+                <div class="panel-title">
+                    <span><span class="drag-handle">⠿</span>IPMG DESIGN APPROVAL</span>
+                    <span class="badge-amber">2 MOS DELAY</span>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                    <span style="font-size: 15px; font-weight: 800; color: var(--accent-green);" contenteditable="true">APPROVED / 100% DONE</span>
+                    <span style="font-size: 9.5px; color: var(--text-muted);" contenteditable="true">Planned: Mar–May | Actual: Apr–Sept</span>
+                </div>
+                <p style="font-size: 10.5px; color: var(--text-muted); line-height: 1.35;" contenteditable="true">
+                    Design submission and approval by IPMG was completed in September. The process took ~4 months to fully complete against a 2-month planned baseline, incurring a 2-month overall delay.
+                </p>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="panel col-span-1" draggable="true" id="card-procurement">
+                <div class="panel-controls">
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-1')">1 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-2')">2 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-full')">Full</button>
+                </div>
+                <div class="panel-title">
+                    <span><span class="drag-handle">⠿</span>CONSTRUCTION SCHEDULE & VARIANCE</span>
+                </div>
+                <div style="font-size: 11px; font-weight: 700; color: var(--accent-red); margin-bottom: 6px;" contenteditable="true">
+                    🚨 Procurement Stage Active (Blocked)
+                </div>
+                <p style="font-size: 10.5px; color: var(--text-muted); line-height: 1.35;" contenteditable="true">
+                    Roofing works implementation was scheduled to start in September 2026. However, site construction has not commenced as works procurement solicitation, bidding, evaluation, and award are still active (5.5-month solicitation variance).
+                </p>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="panel col-span-1" draggable="true" id="card-discrepancies">
+                <div class="panel-controls">
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-1')">1 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-2')">2 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-full')">Full</button>
+                </div>
+                <div class="panel-title">
+                    <span><span class="drag-handle">⠿</span>DATA TRACKING & DISCREPANCIES</span>
+                    <span class="badge-amber">5 TO 6 MONTHS VARIANCE</span>
+                </div>
+                <div style="font-size: 11px; font-weight: 700; color: var(--accent-amber); margin-bottom: 6px;" contenteditable="true">
+                    ⚠️ Inception & Schedule Discrepancies
+                </div>
+                <p style="font-size: 10.5px; color: var(--text-muted); line-height: 1.35;" contenteditable="true">
+                    All 21 inception phase activities are complete, but actual start/end dates remain unrecorded. Furthermore, a discrepancy exists between dashboard timelines and the primary oneUNOPS project schedule.
+                </p>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="panel col-span-1" draggable="true" id="card-redflags" style="border-left: 3px solid var(--accent-red);">
+                <div class="panel-controls">
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-1')">1 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-2')">2 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-full')">Full</button>
+                </div>
+                <div class="panel-title">
+                    <span><span class="drag-handle">⠿</span>RED FLAGS & MANAGEMENT ACTION</span>
+                </div>
+                <table class="issue-table">
+                    <thead>
+                        <tr>
+                            <th>CATEGORY</th>
+                            <th>IMPACT</th>
+                            <th>ACTION REQUIRED</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge-red">Schedule</span></td>
+                            <td style="color: var(--accent-red); font-weight: 700;">HIGH</td>
+                            <td contenteditable="true">Revise construction timelines for OSBP Admin & Market buildings to reset baseline.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-amber">Data Quality</span></td>
+                            <td style="color: var(--accent-amber); font-weight: 700;">MODERATE</td>
+                            <td contenteditable="true">Systematically record actual start/end dates across all site work plans.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-amber">Sync</span></td>
+                            <td style="color: var(--accent-amber); font-weight: 700;">MODERATE</td>
+                            <td contenteditable="true">Align reporting dashboard metrics with official oneUNOPS database.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Card 7: Recommendations -->
+            <div class="panel col-span-full" draggable="true" id="card-recommendations" style="border: 1px solid rgba(245, 158, 11, 0.35); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(17, 24, 39, 0.95));">
+                <div class="panel-controls">
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-1')">1 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-2')">2 Col</button>
+                    <button class="pill-btn" onclick="setSpan(this, 'col-span-full')">Full</button>
+                </div>
+                <div class="panel-title" style="color: #fbbf24; margin-bottom: 6px;">
+                    <span><span class="drag-handle">⠿</span>🎯 KEY RECOMMENDATIONS</span>
+                </div>
+                <p style="font-size: 11.5px; color: #f3f4f6; line-height: 1.5; font-weight: 500;" contenteditable="true">
+                    It is essential to update and revise construction timelines for the <strong style="color: #fbbf24;">OSBP Admin Building and Market Building</strong> to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen <strong style="color: #fbbf24;">real-time progress verification</strong> and quantitative variance analysis.
+                </p>
+            </div>
+
         </div>
     </div>
 
     <!-- ==================== OPTION 2: EXECUTIVE LIGHT "RED FLAG REPORT" ==================== -->
     <div id="option2" class="option-container">
         <div class="light-theme">
-            <!-- Header Banner -->
             <div class="light-header-banner">
                 <div class="light-header-title">
                     <h2 contenteditable="true">WEEKLY RED FLAG REPORT</h2>
@@ -311,7 +481,6 @@
                 </div>
             </div>
 
-            <!-- Top KPI Cards -->
             <div class="light-kpi-row">
                 <div class="light-kpi-card">
                     <div class="light-kpi-label">Total Budget</div>
@@ -332,9 +501,7 @@
                 </div>
             </div>
 
-            <!-- Main Content 2-Column Grid -->
             <div class="light-main-grid">
-                <!-- Left Column: Timeline & Phase Status -->
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                     <div class="light-card">
                         <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
@@ -369,7 +536,6 @@
                     </div>
                 </div>
 
-                <!-- Right Column: Key Gaps & Red Flags List -->
                 <div class="light-card" style="border-left: 4px solid #ef4444;">
                     <div class="light-card-title" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
                     
@@ -400,7 +566,6 @@
                 </div>
             </div>
 
-            <!-- Recommendation Footer -->
             <div class="light-recommendation-bar">
                 <div class="rec-tag">KEY RECOMMENDATION</div>
                 <div style="font-size: 11px; line-height: 1.4;" contenteditable="true">
@@ -410,8 +575,95 @@
         </div>
     </div>
 
+    <!-- Export Code Modal -->
+    <div class="modal-overlay" id="code-modal">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 14px; font-weight: 700; color: #3b82f6;">EXPORTED INDEX.HTML CODE</h3>
+                <button class="btn" onclick="closeModal()">✕ Close</button>
+            </div>
+            <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                Copy this clean HTML code and paste it into your <strong>index.html</strong> on GitHub.
+            </p>
+            <textarea class="code-area" id="exported-code-box" readonly></textarea>
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                <button class="btn btn-primary" onclick="copyCode()">📋 Copy Code to Clipboard</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function switchTheme(option) {
+        // State History Management Engine (Undo / Redo)
+        const undoStack = [];
+        const redoStack = [];
+        const MAX_HISTORY = 30;
+        let activeTheme = 'opt1';
+        let isNavigatingState = false;
+
+        function getAppState() {
+            return {
+                theme: activeTheme,
+                option1HTML: document.getElementById('option1').innerHTML,
+                option2HTML: document.getElementById('option2').innerHTML
+            };
+        }
+
+        function pushState() {
+            if (isNavigatingState) return;
+            const state = getAppState();
+            if (undoStack.length > 0) {
+                const last = undoStack[undoStack.length - 1];
+                if (last.theme === state.theme && last.option1HTML === state.option1HTML && last.option2HTML === state.option2HTML) {
+                    return;
+                }
+            }
+            undoStack.push(state);
+            if (undoStack.length > MAX_HISTORY) undoStack.shift();
+            redoStack.length = 0; // Clear redo on new action
+            updateToolbarButtons();
+        }
+
+        function restoreState(state) {
+            isNavigatingState = true;
+            activeTheme = state.theme;
+            
+            // Restore HTML
+            document.getElementById('option1').innerHTML = state.option1HTML;
+            document.getElementById('option2').innerHTML = state.option2HTML;
+
+            // Apply Theme UI
+            applyThemeUI(activeTheme);
+
+            // Re-attach listeners
+            attachEditableListeners();
+            initDragAndDrop();
+
+            isNavigatingState = false;
+            updateToolbarButtons();
+        }
+
+        function triggerUndo() {
+            if (undoStack.length <= 1) return;
+            const currentState = undoStack.pop();
+            redoStack.push(currentState);
+            const prevState = undoStack[undoStack.length - 1];
+            restoreState(prevState);
+        }
+
+        function triggerRedo() {
+            if (redoStack.length === 0) return;
+            const nextState = redoStack.pop();
+            undoStack.push(nextState);
+            restoreState(nextState);
+        }
+
+        function updateToolbarButtons() {
+            document.getElementById('btn-undo').disabled = undoStack.length <= 1;
+            document.getElementById('btn-redo').disabled = redoStack.length === 0;
+        }
+
+        // Theme Switcher
+        function applyThemeUI(option) {
             document.getElementById('option1').classList.remove('active');
             document.getElementById('option2').classList.remove('active');
             document.getElementById('btn-opt1').classList.remove('active');
@@ -427,6 +679,125 @@
                 document.body.style.backgroundColor = '#f1f5f9';
             }
         }
+
+        function switchTheme(option) {
+            if (activeTheme === option) return;
+            activeTheme = option;
+            applyThemeUI(option);
+            pushState();
+        }
+
+        // Content Editable Tracking
+        let debounceTimer;
+        function attachEditableListeners() {
+            document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+                el.removeEventListener('input', onEditableInput);
+                el.addEventListener('input', onEditableInput);
+            });
+        }
+
+        function onEditableInput() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                pushState();
+            }, 400);
+        }
+
+        // Drag and Drop Grid Handling
+        let draggedItem = null;
+
+        function initDragAndDrop() {
+            const panels = document.querySelectorAll('.panel');
+            panels.forEach(panel => {
+                panel.addEventListener('dragstart', function () {
+                    draggedItem = this;
+                    setTimeout(() => this.style.opacity = '0.4', 0);
+                });
+
+                panel.addEventListener('dragend', function () {
+                    this.style.opacity = '1';
+                    draggedItem = null;
+                    pushState();
+                });
+
+                panel.addEventListener('dragover', function (e) {
+                    e.preventDefault();
+                });
+
+                panel.addEventListener('drop', function (e) {
+                    e.preventDefault();
+                    if (this !== draggedItem && draggedItem) {
+                        const grid = document.getElementById('grid-container');
+                        const children = Array.from(grid.children);
+                        const draggedIndex = children.indexOf(draggedItem);
+                        const targetIndex = children.indexOf(this);
+
+                        if (draggedIndex < targetIndex) {
+                            grid.insertBefore(draggedItem, this.nextSibling);
+                        } else {
+                            grid.insertBefore(draggedItem, this);
+                        }
+                    }
+                });
+            });
+        }
+
+        // Column Width Adjustments
+        function setSpan(btn, spanClass) {
+            const panel = btn.closest('.panel');
+            panel.classList.remove('col-span-1', 'col-span-2', 'col-span-full');
+            panel.classList.add(spanClass);
+            pushState();
+        }
+
+        // Export Clean Code Function
+        function exportCode() {
+            const clone = document.documentElement.cloneNode(true);
+            
+            // Clean control bars & handles
+            clone.querySelectorAll('.no-print, .studio-toolbar, .modal-overlay, .panel-controls, .drag-handle').forEach(el => el.remove());
+            clone.querySelector('body').classList.remove('layout-active');
+            
+            const fullHTML = '<!DOCTYPE html>\n' + clone.outerHTML;
+            document.getElementById('exported-code-box').value = fullHTML;
+            document.getElementById('code-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('code-modal').style.display = 'none';
+        }
+
+        function copyCode() {
+            const codeBox = document.getElementById('exported-code-box');
+            codeBox.select();
+            document.execCommand('copy');
+            alert('Clean index.html code copied to clipboard! Paste into GitHub.');
+        }
+
+        function saveData() {
+            localStorage.setItem('unops_studio_state', JSON.stringify(getAppState()));
+            alert('Studio state saved successfully!');
+        }
+
+        // Keybindings for Undo / Redo
+        window.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+                if (e.shiftKey) {
+                    triggerRedo();
+                } else {
+                    triggerUndo();
+                }
+            } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+                triggerRedo();
+            }
+        });
+
+        // Initialize on load
+        window.onload = function () {
+            attachEditableListeners();
+            initDragAndDrop();
+            pushState(); // Seed initial state
+        };
     </script>
 </body>
 </html>
