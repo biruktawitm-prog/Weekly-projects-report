@@ -131,16 +131,8 @@
 
         /* ================= PERFECT PDF PRINT SETTINGS ================= */
         @media print { 
-            @page {
-                size: landscape;
-                margin: 10mm;
-            }
-            body { 
-                padding: 0; 
-                background: #f8fafc !important; 
-                -webkit-print-color-adjust: exact !important; 
-                print-color-adjust: exact !important; 
-            }
+            @page { size: landscape; margin: 10mm; }
+            body { padding: 0; background: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .top-studio-bar { display: none !important; } 
             .no-print { display: none !important; }
             .light-theme { box-shadow: none !important; padding: 0 !important; }
@@ -344,6 +336,8 @@
             <div class="no-print" style="margin-top: 20px; background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 8px; padding: 12px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">💬 Manager Comments / Next Steps (Hidden in PDF)</div>
+                    <!-- NEW EMAIL BUTTON -->
+                    <button onclick="emailManagerComment()" style="background: #0ea5e9; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; transition: background 0.2s;">📧 Send Comment to PM</button>
                 </div>
                 <div id="manager-comments" contenteditable="true" style="font-size: 12px; color: #334155; min-height: 50px; background: white; padding: 10px; border-radius: 4px; border: 1px solid #cbd5e1;">Click here to leave a comment, layout feedback, or notes for the next reporting cycle...</div>
             </div>
@@ -563,6 +557,28 @@
         }
 
         // ==========================================
+        // EMAIL MANAGER COMMENT FUNCTION
+        // ==========================================
+        function emailManagerComment() {
+            const commentText = document.getElementById('manager-comments').innerText;
+            const projSelect = document.getElementById('select-project');
+            const projName = projSelect.options[projSelect.selectedIndex].text;
+            const month = document.getElementById('select-month').value;
+            const week = document.getElementById('select-week').value;
+
+            if(commentText.includes("Click here to leave a comment")) {
+                alert("Please write a comment before sending the email!");
+                return;
+            }
+
+            const subject = encodeURIComponent(`Manager Comment: ${projName} (${month} - ${week})`);
+            const body = encodeURIComponent(`Hello Biruktawit,\n\nHere are my comments for the ${projName} report:\n\n${commentText}\n\nBest regards,`);
+
+            // Instantly open the user's default email client addressed to you
+            window.location.href = `mailto:biruktawitm@unops.org?subject=${subject}&body=${body}`;
+        }
+
+        // ==========================================
         // ADVANCED SHARING LOGIC (Via Public Data Bin)
         // ==========================================
         async function shareDashboard() {
@@ -586,7 +602,6 @@
             let shareUrl = window.location.href;
 
             try {
-                // Post the entire payload to npoint.io (a free JSON storage bin)
                 const res = await fetch('https://api.npoint.io', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -600,7 +615,6 @@
                     throw new Error("npoint failed");
                 }
             } catch (err) {
-                // Fallback to ByteBin if npoint is down
                 try {
                     const res2 = await fetch('https://bytebin.lucko.me/post', {
                         method: 'POST',
