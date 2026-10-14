@@ -3,523 +3,522 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nimule OSBP - Executive Project Status Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        mono: ['"Space Grotesk"', 'monospace'],
-                    },
-                    colors: {
-                        navy: {
-                            950: '#070f1e',
-                            900: '#0f172a',
-                            800: '#1e293b',
-                            700: '#334155'
-                        },
-                        amber: {
-                            500: '#f59e0b',
-                            600: '#d97706'
-                        },
-                        coral: {
-                            500: '#ef4444',
-                            600: '#dc2626',
-                            950: '#450a0a'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
+    <title>Weekly Project Updates - UNOPS HAMCO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        .editable-field {
-            transition: all 0.2s ease;
+        :root {
+            --bg-dark: #090d16;
+            --panel-bg: #111827;
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            height: 100vh;
+            overflow: hidden;
+            padding: 12px 18px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 48px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--panel-border);
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #fff;
+            font-weight: 800;
+            font-size: 11px;
+            padding: 5px 9px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-titles h1 {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .brand-titles p {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .status-tag {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #fbbf24;
+            box-shadow: 0 0 6px #fbbf24;
+        }
+
+        .btn {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        /* Dashboard Grid Layout - Fits 100vh */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.05fr 1fr 1.35fr;
+            grid-template-rows: auto 1fr;
+            gap: 10px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        /* Panels */
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .panel-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Metric Highlights */
+        .metric-hero {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .metric-val {
+            font-family: var(--font-mono);
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .metric-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Progress Bars & Rings */
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 4px;
-            padding: 2px 4px;
-            margin: -2px -4px;
-        }
-        .editing-mode .editable-field:hover {
-            outline: 2px dashed #f59e0b;
-            background-color: rgba(245, 158, 11, 0.1);
-            cursor: text;
-        }
-        .editing-mode .editable-field:focus {
-            outline: 2px solid #3b82f6;
-            background-color: rgba(255, 255, 255, 0.9);
-            color: #0f172a !important;
+            height: 8px;
+            width: 100%;
+            overflow: hidden;
+            margin: 6px 0;
         }
 
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.4s ease;
         }
 
+        /* Radial gauge container */
+        .radial-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 8px 0;
+        }
+
+        .radial-box {
+            text-align: center;
+            position: relative;
+        }
+
+        .radial-svg {
+            transform: rotate(-90deg);
+            width: 80px;
+            height: 80px;
+        }
+
+        .radial-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.08);
+            stroke-width: 6;
+        }
+
+        .radial-val {
+            fill: none;
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .radial-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        /* Tables & Lists */
+        .issue-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .issue-table th {
+            text-align: left;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--panel-border);
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .issue-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            vertical-align: top;
+        }
+
+        .badge-red {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .badge-amber {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        /* Editable elements focus style */
+        [contenteditable="true"] {
+            outline: none;
+            border-radius: 2px;
+            transition: background 0.2s;
+        }
+
+        [contenteditable="true"]:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        [contenteditable="true"]:focus {
+            background: rgba(59, 130, 246, 0.15);
+            box-shadow: 0 0 0 1px #3b82f6;
+        }
+
+        /* Grid Item Span adjustments */
+        .col-span-2 { grid-column: span 2; }
+        .row-span-2 { grid-row: span 2; }
+
+        /* Print Override */
         @media print {
-            .no-print { display: none !important; }
-            body { background-color: #ffffff !important; color: #0f172a !important; }
-            .print-card { 
-                background: #ffffff !important; 
-                border: 1px solid #e2e8f0 !important;
-                color: #0f172a !important;
-                box-shadow: none !important;
+            body {
+                background: #fff;
+                color: #000;
+                height: auto;
+                overflow: visible;
+                padding: 0;
             }
-            .print-text-dark { color: #0f172a !important; }
-            .print-text-muted { color: #64748b !important; }
-            .print-bg-light { background-color: #f8fafc !important; }
-            .page-sheet {
-                width: 100% !important;
-                max-width: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
+            .header-actions { display: none; }
+            .panel {
+                background: #fff;
+                border: 1px solid #ddd;
+                color: #000;
+                box-shadow: none;
             }
+            .metric-val, .brand-titles h1 { color: #000; }
+            .progress-bar-bg { background: #eee; }
         }
     </style>
 </head>
-<body class="bg-navy-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased">
+<body>
 
-    <!-- Navigation Top Bar -->
-    <header class="no-print bg-navy-900 border-b border-slate-800 px-6 py-3.5 sticky top-0 z-50 flex flex-wrap justify-between items-center gap-4 shadow-xl">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-mono font-bold text-lg shadow-lg shadow-blue-500/20">
-                OSBP
-            </div>
-            <div>
-                <h1 class="text-base font-bold text-white tracking-wide">EXECUTIVE DASHBOARD STUDIO</h1>
-                <p class="text-xs text-slate-400">Nimule One Stop Border Post Construction Project</p>
+    <!-- Header -->
+    <div class="header">
+        <div class="brand">
+            <div class="brand-badge">UNOPS</div>
+            <div class="brand-titles">
+                <h1 contenteditable="true" id="header-title">WEEKLY PROJECT UPDATES UNOPS HAMCO</h1>
+                <p contenteditable="true" id="header-sub">Nimule OSBP Construction Project • Executive Status Review</p>
             </div>
         </div>
-
-        <div class="flex items-center flex-wrap gap-3 text-xs font-semibold">
-            <button onclick="toggleEditMode()" id="btn-edit-toggle" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 transition flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                <span id="edit-mode-label">Direct Edit Mode: ON</span>
-            </button>
-
-            <button onclick="toggleSidebar()" class="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition flex items-center gap-1.5 shadow-md shadow-blue-600/30">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                <span>Update Project Data</span>
-            </button>
-
-            <button onclick="window.print()" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-md shadow-emerald-600/30 transition flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                <span>Export PDF / Print</span>
-            </button>
+        <div class="header-actions">
+            <div class="status-tag">
+                <span class="status-dot"></span>
+                <span contenteditable="true">Schedule Delay: -5.5 Mos</span>
+            </div>
+            <button class="btn" onclick="saveData()">💾 Save</button>
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Export PDF</button>
         </div>
-    </header>
+    </div>
 
-    <main class="editing-mode flex-1 p-4 md:p-8 max-w-[1400px] w-full mx-auto space-y-6">
+    <!-- Main Dashboard Grid (Fits Exactly 1 Page) -->
+    <div class="dashboard-grid">
 
-        <!-- Executive Header & Project Badge -->
-        <div class="glass-panel print-card p-6 rounded-2xl relative overflow-hidden border border-slate-700/60 shadow-2xl">
-            <div class="absolute -right-16 -top-16 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="flex flex-col lg:flex-row justify-between lg:items-center gap-6 relative z-10">
-                <div class="space-y-2">
-                    <div class="flex flex-wrap items-center gap-3">
-                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                            PROJECT STATUS: AT RISK / BEHIND SCHEDULE
-                        </span>
-                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">
-                            UNOPS / National Infrastructure
-                        </span>
+        <!-- Column 1, Row 1: Timeline & Lifecycle -->
+        <div class="panel">
+            <div class="panel-title">
+                <span>PROJECT TIMELINE & ELAPSED DAYS</span>
+                <span style="color: var(--accent-blue);" font-family="var(--font-mono)">37.3% Elapsed</span>
+            </div>
+            <div class="radial-container">
+                <div class="radial-box">
+                    <svg class="radial-svg">
+                        <circle class="radial-bg" cx="40" cy="40" r="32"></circle>
+                        <circle class="radial-val" cx="40" cy="40" r="32" stroke="#3b82f6" stroke-dasharray="201" stroke-dashoffset="126"></circle>
+                    </svg>
+                    <div class="radial-text" style="color: #3b82f6;" contenteditable="true" id="val-elapsed-pct">37.3%</div>
+                </div>
+                <div style="flex-grow: 1; margin-left: 14px;">
+                    <div class="metric-hero">
+                        <span class="metric-val" contenteditable="true" id="val-days-rem">1,067</span>
+                        <span class="metric-sub">Days Remaining</span>
                     </div>
+                    <div style="font-size: 11px; color: var(--text-muted);" contenteditable="true" id="val-days-elapsed-sub">
+                        636 of 1,703 Days Elapsed
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 37.3%; background: #3b82f6;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--text-muted); margin-top: 2px;">
+                        <span>Jan 1, 2025</span>
+                        <span>Aug 31, 2029</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                    <h1 contenteditable="true" id="disp-title" class="editable-field text-2xl md:text-3xl font-extrabold text-white tracking-tight print-text-dark">
-                        Nimule One Stop Border Post (OSBP) Construction Project
-                    </h1>
-                    <p contenteditable="true" id="disp-subtitle" class="editable-field text-sm text-slate-400 print-text-muted">
-                        Executive Status Review & Variance Analysis Report • Implementation Period: Jan 1, 2025 – Aug 31, 2029
+        <!-- Column 2, Row 1: Financial Summary -->
+        <div class="panel">
+            <div class="panel-title">
+                <span>FINANCIAL EXECUTION RATE</span>
+                <span style="color: var(--accent-green);" font-family="var(--font-mono)">18.53% Expensed</span>
+            </div>
+            <div class="radial-container">
+                <div class="radial-box">
+                    <svg class="radial-svg">
+                        <circle class="radial-bg" cx="40" cy="40" r="32"></circle>
+                        <circle class="radial-val" cx="40" cy="40" r="32" stroke="#10b981" stroke-dasharray="201" stroke-dashoffset="163"></circle>
+                    </svg>
+                    <div class="radial-text" style="color: #10b981;" contenteditable="true" id="val-burn-rate">18.53%</div>
+                </div>
+                <div style="flex-grow: 1; margin-left: 14px;">
+                    <div style="font-size: 10px; color: var(--text-muted);">Total Budget</div>
+                    <div style="font-size: 15px; font-weight: 700; color: #fff; font-family: var(--font-mono)" contenteditable="true" id="val-budget-total">$10,845,990.00</div>
+                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Expensed Amount</div>
+                    <div style="font-size: 13px; font-weight: 700; color: #10b981; font-family: var(--font-mono)" contenteditable="true" id="val-budget-exp">$2,009,685.02</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 3, Row 1: Key Design Status -->
+        <div class="panel" style="border-left: 3px solid var(--accent-green);">
+            <div class="panel-title">
+                <span>IPMG DESIGN APPROVAL</span>
+                <span class="badge-amber">2 Mos Delay</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                <span style="font-size: 16px; font-weight: 800; color: var(--accent-green);" contenteditable="true">APPROVED / 100% DONE</span>
+                <span style="font-size: 10px; color: var(--text-muted);" contenteditable="true">Planned: Mar–May | Actual: Apr–Sept</span>
+            </div>
+            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.3;" contenteditable="true">
+                Design submission and approval by IPMG was completed in September. The process took ~4 months to fully complete against a 2-month planned baseline, incurring a 2-month overall delay.
+            </p>
+        </div>
+
+        <!-- Column 1 & 2, Row 2: Construction & Gap Breakdown -->
+        <div class="panel col-span-2">
+            <div class="panel-title">
+                <span>CONSTRUCTION SCHEDULE & CRITICAL VARIANCE ANALYSIS</span>
+                <span class="badge-red">5 to 6 Months Variance</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex-grow: 1;">
+                <div style="background: rgba(255,255,255,0.02); padding: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size: 11px; font-weight: 700; color: var(--accent-red); margin-bottom: 4px;" contenteditable="true">
+                        🚨 Procurement Stage Active (Blocked)
+                    </div>
+                    <p style="font-size: 10.5px; color: var(--text-muted); line-height: 1.35;" contenteditable="true">
+                        Roofing works implementation was scheduled to start in September 2026. However, site construction has not commenced as works procurement solicitation, bidding, evaluation, and award are still active (5.5-month solicitation variance).
                     </p>
                 </div>
-
-                <!-- High Level Progress Gauge Badges -->
-                <div class="flex items-center gap-4 border-t lg:border-t-0 lg:border-l border-slate-700/80 pt-4 lg:pt-0 lg:pl-6">
-                    <div class="text-center px-3">
-                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider print-text-muted">Budget Spent</p>
-                        <p contenteditable="true" id="disp-spend-pct" class="editable-field text-2xl font-mono font-bold text-emerald-400 print-text-dark">18.53%</p>
-                        <p contenteditable="true" id="disp-spend-amt" class="editable-field text-[11px] text-slate-400 font-mono print-text-muted">$2,009,685.02</p>
+                <div style="background: rgba(255,255,255,0.02); padding: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size: 11px; font-weight: 700; color: var(--accent-amber); margin-bottom: 4px;" contenteditable="true">
+                        ⚠️ Data Tracking & Schedule Discrepancies
                     </div>
-
-                    <div class="w-px h-10 bg-slate-700"></div>
-
-                    <div class="text-center px-3">
-                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider print-text-muted">Time Elapsed</p>
-                        <p contenteditable="true" id="disp-time-pct" class="editable-field text-2xl font-mono font-bold text-blue-400 print-text-dark">37.30%</p>
-                        <p contenteditable="true" id="disp-time-days" class="editable-field text-[11px] text-slate-400 font-mono print-text-muted">636 / 1,703 Days</p>
-                    </div>
-
-                    <div class="w-px h-10 bg-slate-700"></div>
-
-                    <div class="text-center px-3">
-                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider print-text-muted">Schedule Delay</p>
-                        <p contenteditable="true" id="disp-variance-val" class="editable-field text-2xl font-mono font-bold text-coral-500 print-text-dark">-5.5 Mos</p>
-                        <p contenteditable="true" id="disp-variance-lbl" class="editable-field text-[11px] text-coral-400 font-medium print-text-muted">Critical Variance</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Key Metrics Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            
-            <!-- Card 1: Total Budget -->
-            <div class="glass-panel print-card p-5 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider print-text-muted">Total Budget</span>
-                    <span class="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">💵</span>
-                </div>
-                <div contenteditable="true" id="disp-total-budget" class="editable-field text-2xl font-mono font-extrabold text-white mb-2 print-text-dark">
-                    $10,845,990.00
-                </div>
-                <div class="w-full bg-slate-800 rounded-full h-2 mb-2 overflow-hidden print-bg-light">
-                    <div id="bar-budget-spent" class="bg-emerald-500 h-2 rounded-full" style="width: 18.53%"></div>
-                </div>
-                <div class="flex justify-between text-xs font-mono text-slate-400 print-text-muted">
-                    <span>Spent: <strong contenteditable="true" id="disp-spent-sub" class="editable-field text-emerald-400">$2.01M</strong></span>
-                    <span>Rem: <strong contenteditable="true" id="disp-rem-budget" class="editable-field text-slate-200 print-text-dark">$8.84M</strong></span>
-                </div>
-            </div>
-
-            <!-- Card 2: Timeline Schedule -->
-            <div class="glass-panel print-card p-5 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider print-text-muted">Project Duration</span>
-                    <span class="p-2 rounded-lg bg-blue-500/10 text-blue-400">⏳</span>
-                </div>
-                <div contenteditable="true" id="disp-total-days" class="editable-field text-2xl font-mono font-extrabold text-white mb-2 print-text-dark">
-                    1,703 Days
-                </div>
-                <div class="w-full bg-slate-800 rounded-full h-2 mb-2 overflow-hidden print-bg-light">
-                    <div id="bar-time-elapsed" class="bg-blue-500 h-2 rounded-full" style="width: 37.3%"></div>
-                </div>
-                <div class="flex justify-between text-xs font-mono text-slate-400 print-text-muted">
-                    <span>Elapsed: <strong contenteditable="true" id="disp-elapsed-days" class="editable-field text-blue-400">636 Days</strong></span>
-                    <span>Rem: <strong contenteditable="true" id="disp-rem-days" class="editable-field text-slate-200 print-text-dark">1,067 Days</strong></span>
-                </div>
-            </div>
-
-            <!-- Card 3: Critical Delay -->
-            <div class="glass-panel print-card p-5 rounded-2xl border border-coral-500/30 bg-coral-950/20 shadow-lg relative overflow-hidden">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="text-xs font-bold text-coral-400 uppercase tracking-wider">Baseline Variance</span>
-                    <span class="p-2 rounded-lg bg-coral-500/10 text-coral-400">⚠️</span>
-                </div>
-                <div contenteditable="true" id="disp-delay-months" class="editable-field text-2xl font-mono font-extrabold text-coral-400 mb-2">
-                    5 - 6 Months
-                </div>
-                <p contenteditable="true" id="disp-delay-desc" class="editable-field text-xs text-slate-300 leading-snug print-text-muted">
-                    Behind baseline schedule submitted (April 1 to October 1, 2026).
-                </p>
-            </div>
-
-            <!-- Card 4: Inception Phase -->
-            <div class="glass-panel print-card p-5 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider print-text-muted">Inception Stage</span>
-                    <span class="p-2 rounded-lg bg-indigo-500/10 text-indigo-400">✅</span>
-                </div>
-                <div contenteditable="true" id="disp-inception-status" class="editable-field text-2xl font-mono font-extrabold text-emerald-400 mb-2">
-                    21 / 21 Done
-                </div>
-                <p contenteditable="true" id="disp-inception-note" class="editable-field text-xs text-amber-300 font-medium leading-snug">
-                    ⚠️ Completed, but actual start & end dates remain unrecorded.
-                </p>
-            </div>
-
-        </div>
-
-        <!-- Visual Analytics & Detailed Schedule Variance -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-            <!-- Financial vs Time Execution Gauges (4 cols) -->
-            <div class="lg:col-span-5 glass-panel print-card p-6 rounded-2xl border border-slate-800 space-y-6">
-                <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
-                    <h2 class="text-base font-bold text-white tracking-wide print-text-dark">FINANCIAL & TIME BURNDOWN</h2>
-                    <span class="text-xs text-slate-400 font-mono print-text-muted">P-S-CURVE</span>
-                </div>
-
-                <!-- Spend Breakdown Card -->
-                <div class="bg-navy-900/80 p-4 rounded-xl border border-slate-800 space-y-3">
-                    <div class="flex justify-between text-xs font-bold">
-                        <span class="text-slate-300 print-text-dark">Financial Execution Rate</span>
-                        <span class="text-emerald-400 font-mono">18.53% Expensed</span>
-                    </div>
-                    <div class="h-4 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700">
-                        <div class="bg-gradient-to-r from-emerald-600 to-emerald-400 h-full rounded-full" style="width: 18.53%"></div>
-                    </div>
-                    <div class="flex justify-between text-[11px] font-mono text-slate-400 print-text-muted">
-                        <span>Expensed: $2,009,685.02</span>
-                        <span>Remaining: $8,836,304.98</span>
-                    </div>
-                </div>
-
-                <!-- Timeline Breakdown Card -->
-                <div class="bg-navy-900/80 p-4 rounded-xl border border-slate-800 space-y-3">
-                    <div class="flex justify-between text-xs font-bold">
-                        <span class="text-slate-300 print-text-dark">Calendar Time Progress</span>
-                        <span class="text-blue-400 font-mono">37.29% Elapsed</span>
-                    </div>
-                    <div class="h-4 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700">
-                        <div class="bg-gradient-to-r from-blue-600 to-indigo-400 h-full rounded-full" style="width: 37.3%"></div>
-                    </div>
-                    <div class="flex justify-between text-[11px] font-mono text-slate-400 print-text-muted">
-                        <span>636 Days Passed</span>
-                        <span>1,067 Days Remaining</span>
-                    </div>
-                </div>
-
-                <!-- Summary Callout -->
-                <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200/90 leading-relaxed space-y-1">
-                    <div class="font-bold text-amber-300 flex items-center gap-1.5">
-                        <span>💡 Management Note:</span>
-                    </div>
-                    <p contenteditable="true" class="editable-field">
-                        While budget consumption is low (18.53%) relative to elapsed duration (37.3%), significant operational delays in procurement and design approvals threaten upcoming physical execution.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Detailed Schedule Gaps & Critical Path Analysis (7 cols) -->
-            <div class="lg:col-span-7 glass-panel print-card p-6 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                <div>
-                    <div class="border-b border-slate-800 pb-3 mb-5 flex justify-between items-center">
-                        <h2 class="text-base font-bold text-white tracking-wide print-text-dark">CRITICAL PATH & SCHEDULE GAPS OBSERVED</h2>
-                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-coral-500/20 text-coral-300 border border-coral-500/40">5 Key Variances</span>
-                    </div>
-
-                    <div class="space-y-3.5 text-xs">
-                        
-                        <!-- Gap Item 1 -->
-                        <div class="p-3.5 rounded-xl bg-navy-900/90 border border-slate-800 hover:border-coral-500/40 transition space-y-1">
-                            <div class="flex justify-between font-bold text-coral-400">
-                                <span contenteditable="true" class="editable-field">1. Overall Baseline Schedule Slip</span>
-                                <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-coral-950 text-coral-300">5 - 6 Months Delay</span>
-                            </div>
-                            <p contenteditable="true" class="editable-field text-slate-300 leading-relaxed print-text-muted">
-                                The project is currently approximately 5 to 6 months behind the official baseline schedule submitted (April 1 to October 1, 2026).
-                            </p>
-                        </div>
-
-                        <!-- Gap Item 2 -->
-                        <div class="p-3.5 rounded-xl bg-navy-900/90 border border-slate-800 hover:border-amber-500/40 transition space-y-1">
-                            <div class="flex justify-between font-bold text-amber-300">
-                                <span contenteditable="true" class="editable-field">2. Roofing Construction Stage Stalled</span>
-                                <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-amber-950 text-amber-300">Procurement Active</span>
-                            </div>
-                            <p contenteditable="true" class="editable-field text-slate-300 leading-relaxed print-text-muted">
-                                Roofing works were scheduled to start in September 2026. Construction has not commenced as procurement is still active (was due for completion in June 2026).
-                            </p>
-                        </div>
-
-                        <!-- Gap Item 3 -->
-                        <div class="p-3.5 rounded-xl bg-navy-900/90 border border-slate-800 hover:border-coral-500/40 transition space-y-1">
-                            <div class="flex justify-between font-bold text-coral-400">
-                                <span contenteditable="true" class="editable-field">3. Works Procurement Delay</span>
-                                <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-coral-950 text-coral-300">5.5 Months Slip</span>
-                            </div>
-                            <p contenteditable="true" class="editable-field text-slate-300 leading-relaxed print-text-muted">
-                                Works procurement solicitation, bidding, evaluation, and award was planned for April 2026 but commenced in September 2026 (5.5 month variance).
-                            </p>
-                        </div>
-
-                        <!-- Gap Item 4 -->
-                        <div class="p-3.5 rounded-xl bg-navy-900/90 border border-slate-800 hover:border-amber-500/40 transition space-y-1">
-                            <div class="flex justify-between font-bold text-amber-300">
-                                <span contenteditable="true" class="editable-field">4. IPMG Design Approval Extended</span>
-                                <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-amber-950 text-amber-300">2 Months Overrun</span>
-                            </div>
-                            <p contenteditable="true" class="editable-field text-slate-300 leading-relaxed print-text-muted">
-                                Planned for 2 months (March–May 2026). Started April 23 and concluded in September (took ~4 months total; 2-month delay).
-                            </p>
-                        </div>
-
-                        <!-- Gap Item 5 -->
-                        <div class="p-3.5 rounded-xl bg-navy-900/90 border border-slate-800 hover:border-slate-700 transition space-y-1">
-                            <div class="flex justify-between font-bold text-slate-200 print-text-dark">
-                                <span contenteditable="true" class="editable-field">5. Inception Dates & Platform Discrepancy</span>
-                                <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300">System Mismatch</span>
-                            </div>
-                            <p contenteditable="true" class="editable-field text-slate-300 leading-relaxed print-text-muted">
-                                All 21 inception tasks are marked Completed without actual start/end dates. A discrepancy exists between dashboard time schedules and oneUNOPS.
-                            </p>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Management Key Recommendations Box -->
-        <div class="glass-panel print-card p-6 rounded-2xl border border-emerald-500/30 bg-emerald-950/10 shadow-xl space-y-4">
-            <div class="flex items-center gap-3 border-b border-emerald-500/30 pb-3">
-                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg font-bold">
-                    🎯
-                </div>
-                <div>
-                    <h2 class="text-base font-bold text-white tracking-wide print-text-dark">KEY MANAGEMENT RECOMMENDATIONS</h2>
-                    <p class="text-xs text-emerald-300/80">Actionable Steps to Re-align OSBP Construction Baseline</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <div class="p-4 rounded-xl bg-navy-900/90 border border-slate-800 space-y-2">
-                    <h3 contenteditable="true" class="editable-field font-bold text-emerald-400 text-sm">
-                        1. Schedule Revision for Admin & Market Buildings
-                    </h3>
-                    <p contenteditable="true" class="editable-field text-slate-300 leading-relaxed print-text-muted">
-                        It is essential to formally update and revise construction timelines for the OSBP Admin Building and Market Building to establish realistic, achievable scheduling expectations for senior leadership.
-                    </p>
-                </div>
-
-                <div class="p-4 rounded-xl bg-navy-900/90 border border-slate-800 space-y-2">
-                    <h3 contenteditable="true" class="editable-field font-bold text-emerald-400 text-sm">
-                        2. System Sync & Actual Date Verification
-                    </h3>
-                    <p contenteditable="true" class="editable-field text-slate-300 leading-relaxed print-text-muted">
-                        Systematically record actual start and end dates across all site work plans and stages to eliminate discrepancies between Dashboard schedules and oneUNOPS, strengthening real-time progress verification and variance analysis.
+                    <p style="font-size: 10.5px; color: var(--text-muted); line-height: 1.35;" contenteditable="true">
+                        All 21 inception phase activities are complete, but actual start/end dates remain unrecorded. Furthermore, a discrepancy exists between dashboard timelines and the primary oneUNOPS project schedule.
                     </p>
                 </div>
             </div>
         </div>
 
-    </main>
-
-    <!-- Slide-Out Data Editor Sidebar -->
-    <aside id="data-sidebar" class="no-print fixed top-0 right-0 h-full w-full max-w-md bg-navy-900 border-l border-slate-800 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 overflow-y-auto p-6 space-y-6">
-        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-            <div>
-                <h2 class="text-lg font-bold text-white">UPDATE PROJECT METRICS</h2>
-                <p class="text-xs text-slate-400">Modify numerical data to auto-update gauges</p>
+        <!-- Column 3, Row 2: Red Flags & Key Recommendations -->
+        <div class="panel" style="border-left: 3px solid var(--accent-red);">
+            <div class="panel-title">
+                <span>RED FLAGS & REQUIRED MANAGEMENT ACTION</span>
             </div>
-            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white text-xl p-2">✕</button>
+            <table class="issue-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Impact</th>
+                        <th>Action Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge-red">Schedule</span></td>
+                        <td style="color: var(--accent-red); font-weight: 700;">HIGH</td>
+                        <td contenteditable="true">Revise construction timelines for OSBP Admin & Market buildings to reset baseline.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge-amber">Data Quality</span></td>
+                        <td style="color: var(--accent-amber); font-weight: 700;">MODERATE</td>
+                        <td contenteditable="true">Systematically record actual start/end dates across all site work plans.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge-amber">Sync</span></td>
+                        <td style="color: var(--accent-amber); font-weight: 700;">MODERATE</td>
+                        <td contenteditable="true">Align reporting dashboard metrics with the official oneUNOPS project database.</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <form onsubmit="handleFormSubmit(event)" class="space-y-4 text-xs">
-            <div>
-                <label class="block font-bold text-slate-300 mb-1">Project Name</label>
-                <input type="text" id="inp-title" value="Nimule One Stop Border Post (OSBP) Construction Project" class="w-full bg-navy-950 border border-slate-700 rounded-lg p-2.5 text-white">
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1">Total Budget ($)</label>
-                    <input type="number" id="inp-budget" value="10845990" class="w-full bg-navy-950 border border-slate-700 rounded-lg p-2.5 text-white">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1">Budget Expensed ($)</label>
-                    <input type="number" id="inp-spent" value="2009685.02" step="0.01" class="w-full bg-navy-950 border border-slate-700 rounded-lg p-2.5 text-white">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1">Total Project Days</label>
-                    <input type="number" id="inp-total-days" value="1703" class="w-full bg-navy-950 border border-slate-700 rounded-lg p-2.5 text-white">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1">Days Elapsed</label>
-                    <input type="number" id="inp-elapsed-days" value="636" class="w-full bg-navy-950 border border-slate-700 rounded-lg p-2.5 text-white">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1">Start Date</label>
-                    <input type="text" id="inp-start-date" value="Jan 1, 2025" class="w-full bg-navy-950 border border-slate-700 rounded-lg p-2.5 text-white">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1">End Date</label>
-                    <input type="text" id="inp-end-date" value="Aug 31, 2029" class="w-full bg-navy-950 border border-slate-700 rounded-lg p-2.5 text-white">
-                </div>
-            </div>
-
-            <div>
-                <label class="block font-bold text-slate-300 mb-1">Schedule Delay Summary</label>
-                <input type="text" id="inp-variance-text" value="5 - 6 Months Delay" class="w-full bg-navy-950 border border-slate-700 rounded-lg p-2.5 text-white">
-            </div>
-
-            <button type="submit" class="w-full py-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-bold text-white shadow-lg transition text-sm mt-4">
-                Recalculate & Apply Changes
-            </button>
-        </form>
-    </aside>
+    </div>
 
     <script>
-        let directEditActive = true;
+        // Simple local storage persistence for edits
+        function saveData() {
+            const elements = document.querySelectorAll('[contenteditable="true"]');
+            const data = {};
+            elements.forEach((el, idx) => {
+                const id = el.id || 'editable_' + idx;
+                data[id] = el.innerHTML;
+            });
+            localStorage.setItem('unops_dashboard_data', JSON.stringify(data));
+            alert('Dashboard changes saved successfully!');
+        }
 
-        function toggleEditMode() {
-            directEditActive = !directEditActive;
-            const main = document.querySelector('main');
-            const label = document.getElementById('edit-mode-label');
-            
-            if (directEditActive) {
-                main.classList.add('editing-mode');
-                label.innerText = "Direct Edit Mode: ON";
-            } else {
-                main.classList.remove('editing-mode');
-                label.innerText = "Direct Edit Mode: OFF";
+        function loadData() {
+            const saved = localStorage.getItem('unops_dashboard_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                Object.keys(data).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = data[id];
+                });
             }
         }
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('data-sidebar');
-            sidebar.classList.toggle('translate-x-full');
-        }
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-
-            const title = document.getElementById('inp-title').value;
-            const budget = parseFloat(document.getElementById('inp-budget').value) || 0;
-            const spent = parseFloat(document.getElementById('inp-spent').value) || 0;
-            const totalDays = parseInt(document.getElementById('inp-total-days').value) || 1;
-            const elapsedDays = parseInt(document.getElementById('inp-elapsed-days').value) || 0;
-            const variance = document.getElementById('inp-variance-text').value;
-
-            // Math calculations
-            const remBudget = budget - spent;
-            const spendPct = ((spent / budget) * 100).toFixed(2);
-            const remDays = totalDays - elapsedDays;
-            const timePct = ((elapsedDays / totalDays) * 100).toFixed(2);
-
-            // Formatting USD
-            const fmtUSD = (num) => '$' + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            const fmtShortUSD = (num) => '$' + (num / 1000000).toFixed(2) + 'M';
-
-            // Apply updates to UI
-            document.getElementById('disp-title').innerText = title;
-            document.getElementById('disp-total-budget').innerText = fmtUSD(budget);
-            document.getElementById('disp-spend-pct').innerText = spendPct + '%';
-            document.getElementById('disp-spend-amt').innerText = fmtUSD(spent);
-            document.getElementById('disp-spent-sub').innerText = fmtShortUSD(spent);
-            document.getElementById('disp-rem-budget').innerText = fmtShortUSD(remBudget);
-
-            document.getElementById('disp-total-days').innerText = totalDays.toLocaleString() + ' Days';
-            document.getElementById('disp-time-pct').innerText = timePct + '%';
-            document.getElementById('disp-time-days').innerText = `${elapsedDays} / ${totalDays} Days`;
-            document.getElementById('disp-elapsed-days').innerText = elapsedDays + ' Days';
-            document.getElementById('disp-rem-days').innerText = remDays + ' Days';
-
-            document.getElementById('disp-delay-months').innerText = variance;
-
-            // Bars
-            document.getElementById('bar-budget-spent').style.width = Math.min(spendPct, 100) + '%';
-            document.getElementById('bar-time-elapsed').style.width = Math.min(timePct, 100) + '%';
-
-            toggleSidebar();
-        }
+        window.onload = loadData;
     </script>
 </body>
 </html>
