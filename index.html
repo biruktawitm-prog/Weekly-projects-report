@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNOPS HAMCO - Multi-Project Executive Dashboard</title>
+    <title>UNOPS HAMCO - Executive Project Dashboard</title>
     <!-- Loaded 5 professional fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
@@ -13,10 +13,6 @@
             --panel-border: rgba(255, 255, 255, 0.08);
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
-            --accent-green: #10b981;
-            --accent-blue: #3b82f6;
-            --accent-amber: #f59e0b;
-            --accent-red: #ef4444;
             --font-sans: 'Plus Jakarta Sans', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
@@ -65,7 +61,6 @@
             transition: all 0.2s;
         }
         .btn-studio:hover { background: #374151; color: #ffffff; }
-        .btn-studio.active { background: #2563eb; color: #ffffff; border-color: #3b82f6; }
 
         .btn-action-green {
             background: #059669;
@@ -79,53 +74,26 @@
         }
         .btn-action-green:hover { background: #047857; }
 
-        .option-container { display: none; transition: zoom 0.2s ease; }
-        .option-container.active { display: block; }
+        .dashboard-container { transition: zoom 0.2s ease; }
 
-        /* ================= OPTION 1: DARK STUDIO STYLES ================= */
-        .dark-header { display: flex; justify-content: space-between; align-items: center; height: 44px; border-bottom: 1px solid var(--panel-border); margin-bottom: 10px; }
-        .brand-badges { display: flex; gap: 6px; }
-        .badge-unops { background: #2563eb; color: #fff; font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 4px; }
-        .badge-hamco { background: #0284c7; color: #fff; font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 4px; }
-        
-        .dark-grid { display: grid; grid-template-columns: 1fr 1fr 1.25fr; gap: 10px; }
-        .dark-panel { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 12px; position: relative; }
-
-        /* Handle Controls */
-        .card-controls {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0, 0, 0, 0.4); padding: 3px 6px; border-radius: 4px;
-            margin-bottom: 8px; font-size: 9px; border: 1px solid rgba(255,255,255,0.08);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-        .handles-off .card-controls { display: none !important; }
-        .span-btn { background: #374151; color: #9ca3af; border: none; padding: 2px 6px; border-radius: 3px; font-size: 9px; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;}
-        .span-btn.active { background: #2563eb; color: white; }
-        .col-span-1 { grid-column: span 1; }
-        .col-span-2 { grid-column: span 2; }
-        .col-span-3 { grid-column: span 3; }
+        /* ================= EXECUTIVE LIGHT STYLES ================= */
+        .light-theme { background-color: #f8fafc; color: #0f172a; border-radius: 10px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .light-header-banner { background: linear-gradient(135deg, #0f4c81, #1e3a8a); color: white; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .light-header-title h2 { font-size: 20px; font-weight: 800; text-transform: uppercase; }
+        .light-header-title p { font-size: 11px; opacity: 0.85; }
 
         /* Radial Rings */
         .radial-flex { display: flex; align-items: center; gap: 12px; }
         .radial-container { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
         .radial-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-        .radial-bg { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 5; }
+        .radial-bg { fill: none; stroke: #e2e8f0; stroke-width: 5; }
         .radial-val { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease; }
         .radial-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; font-weight: 800; font-family: var(--font-mono); }
 
-        /* Dark Table */
-        .dark-table { width: 100%; border-collapse: collapse; font-size: 10px; }
-        .dark-table th { text-align: left; color: var(--text-muted); font-weight: 700; padding-bottom: 6px; border-bottom: 1px solid var(--panel-border); }
-        .dark-table td { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; line-height: 1.3; }
-        .badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-block; font-family: 'Plus Jakarta Sans', sans-serif;}
-        .badge-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-        .badge-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-
-        /* ================= OPTION 2: EXECUTIVE LIGHT STYLES ================= */
-        .light-theme { background-color: #f8fafc; color: #0f172a; border-radius: 10px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .light-header-banner { background: linear-gradient(135deg, #0f4c81, #1e3a8a); color: white; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .light-header-title h2 { font-size: 20px; font-weight: 800; text-transform: uppercase; }
-        .light-header-title p { font-size: 11px; opacity: 0.85; }
+        .light-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+        .light-kpi-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; }
+        .light-kpi-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif;}
+        .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
 
         .light-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; margin-bottom: 12px; }
         .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
@@ -148,7 +116,11 @@
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
         [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
 
-        @media print { .top-studio-bar { display: none; } body { padding: 0; background: white; } }
+        @media print { 
+            .top-studio-bar { display: none !important; } 
+            .no-print { display: none !important; }
+            body { padding: 0; background: white; } 
+        }
     </style>
 </head>
 <body>
@@ -190,7 +162,7 @@
             </select>
         </div>
 
-        <!-- FONT & ZOOM & THEME SWITCHER -->
+        <!-- FONT & ZOOM SWITCHER -->
         <div class="bar-group">
             <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">Aa Font:</span>
             <select class="dropdown-select" id="select-font" onchange="changeFont(true)">
@@ -201,136 +173,29 @@
                 <option value="'Merriweather', serif">Merriweather (Serif)</option>
             </select>
             
-            <!-- NEW ZOOM BUTTONS -->
             <button class="btn-studio" onclick="changeZoom(-0.05, true)" title="Minimize Text">A-</button>
             <button class="btn-studio" onclick="changeZoom(0.05, true)" title="Maximize Text">A+</button>
-            
-            <button class="btn-studio active" id="btn-opt1" onclick="switchTheme('opt1')">Dark</button>
-            <button class="btn-studio" id="btn-opt2" onclick="switchTheme('opt2')">Light</button>
         </div>
 
-        <!-- LAYOUT CONTROLS -->
+        <!-- BLOCK & UNDO CONTROLS -->
         <div class="bar-group">
-            <button class="btn-studio" id="btn-handles" onclick="toggleHandles()">🛠️ Handles: ON</button>
-            <button class="btn-studio" onclick="addCustomBlock()">➕ Block</button>
+            <button class="btn-studio" onclick="addCustomBlock()">➕ Custom Block</button>
             <button class="btn-studio" id="btn-undo" onclick="undo()" disabled>↩️ Undo</button>
             <button class="btn-studio" id="btn-redo" onclick="redo()" disabled>↪️ Redo</button>
         </div>
 
-        <!-- EXPORT & SHARE -->
+        <!-- EXPORT, SHARE & EMAIL -->
         <div class="bar-group">
-            <button class="btn-action-green" onclick="saveLayout()">💾 Save</button>
             <button class="btn-studio" onclick="window.print()">🖨️ PDF</button>
-            <button class="btn-studio" onclick="shareDashboard()" style="background: #2563eb; color: white; border-color: #3b82f6;">📤 Share Collab Link</button>
+            <button class="btn-studio" onclick="shareDashboard()" style="background: #2563eb; color: white; border-color: #3b82f6;">📤 Share Link</button>
+            <button class="btn-studio" onclick="emailDashboard()" style="background: #059669; color: white; border-color: #10b981;">📧 Email</button>
         </div>
     </div>
 
-    <!-- ================= OPTION 1: DARK STUDIO ================= -->
-    <div id="option1" class="option-container active">
-        <div class="dark-header">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div class="brand-badges">
-                    <span class="badge-unops" style="font-family: 'Plus Jakarta Sans', sans-serif;">UNOPS</span>
-                    <span class="badge-hamco" style="font-family: 'Plus Jakarta Sans', sans-serif;">HAMCO</span>
-                </div>
-                <div>
-                    <h1 style="font-size: 14px; font-weight: 800;" id="dark-proj-title" contenteditable="true">WEEKLY PROJECT UPDATES</h1>
-                    <p style="font-size: 10px; color: var(--text-muted);" id="dark-sub-title" contenteditable="true">Nimule OSBP Construction Project (October Week 4)</p>
-                </div>
-            </div>
-            <div style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700;" id="dark-delay-badge" contenteditable="true">
-                SCHEDULE DELAY: -5.5 MOS
-            </div>
-        </div>
-
-        <div class="dark-grid" id="dark-grid-container">
-            
-            <!-- ROW 1 (Dark) -->
-            <div class="dark-panel col-span-1" id="card-1">
-                <div class="card-controls"><span>⠿ Card 1</span></div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">PROJECT TIMELINE & ELAPSED DAYS</div>
-                <div class="radial-flex">
-                    <div class="radial-container">
-                        <svg class="radial-svg" viewBox="0 0 64 64">
-                            <circle class="radial-bg" cx="32" cy="32" r="28"></circle>
-                            <circle class="radial-val" id="d-ring-time" cx="32" cy="32" r="28" stroke="#3b82f6" stroke-dasharray="175.93" stroke-dashoffset="110.3"></circle>
-                        </svg>
-                        <div class="radial-text" style="color: #3b82f6;" id="d-ring-time-val">37.3%</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 18px; font-weight: 800; color: #fff;" id="d-rem-days" contenteditable="true">1,067 Days Rem</div>
-                        <div style="font-size: 10px; color: var(--text-muted);" id="d-elapsed-days" contenteditable="true">636 of 1,703 Days Elapsed</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="dark-panel col-span-1" id="card-2">
-                <div class="card-controls"><span>⠿ Card 2</span></div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">FINANCIAL EXECUTION RATE</div>
-                <div class="radial-flex">
-                    <div class="radial-container">
-                        <svg class="radial-svg" viewBox="0 0 64 64">
-                            <circle class="radial-bg" cx="32" cy="32" r="28"></circle>
-                            <circle class="radial-val" id="d-ring-fin" cx="32" cy="32" r="28" stroke="#10b981" stroke-dasharray="175.93" stroke-dashoffset="143.3"></circle>
-                        </svg>
-                        <div class="radial-text" style="color: #10b981;" id="d-ring-fin-val">18.5%</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 13px; font-weight: 800; color: #fff;" id="d-budget-total" contenteditable="true">Total: $10,845,990</div>
-                        <div style="font-size: 11px; font-weight: 700; color: #10b981; margin-top: 2px;" id="d-budget-exp" contenteditable="true">Exp: $2,009,685.02</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="dark-panel col-span-1" id="card-3" style="border-left: 3px solid #10b981;">
-                <div class="card-controls"><span>⠿ Card 3</span></div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;" id="d-design-head">IPMG DESIGN APPROVAL</div>
-                <div style="font-size: 14px; font-weight: 800; color: #10b981;" id="d-design-status" contenteditable="true">APPROVED / 100% DONE</div>
-                <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;" id="d-design-desc" contenteditable="true">Design completed in September. Process took ~4 months (2-month delay).</div>
-            </div>
-
-            <!-- ROW 2 (Dark) -->
-            <div class="dark-panel col-span-1" id="card-4">
-                <div class="card-controls"><span>⠿ Card 4</span></div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">CONSTRUCTION SCHEDULE & VARIANCE</div>
-                <div style="font-size: 11px; font-weight: 700; color: #ef4444; margin-bottom: 4px;" id="d-procurement-head" contenteditable="true">🚨 Procurement Stage Active</div>
-                <div style="font-size: 11px; color: var(--text-muted);" id="d-procurement-text" contenteditable="true">Roofing works implementation scheduled for Sept 2026 has not commenced because works procurement solicitation is still active (5.5-month variance).</div>
-            </div>
-
-            <div class="dark-panel col-span-1" id="card-5">
-                <div class="card-controls"><span>⠿ Card 5</span></div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">DATA TRACKING & DISCREPANCIES</div>
-                <div style="font-size: 11px; font-weight: 700; color: #f59e0b; margin-bottom: 4px;" id="d-gap-head" contenteditable="true">⚠️ Schedule Discrepancies</div>
-                <div style="font-size: 11px; color: var(--text-muted);" id="d-gap-text" contenteditable="true">All 21 inception phase activities are complete, but actual start/end dates remain unrecorded. Dashboard vs oneUNOPS variance exists.</div>
-            </div>
-
-            <div class="dark-panel col-span-1" id="card-6" style="border-left: 3px solid #ef4444;">
-                <div class="card-controls"><span>⠿ Card 6</span></div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">RED FLAGS & MANAGEMENT ACTION</div>
-                <table class="dark-table">
-                    <thead><tr><th>CATEGORY</th><th>IMPACT</th><th>ACTION REQUIRED</th></tr></thead>
-                    <tbody id="dark-action-table">
-                        <tr><td><span class="badge badge-red">Schedule</span></td><td style="color:#ef4444; font-weight:700;">HIGH</td><td id="dtbl-1" contenteditable="true">Revise construction timelines for Admin & Market bldgs.</td></tr>
-                        <tr><td><span class="badge badge-amber">Data Qual</span></td><td style="color:#fbbf24; font-weight:700;">MODERATE</td><td id="dtbl-2" contenteditable="true">Systematically record dates across all work plans.</td></tr>
-                        <tr><td><span class="badge badge-amber">Sync</span></td><td style="color:#fbbf24; font-weight:700;">MODERATE</td><td id="dtbl-3" contenteditable="true">Align reporting dashboard metrics with oneUNOPS.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- ROW 3: FOOTER -->
-            <div class="dark-panel col-span-3" id="card-7" style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.3);">
-                <div class="card-controls"><span>⠿ Card 7</span></div>
-                <div style="font-size: 11px; font-weight: 800; color: #fbbf24; margin-bottom: 4px;">🎯 KEY RECOMMENDATIONS</div>
-                <div style="font-size: 11px; color: #e2e8f0; line-height: 1.4;" id="d-recommendation" contenteditable="true">
-                    It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= OPTION 2: EXECUTIVE LIGHT ================= -->
-    <div id="option2" class="option-container">
+    <!-- ================= DASHBOARD CONTAINER ================= -->
+    <div id="dashboard-container" class="dashboard-container">
         <div class="light-theme">
+            
             <div class="light-header-banner">
                 <div class="light-header-title">
                     <h2 id="l-main-title" contenteditable="true">WEEKLY RED FLAG REPORT</h2>
@@ -342,14 +207,14 @@
                 </div>
             </div>
 
-            <!-- NEW TOP KPI SECTION FOR LIGHT OPTION (Mirrors Dark Option exactly) -->
+            <!-- KPI & RADIAL RINGS SECTION -->
             <div class="light-main-grid" style="grid-template-columns: 1fr 1fr 1.25fr; margin-bottom: 12px;">
                 <div class="light-card">
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">PROJECT TIMELINE & ELAPSED DAYS</div>
                     <div class="radial-flex">
                         <div class="radial-container">
                             <svg class="radial-svg" viewBox="0 0 64 64">
-                                <circle class="radial-bg" cx="32" cy="32" r="28" style="stroke: #e2e8f0;"></circle>
+                                <circle class="radial-bg" cx="32" cy="32" r="28"></circle>
                                 <circle class="radial-val" id="l-ring-time" cx="32" cy="32" r="28" stroke="#3b82f6" stroke-dasharray="175.93" stroke-dashoffset="110.3"></circle>
                             </svg>
                             <div class="radial-text" style="color: #3b82f6;" id="l-ring-time-val">37.3%</div>
@@ -366,14 +231,14 @@
                     <div class="radial-flex">
                         <div class="radial-container">
                             <svg class="radial-svg" viewBox="0 0 64 64">
-                                <circle class="radial-bg" cx="32" cy="32" r="28" style="stroke: #e2e8f0;"></circle>
+                                <circle class="radial-bg" cx="32" cy="32" r="28"></circle>
                                 <circle class="radial-val" id="l-ring-fin" cx="32" cy="32" r="28" stroke="#059669" stroke-dasharray="175.93" stroke-dashoffset="143.3"></circle>
                             </svg>
                             <div class="radial-text" style="color: #059669;" id="l-ring-fin-val">18.5%</div>
                         </div>
                         <div>
-                            <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: $10,845,990</div>
-                            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: $2,009,685.02</div>
+                            <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: \$10,845,990</div>
+                            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: \$2,009,685.02</div>
                         </div>
                     </div>
                 </div>
@@ -386,7 +251,7 @@
             </div>
 
             <!-- MAIN CONTENT AREA -->
-            <div class="light-main-grid">
+            <div class="light-main-grid" id="main-content-grid">
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                     <div class="light-card">
                         <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
@@ -438,11 +303,20 @@
                     It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
                 </div>
             </div>
+
+            <!-- MANAGER COMMENT SECTION (HIDDEN ON PDF) -->
+            <div class="no-print" style="margin-top: 20px; background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 8px; padding: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">💬 Manager Comments / Next Steps (Hidden in PDF)</div>
+                </div>
+                <div id="manager-comments" contenteditable="true" style="font-size: 12px; color: #334155; min-height: 50px; background: white; padding: 10px; border-radius: 4px; border: 1px solid #cbd5e1;">Click here to leave a comment, layout feedback, or notes for the next reporting cycle...</div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        let handlesOn = true; let undoStack = []; let redoStack = []; let customBlockCount = 0;
+        let undoStack = []; let redoStack = []; let customBlockCount = 0;
         let currentZoom = 1;
 
         const projectData = {
@@ -453,10 +327,8 @@
                 delayBadge: "SCHEDULE DELAY: -5.5 MOS",
                 timePct: 37.3, finPct: 18.5,
                 remDays: "1,067 Days Rem", elapsedDays: "636 of 1,703 Days Elapsed",
-                budgetTotal: "Total: $10,845,990.00", budgetExp: "Exp: $2,009,685.02",
+                budgetTotal: "Total: \$10,845,990.00", budgetExp: "Exp: \$2,009,685.02",
                 designHead: "IPMG DESIGN APPROVAL", designStatus: "APPROVED / 100% DONE", designDesc: "Design completed in September. Process took ~4 months (2-month delay).",
-                procHead: "🚨 Procurement Stage Active", procText: "Roofing works implementation scheduled for Sept 2026 has not commenced because works procurement solicitation is still active.",
-                gapHead: "⚠️ Schedule Discrepancies", gapText: "All 21 inception phase activities are complete, but actual start/end dates remain unrecorded.",
                 pipe: ["Completed", "Approved", "Active (5.5m)", "Pending"],
                 recommendation: "It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.",
                 redFlags: [
@@ -466,11 +338,6 @@
                     "Solicitation phase has a 5.5-month variance.",
                     "Inception dates remain blank across actual tracking.",
                     "Schedule discrepancy between dashboard and oneUNOPS."
-                ],
-                table: [
-                    {cat: 'Schedule', color: 'red', impact: 'HIGH', txt: 'Revise construction timelines for Admin & Market bldgs.'},
-                    {cat: 'Data Qual', color: 'amber', impact: 'MODERATE', txt: 'Systematically record dates across all work plans.'},
-                    {cat: 'Sync', color: 'amber', impact: 'MODERATE', txt: 'Align reporting dashboard metrics with oneUNOPS.'}
                 ]
             },
             japan: {
@@ -480,10 +347,8 @@
                 delayBadge: "ON SCHEDULE / NORMAL",
                 timePct: 42.5, finPct: 54.2,
                 remDays: "420 Days Rem", elapsedDays: "310 of 730 Days Elapsed",
-                budgetTotal: "Total: $6,000,000.00", budgetExp: "Exp: $3,250,000.00",
+                budgetTotal: "Total: \$6,000,000.00", budgetExp: "Exp: \$3,250,000.00",
                 designHead: "PHASE STATUS", designStatus: "APPROVED", designDesc: "Design phase fully approved and documented.",
-                procHead: "✅ Procurement On-Track", procText: "Equipment procurement ongoing smoothly; 80% of materials delivered to site.",
-                gapHead: "ℹ️ Minor Discrepancies", gapText: "Minor variance in regional transport cost tracking.",
                 pipe: ["Completed", "Approved", "Active", "Pending"],
                 recommendation: "Maintain close coordination with local port authorities to expedite remaining logistics clearance.",
                 redFlags: [
@@ -493,11 +358,6 @@
                     "Quality assurance audit scheduled for end of month.",
                     "Environmental impact assessment updated and approved.",
                     "Stakeholder committee review completed with positive feedback."
-                ],
-                table: [
-                    {cat: 'Logistics', color: 'red', impact: 'HIGH', txt: 'Expedite clearance at Mombasa port.'},
-                    {cat: 'Finance', color: 'amber', impact: 'LOW', txt: 'Monitor fuel transport cost variances.'},
-                    {cat: 'Audit', color: 'amber', impact: 'MODERATE', txt: 'Prepare documents for month-end QA.'}
                 ]
             },
             flood: {
@@ -507,10 +367,8 @@
                 delayBadge: "42.57% PROGRESS GAP",
                 timePct: 70.2, finPct: 25.6,
                 remDays: "End: 31 Mar 2027", elapsedDays: "70.25% Elapsed / 27.68% Physical",
-                budgetTotal: "Total: $9,860,000.00", budgetExp: "Exp: $2,500,000.00",
+                budgetTotal: "Total: \$9,860,000.00", budgetExp: "Exp: \$2,500,000.00",
                 designHead: "INCEPTION & ASSESSMENT", designStatus: "IN PROGRESS", designDesc: "Preparation of Technical documents and design approval for Water Yards remains In Progress (planned for June 1, 2026).",
-                procHead: "🚨 Procurement Blocked", procText: "5 activities: 2 completed, 1 in progress (4 mo behind), 2 not started (4 mo behind).",
-                gapHead: "⚠️ Execution Delay", gapText: "Under works and contract management, 8 activities planned: 2 completed, 1 in progress, 5 not started. Overall 6 month delay.",
                 pipe: ["In Progress", "Delayed", "Active", "Delayed (6m)"],
                 recommendation: "In the forecast to delivery percentage, there is an over forecasting trend noticed with a total forecasted value of -7,859,796.48 USD over the past 10 months.",
                 redFlags: [
@@ -519,12 +377,7 @@
                     "Procurement: 1 activity in progress is 4 months behind schedule (June 17, 2026).",
                     "Procurement: 2 activities not started, 4 months behind schedule (July 4, 2026).",
                     "Works & Contract Management: 6-month delay overall. 5 activities not started.",
-                    "Over forecasting trend noticed with a total forecasted value of -$7.85M over the past 10 months."
-                ],
-                table: [
-                    {cat: 'Progress', color: 'red', impact: 'HIGH', txt: 'Address the 42.57% point gap between time and physical progress.'},
-                    {cat: 'Schedule', color: 'red', impact: 'HIGH', txt: 'Expedite technical documents and design approval.'},
-                    {cat: 'Forecast', color: 'red', impact: 'HIGH', txt: 'Reassess financial forecast trend (-$7.85M variance).'}
+                    "Over forecasting trend noticed with a total forecasted value of -\$7.85M over the past 10 months."
                 ]
             }
         };
@@ -552,8 +405,7 @@
             currentZoom += delta;
             if(currentZoom < 0.5) currentZoom = 0.5;
             if(currentZoom > 2.0) currentZoom = 2.0;
-            document.getElementById('option1').style.zoom = currentZoom;
-            document.getElementById('option2').style.zoom = currentZoom;
+            document.getElementById('dashboard-container').style.zoom = currentZoom;
         }
 
         function changeProject(isUserTriggered = false) {
@@ -562,37 +414,6 @@
             const m = document.getElementById('select-month').value;
             const w = document.getElementById('select-week').value;
 
-            // Update Dark Values
-            document.getElementById('dark-proj-title').innerHTML = p.title;
-            document.getElementById('dark-sub-title').innerHTML = `${p.subTitle} (${m} ${w})`;
-            document.getElementById('dark-delay-badge').innerHTML = p.delayBadge;
-            document.getElementById('d-rem-days').innerHTML = p.remDays;
-            document.getElementById('d-elapsed-days').innerHTML = p.elapsedDays;
-            document.getElementById('d-budget-total').innerHTML = p.budgetTotal;
-            document.getElementById('d-budget-exp').innerHTML = p.budgetExp;
-            document.getElementById('d-design-head').innerHTML = p.designHead;
-            document.getElementById('d-design-status').innerHTML = p.designStatus;
-            document.getElementById('d-design-desc').innerHTML = p.designDesc;
-            document.getElementById('d-procurement-head').innerHTML = p.procHead;
-            document.getElementById('d-procurement-text').innerHTML = p.procText;
-            document.getElementById('d-gap-head').innerHTML = p.gapHead;
-            document.getElementById('d-gap-text').innerHTML = p.gapText;
-            document.getElementById('d-recommendation').innerHTML = p.recommendation;
-
-            document.getElementById('d-ring-time-val').innerHTML = p.timePct + '%';
-            document.getElementById('d-ring-fin-val').innerHTML = p.finPct + '%';
-            setTimeout(() => { setRing('d-ring-time', p.timePct); setRing('d-ring-fin', p.finPct); }, 50);
-
-            const tbody = document.getElementById('dark-action-table');
-            tbody.innerHTML = '';
-            p.table.forEach((r, i) => {
-                const tr = document.createElement('tr');
-                const colorCode = r.color === 'red' ? '#ef4444' : '#fbbf24';
-                tr.innerHTML = `<td><span class="badge badge-${r.color}">${r.cat}</span></td><td style="color:${colorCode}; font-weight:700;">${r.impact}</td><td id="dtbl-${i+1}" contenteditable="true">${r.txt}</td>`;
-                tbody.appendChild(tr);
-            });
-
-            // Update Light Values
             document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
             document.getElementById('l-sub-title').innerHTML = p.subTitle;
             document.getElementById('l-location-tag').innerHTML = p.location;
@@ -627,39 +448,26 @@
             const m = document.getElementById('select-month').value;
             const w = document.getElementById('select-week').value;
             document.getElementById('l-period-tag').innerHTML = `${m} 2026 - ${w}`;
-            const p = projectData[document.getElementById('select-project').value];
-            document.getElementById('dark-sub-title').innerHTML = `${p.subTitle} (${m} ${w})`;
         }
 
-        function switchTheme(option) {
+        function addCustomBlock() {
             saveState();
-            document.getElementById('option1').classList.remove('active');
-            document.getElementById('option2').classList.remove('active');
-            document.getElementById('btn-opt1').classList.remove('active');
-            document.getElementById('btn-opt2').classList.remove('active');
-            if (option === 'opt1') {
-                document.getElementById('option1').classList.add('active');
-                document.getElementById('btn-opt1').classList.add('active');
-                document.body.style.backgroundColor = '#090d16';
-            } else {
-                document.getElementById('option2').classList.add('active');
-                document.getElementById('btn-opt2').classList.add('active');
-                document.body.style.backgroundColor = '#f1f5f9';
-            }
-        }
-
-        function toggleHandles() {
-            handlesOn = !handlesOn;
-            const btn = document.getElementById('btn-handles');
-            const grid = document.getElementById('dark-grid-container');
-            if (handlesOn) { btn.innerHTML = '🛠️ Handles: ON'; grid.classList.remove('handles-off'); }
-            else { btn.innerHTML = '🛠️ Handles: OFF'; grid.classList.add('handles-off'); }
+            customBlockCount++;
+            const container = document.getElementById('main-content-grid');
+            const newCard = document.createElement('div');
+            newCard.className = 'light-card col-span-2';
+            newCard.style.gridColumn = '1 / -1';
+            newCard.innerHTML = `
+                <div class="light-card-title">📌 CUSTOM STATUS BLOCK</div>
+                <div contenteditable="true" style="font-size: 11px; color: #475569; min-height: 30px;">Click here to edit this custom project note.</div>
+            `;
+            container.appendChild(newCard);
         }
 
         // ==========================================
-        // ADVANCED SHARING LOGIC (URL STATE ENCODING)
+        // ADVANCED SHARING & EMAIL LOGIC 
         // ==========================================
-        async function shareDashboard() {
+        function generateShareLink() {
             const edits = {};
             document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
                 if(!el.id) el.id = 'edit_' + index;
@@ -671,17 +479,19 @@
                 m: document.getElementById('select-month').value,
                 w: document.getElementById('select-week').value,
                 f: document.getElementById('select-font').value, 
-                z: currentZoom, // save zoom size
-                t: document.getElementById('option2').classList.contains('active') ? 'opt2' : 'opt1',
+                z: currentZoom, 
                 edits: edits
             };
 
             const encoded = btoa(encodeURIComponent(JSON.stringify(state)));
-            const shareUrl = window.location.origin + window.location.pathname + '?s=' + encoded;
+            return window.location.origin + window.location.pathname + '?s=' + encoded;
+        }
 
+        async function shareDashboard() {
+            const shareUrl = generateShareLink();
             const shareData = {
                 title: 'UNOPS HAMCO - Weekly Project Updates',
-                text: 'Check out the executive weekly project updates. I have added some edits, and you can edit them too!',
+                text: 'Check out the executive weekly project updates. I have added some edits and comments.',
                 url: shareUrl
             };
 
@@ -690,12 +500,25 @@
                     await navigator.share(shareData);
                 } else {
                     await navigator.clipboard.writeText(shareUrl);
-                    alert("✅ Collaborative link copied to clipboard!\n\nWhen your colleagues open this link, they will see your exact custom edits (like new text or bullet points) and can continue editing from their own browser.");
+                    alert("✅ Collaborative link copied to clipboard!\n\nColleagues opening this link will see your exact custom text, font, zoom size, and Manager Comments.");
                 }
             } catch (err) {
                 await navigator.clipboard.writeText(shareUrl);
                 alert("✅ Collaborative link copied to clipboard!");
             }
+        }
+
+        function emailDashboard() {
+            const shareUrl = generateShareLink();
+            const projSelect = document.getElementById('select-project');
+            const projName = projSelect.options[projSelect.selectedIndex].text;
+            
+            const subject = encodeURIComponent(`Weekly Project Update - ${projName}`);
+            const body = encodeURIComponent(
+                `Hello,\n\nPlease review the latest executive weekly project updates here:\n\n${shareUrl}\n\nYou can click directly on the text to make edits, add comments to the Manager Section, and then generate a new link to send back.\n\nBest regards,`
+            );
+            
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
         }
 
         // LOAD SHARED STATE FROM URL ON BOOT
@@ -711,19 +534,10 @@
                     if(state.m) document.getElementById('select-month').value = state.m;
                     if(state.w) document.getElementById('select-week').value = state.w;
                     
-                    if(state.f) {
-                        document.getElementById('select-font').value = state.f;
-                        changeFont(false);
-                    }
-
-                    if(state.z) {
-                        currentZoom = state.z;
-                        changeZoom(0, false);
-                    }
+                    if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
+                    if(state.z) { currentZoom = state.z; changeZoom(0, false); }
                     
                     changeProject(false); 
-                    
-                    if(state.t) switchTheme(state.t);
 
                     if(state.edits) {
                         for (const id in state.edits) {
@@ -731,7 +545,6 @@
                             if (el) el.innerHTML = state.edits[id];
                         }
                     }
-                    
                     window.history.replaceState({}, document.title, window.location.pathname);
                 } catch(e) {
                     changeProject(false);
@@ -743,21 +556,19 @@
 
         // State Engine (Undo/Redo)
         function saveState() {
-            undoStack.push({opt1: document.getElementById('option1').innerHTML, opt2: document.getElementById('option2').innerHTML});
+            undoStack.push(document.getElementById('dashboard-container').innerHTML);
             redoStack = []; document.getElementById('btn-undo').disabled = false; document.getElementById('btn-redo').disabled = true;
         }
         function undo() {
             if (!undoStack.length) return;
-            redoStack.push({opt1: document.getElementById('option1').innerHTML, opt2: document.getElementById('option2').innerHTML});
-            const s = undoStack.pop();
-            document.getElementById('option1').innerHTML = s.opt1; document.getElementById('option2').innerHTML = s.opt2;
+            redoStack.push(document.getElementById('dashboard-container').innerHTML);
+            document.getElementById('dashboard-container').innerHTML = undoStack.pop();
             document.getElementById('btn-undo').disabled = !undoStack.length; document.getElementById('btn-redo').disabled = false;
         }
         function redo() {
             if (!redoStack.length) return;
-            undoStack.push({opt1: document.getElementById('option1').innerHTML, opt2: document.getElementById('option2').innerHTML});
-            const s = redoStack.pop();
-            document.getElementById('option1').innerHTML = s.opt1; document.getElementById('option2').innerHTML = s.opt2;
+            undoStack.push(document.getElementById('dashboard-container').innerHTML);
+            document.getElementById('dashboard-container').innerHTML = redoStack.pop();
             document.getElementById('btn-undo').disabled = false; document.getElementById('btn-redo').disabled = !redoStack.length;
         }
     </script>
