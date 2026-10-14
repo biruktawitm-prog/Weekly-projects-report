@@ -92,8 +92,8 @@
         /* ================= EXECUTIVE LIGHT STYLES ================= */
         .light-theme { background-color: #f8fafc; color: #0f172a; border-radius: 10px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .light-header-banner { background: linear-gradient(135deg, #0f4c81, #1e3a8a); color: white; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .light-header-title h2 { font-size: 20px; font-weight: 800; text-transform: uppercase; }
-        .light-header-title p { font-size: 11px; opacity: 0.85; }
+        .light-header-title h2 { font-size: 20px; font-weight: 800; text-transform: uppercase; margin: 0; }
+        .light-header-title p { font-size: 11px; opacity: 0.85; margin: 4px 0 0 0; }
 
         /* Radial Rings */
         .radial-flex { display: flex; align-items: center; gap: 12px; }
@@ -129,10 +129,22 @@
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
         [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
 
+        /* ================= PERFECT PDF PRINT SETTINGS ================= */
         @media print { 
+            @page {
+                size: landscape;
+                margin: 10mm;
+            }
+            body { 
+                padding: 0; 
+                background: #f8fafc !important; 
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
+            }
             .top-studio-bar { display: none !important; } 
             .no-print { display: none !important; }
-            body { padding: 0; background: white; } 
+            .light-theme { box-shadow: none !important; padding: 0 !important; }
+            .card-controls { display: none !important; }
         }
     </style>
 </head>
@@ -222,7 +234,7 @@
             </div>
 
             <!-- KPI & RADIAL RINGS SECTION -->
-            <div class="light-main-grid" style="grid-template-columns: 1fr 1fr 1.25fr; margin-bottom: 12px;">
+            <div class="light-main-grid handles-off" style="grid-template-columns: 1fr 1fr 1.25fr; margin-bottom: 12px;" id="kpi-grid">
                 <div class="light-card col-span-1" id="kpi-card-1">
                     <div class="card-controls"><span>⠿ Card 1</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">PROJECT TIMELINE & ELAPSED DAYS</div>
@@ -253,7 +265,7 @@
                             <div class="radial-text" style="color: #059669;" id="l-ring-fin-val">18.5%</div>
                         </div>
                         <div>
-                            <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: \$10,845,990</div>
+                            <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: $10,845,990</div>
                             <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: \$2,009,685.02</div>
                         </div>
                     </div>
@@ -268,7 +280,7 @@
             </div>
 
             <!-- MAIN CONTENT AREA -->
-            <div class="light-main-grid" id="main-content-grid">
+            <div class="light-main-grid handles-off" id="main-content-grid">
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                     <div class="light-card" id="card-timeline">
                         <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
@@ -340,7 +352,7 @@
     </div>
 
     <script>
-        let handlesOn = true; 
+        let handlesOn = false; 
         let undoStack = []; 
         let redoStack = []; 
         let customBlockCount = 0;
@@ -422,7 +434,7 @@
 
         // Change Font Type
         function changeFont(isUserTriggered = false) {
-            if(isUserTriggered) saveState();
+            if(isUserTriggered) saveStateForUndo();
             const font = document.getElementById('select-font').value;
             document.body.style.fontFamily = font;
             document.documentElement.style.setProperty('--font-sans', font);
@@ -430,7 +442,7 @@
 
         // Change Font Zoom (Size)
         function changeZoom(delta, isUserTriggered = false) {
-            if(isUserTriggered) saveState();
+            if(isUserTriggered) saveStateForUndo();
             currentZoom += delta;
             if(currentZoom < 0.5) currentZoom = 0.5;
             if(currentZoom > 2.0) currentZoom = 2.0;
@@ -439,7 +451,7 @@
 
         function changeProject(isUserTriggered = false) {
             if(isUserTriggered) {
-                saveState();
+                saveStateForUndo();
                 customEdits = {}; // Clear previous text edits if user explicitly switches project
             }
             const p = projectData[document.getElementById('select-project').value];
@@ -474,11 +486,11 @@
             }
             
             updatePeriodLabel(false);
-            applyCustomEdits(); // Layer any shared edits on top
+            applyCustomEdits(); 
         }
 
         function updatePeriodLabel(isUserTriggered = false) {
-            if(isUserTriggered) saveState();
+            if(isUserTriggered) saveStateForUndo();
             const m = document.getElementById('select-month').value;
             const w = document.getElementById('select-week').value;
             document.getElementById('l-period-tag').innerHTML = `${m} 2026 - ${w}`;
@@ -499,7 +511,7 @@
         }
 
         function setSpan(cardId, cols, isUserTriggered = true) {
-            if(isUserTriggered) saveState();
+            if(isUserTriggered) saveStateForUndo();
             const card = document.getElementById(cardId);
             if(!card) return;
             card.className = card.className.replace(/col-span-\d/g, '');
@@ -514,7 +526,7 @@
         }
 
         function addCustomBlock(isUserTriggered = false) {
-            if(isUserTriggered) saveState();
+            if(isUserTriggered) saveStateForUndo();
             customBlockCount++;
             const container = document.getElementById('main-content-grid');
             const id = 'custom-block-' + customBlockCount;
@@ -536,7 +548,6 @@
             cardLayouts[id] = 2;
         }
 
-        // Track user edits live for minimal URL sharing
         document.addEventListener('input', function(e) {
             if (e.target && e.target.getAttribute('contenteditable') === 'true') {
                 if (!e.target.id) e.target.id = 'edit_' + Math.random().toString(36).substr(2, 5);
@@ -552,12 +563,14 @@
         }
 
         // ==========================================
-        // ADVANCED SHARING LOGIC (Tiny URL state)
+        // ADVANCED SHARING LOGIC (Via Public Data Bin)
         // ==========================================
         async function shareDashboard() {
             const btn = document.getElementById('btn-share');
             const ogText = btn.innerHTML;
-            btn.innerHTML = '⏳ Generating...';
+            btn.innerHTML = '⏳ Generating Short Link...';
+
+            saveLayout(false); // Also save locally
 
             const state = {
                 p: document.getElementById('select-project').value,
@@ -567,74 +580,129 @@
                 z: currentZoom, 
                 b: customBlockCount,
                 l: cardLayouts,
-                e: customEdits // Only the explicit text edits are captured
+                e: customEdits
             };
 
-            const encoded = btoa(encodeURIComponent(JSON.stringify(state)));
-            const longUrl = window.location.origin + window.location.pathname + '?s=' + encoded;
-            let shareUrl = longUrl;
+            let shareUrl = window.location.href;
 
             try {
-                // Shorten URL using a free robust API
-                const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`);
+                // Post the entire payload to npoint.io (a free JSON storage bin)
+                const res = await fetch('https://api.npoint.io', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(state)
+                });
+                
                 if (res.ok) {
                     const data = await res.json();
-                    if (data.shorturl) shareUrl = data.shorturl;
+                    shareUrl = window.location.origin + window.location.pathname + '?id=' + data.id;
                 } else {
-                    const tinyRes = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
-                    if(tinyRes.ok) shareUrl = await tinyRes.text();
+                    throw new Error("npoint failed");
                 }
-            } catch (e) {
-                console.warn('URL shortener API failed, falling back to long URL.');
+            } catch (err) {
+                // Fallback to ByteBin if npoint is down
+                try {
+                    const res2 = await fetch('https://bytebin.lucko.me/post', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(state)
+                    });
+                    const data2 = await res2.json();
+                    shareUrl = window.location.origin + window.location.pathname + '?bin=' + data2.key;
+                } catch (err2) {
+                    alert("⚠️ Network error preventing short link creation. Please use 'Save' to save to your local machine instead.");
+                    btn.innerHTML = ogText;
+                    return;
+                }
             }
 
             try {
                 await navigator.clipboard.writeText(shareUrl);
-                alert("✅ Short Collaborative link copied to clipboard!\n\nColleagues opening this link will see your exact custom text, bullet points, font, zoom size, and Manager Comments.\n\nLink: " + shareUrl);
+                alert("✅ Short Link Generated & Copied to Clipboard!\n\nLink: " + shareUrl + "\n\nColleagues opening this link will see your exact custom edits, fonts, zooms, and Manager Comments.");
             } catch (err) {
                 alert("Link ready: " + shareUrl);
             }
             btn.innerHTML = ogText;
         }
 
-        // LOAD SHARED STATE FROM URL ON BOOT
-        window.onload = () => {
-            const params = new URLSearchParams(window.location.search);
-            const shared = params.get('s');
+        // ==========================================
+        // LOCAL SAVE & LOAD (Remember everything)
+        // ==========================================
+        function saveLayout(showAlert = true) {
+            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                if(!el.id) el.id = 'edit_' + index;
+                customEdits[el.id] = el.innerHTML;
+            });
+
+            const state = {
+                p: document.getElementById('select-project').value,
+                m: document.getElementById('select-month').value,
+                w: document.getElementById('select-week').value,
+                f: document.getElementById('select-font').value, 
+                z: currentZoom, 
+                b: customBlockCount,
+                l: cardLayouts,
+                e: customEdits
+            };
+
+            localStorage.setItem('hamco_dashboard_save', JSON.stringify(state));
+            if(showAlert) alert('✅ Everything saved locally!\n\nYour text edits, manager comments, font, and layout are safely stored in your browser.');
+        }
+
+        function loadState(state) {
+            if(state.p) document.getElementById('select-project').value = state.p;
+            if(state.m) document.getElementById('select-month').value = state.m;
+            if(state.w) document.getElementById('select-week').value = state.w;
+            if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
+            if(state.z) { currentZoom = state.z; changeZoom(0, false); }
             
-            if (shared) {
+            if(state.b) {
+                for(let i=0; i<state.b; i++) addCustomBlock(false);
+            }
+            if(state.l) {
+                for(const id in state.l) setSpan(id, state.l[id], false);
+            }
+
+            if(state.e) customEdits = state.e;
+            changeProject(false); 
+        }
+
+        // LOAD FROM SHARED DATA BIN OR LOCAL SAVE ON BOOT
+        window.onload = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const npointId = params.get('id');
+            const bytebinId = params.get('bin');
+            
+            if (npointId) {
                 try {
-                    const state = JSON.parse(decodeURIComponent(atob(shared)));
-                    
-                    if(state.p) document.getElementById('select-project').value = state.p;
-                    if(state.m) document.getElementById('select-month').value = state.m;
-                    if(state.w) document.getElementById('select-week').value = state.w;
-                    
-                    if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
-                    if(state.z) { currentZoom = state.z; changeZoom(0, false); }
-                    
-                    if(state.b) {
-                        for(let i=0; i<state.b; i++) addCustomBlock(false);
-                    }
-                    if(state.l) {
-                        for(const id in state.l) setSpan(id, state.l[id], false);
-                    }
-
-                    if(state.e) customEdits = state.e; // Load the sender's text edits
-                    
-                    changeProject(false); // Render everything
-
+                    const res = await fetch('https://api.npoint.io/' + npointId);
+                    const state = await res.json();
+                    loadState(state);
                     window.history.replaceState({}, document.title, window.location.pathname);
-                } catch(e) {
-                    changeProject(false);
-                }
+                } catch(e) { changeProject(false); }
+            } else if (bytebinId) {
+                try {
+                    const res = await fetch('https://bytebin.lucko.me/' + bytebinId);
+                    const state = await res.json();
+                    loadState(state);
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } catch(e) { changeProject(false); }
             } else {
-                changeProject(false);
+                const localSave = localStorage.getItem('hamco_dashboard_save');
+                if (localSave) {
+                    try {
+                        loadState(JSON.parse(localSave));
+                    } catch(e) {
+                        changeProject(false);
+                    }
+                } else {
+                    changeProject(false); 
+                }
             }
         }
 
         // State Engine (Undo/Redo)
-        function saveState() {
+        function saveStateForUndo() {
             undoStack.push(document.getElementById('dashboard-container').innerHTML);
             redoStack = []; document.getElementById('btn-undo').disabled = false; document.getElementById('btn-redo').disabled = true;
         }
@@ -650,7 +718,6 @@
             document.getElementById('dashboard-container').innerHTML = redoStack.pop();
             document.getElementById('btn-undo').disabled = false; document.getElementById('btn-redo').disabled = !redoStack.length;
         }
-        function saveLayout() { alert('Layout saved successfully!'); }
     </script>
 </body>
 </html>
