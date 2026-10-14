@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNOPS HAMCO - Multi-Project Executive Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Loaded 5 professional fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #090d16;
@@ -21,7 +22,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-sans); min-height: 100vh; padding: 12px 18px; }
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-sans); min-height: 100vh; padding: 12px 18px; transition: font-family 0.3s ease; }
 
         /* Top Bar Navigation & Controls */
         .top-studio-bar {
@@ -78,7 +79,7 @@
         }
         .btn-action-green:hover { background: #047857; }
 
-        .option-container { display: none; }
+        .option-container { display: none; transition: zoom 0.2s ease; }
         .option-container.active { display: block; }
 
         /* ================= OPTION 1: DARK STUDIO STYLES ================= */
@@ -95,9 +96,10 @@
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(0, 0, 0, 0.4); padding: 3px 6px; border-radius: 4px;
             margin-bottom: 8px; font-size: 9px; border: 1px solid rgba(255,255,255,0.08);
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .handles-off .card-controls { display: none !important; }
-        .span-btn { background: #374151; color: #9ca3af; border: none; padding: 2px 6px; border-radius: 3px; font-size: 9px; cursor: pointer; }
+        .span-btn { background: #374151; color: #9ca3af; border: none; padding: 2px 6px; border-radius: 3px; font-size: 9px; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;}
         .span-btn.active { background: #2563eb; color: white; }
         .col-span-1 { grid-column: span 1; }
         .col-span-2 { grid-column: span 2; }
@@ -115,7 +117,7 @@
         .dark-table { width: 100%; border-collapse: collapse; font-size: 10px; }
         .dark-table th { text-align: left; color: var(--text-muted); font-weight: 700; padding-bottom: 6px; border-bottom: 1px solid var(--panel-border); }
         .dark-table td { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; line-height: 1.3; }
-        .badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-block;}
+        .badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-block; font-family: 'Plus Jakarta Sans', sans-serif;}
         .badge-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
         .badge-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
 
@@ -125,17 +127,12 @@
         .light-header-title h2 { font-size: 20px; font-weight: 800; text-transform: uppercase; }
         .light-header-title p { font-size: 11px; opacity: 0.85; }
 
-        .light-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
-        .light-kpi-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; }
-        .light-kpi-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
-        .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
-
         .light-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; margin-bottom: 12px; }
         .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
         .light-card-title { font-size: 11px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; margin-bottom: 8px; }
 
         .red-flag-item { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 11px; line-height: 1.35; }
-        .red-flag-bullet { color: #ef4444; font-size: 18px; line-height: 1; margin-top: -3px; font-weight: bold; }
+        .red-flag-bullet { color: #ef4444; font-size: 18px; line-height: 1; margin-top: -3px; font-weight: bold; font-family: Arial, sans-serif;}
 
         .pipeline-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
         .pipeline-step { background: #f1f5f9; padding: 8px 6px; border-radius: 6px; text-align: center; border: 1px solid #cbd5e1; }
@@ -145,7 +142,7 @@
         .pipeline-step-status { font-size: 9px; color: #64748b; margin-top: 2px; }
 
         .light-recommendation-bar { background: #0f172a; color: white; padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 12px; }
-        .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; }
+        .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif;}
 
         [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
@@ -168,10 +165,10 @@
             </select>
         </div>
 
-        <!-- PERIOD DROPDOWN (All 12 Months Added) -->
+        <!-- PERIOD DROPDOWN -->
         <div class="bar-group">
             <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📅 Period:</span>
-            <select class="dropdown-select" id="select-month" onchange="updatePeriodLabel()">
+            <select class="dropdown-select" id="select-month" onchange="updatePeriodLabel(true)">
                 <option value="January">January</option>
                 <option value="February">February</option>
                 <option value="March">March</option>
@@ -185,7 +182,7 @@
                 <option value="November">November</option>
                 <option value="December">December</option>
             </select>
-            <select class="dropdown-select" id="select-week" onchange="updatePeriodLabel()">
+            <select class="dropdown-select" id="select-week" onchange="updatePeriodLabel(true)">
                 <option value="Week 1">Week 1</option>
                 <option value="Week 2">Week 2</option>
                 <option value="Week 3">Week 3</option>
@@ -193,24 +190,37 @@
             </select>
         </div>
 
-        <!-- THEME SWITCHER -->
+        <!-- FONT & ZOOM & THEME SWITCHER -->
         <div class="bar-group">
-            <button class="btn-studio active" id="btn-opt1" onclick="switchTheme('opt1')">Option 1: Dark</button>
-            <button class="btn-studio" id="btn-opt2" onclick="switchTheme('opt2')">Option 2: Light</button>
+            <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">Aa Font:</span>
+            <select class="dropdown-select" id="select-font" onchange="changeFont(true)">
+                <option value="'Plus Jakarta Sans', sans-serif">Jakarta (Modern)</option>
+                <option value="'Inter', sans-serif">Inter (Clean)</option>
+                <option value="'Roboto', sans-serif">Roboto (Corporate)</option>
+                <option value="'Poppins', sans-serif">Poppins (Round)</option>
+                <option value="'Merriweather', serif">Merriweather (Serif)</option>
+            </select>
+            
+            <!-- NEW ZOOM BUTTONS -->
+            <button class="btn-studio" onclick="changeZoom(-0.05, true)" title="Minimize Text">A-</button>
+            <button class="btn-studio" onclick="changeZoom(0.05, true)" title="Maximize Text">A+</button>
+            
+            <button class="btn-studio active" id="btn-opt1" onclick="switchTheme('opt1')">Dark</button>
+            <button class="btn-studio" id="btn-opt2" onclick="switchTheme('opt2')">Light</button>
         </div>
 
         <!-- LAYOUT CONTROLS -->
         <div class="bar-group">
             <button class="btn-studio" id="btn-handles" onclick="toggleHandles()">🛠️ Handles: ON</button>
-            <button class="btn-studio" onclick="addCustomBlock()">➕ Custom Block</button>
+            <button class="btn-studio" onclick="addCustomBlock()">➕ Block</button>
             <button class="btn-studio" id="btn-undo" onclick="undo()" disabled>↩️ Undo</button>
             <button class="btn-studio" id="btn-redo" onclick="redo()" disabled>↪️ Redo</button>
         </div>
 
         <!-- EXPORT & SHARE -->
         <div class="bar-group">
-            <button class="btn-action-green" onclick="saveLayout()">💾 Save Layout</button>
-            <button class="btn-studio" onclick="window.print()">🖨️ Export PDF</button>
+            <button class="btn-action-green" onclick="saveLayout()">💾 Save</button>
+            <button class="btn-studio" onclick="window.print()">🖨️ PDF</button>
             <button class="btn-studio" onclick="shareDashboard()" style="background: #2563eb; color: white; border-color: #3b82f6;">📤 Share Collab Link</button>
         </div>
     </div>
@@ -220,8 +230,8 @@
         <div class="dark-header">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <div class="brand-badges">
-                    <span class="badge-unops">UNOPS</span>
-                    <span class="badge-hamco">HAMCO</span>
+                    <span class="badge-unops" style="font-family: 'Plus Jakarta Sans', sans-serif;">UNOPS</span>
+                    <span class="badge-hamco" style="font-family: 'Plus Jakarta Sans', sans-serif;">HAMCO</span>
                 </div>
                 <div>
                     <h1 style="font-size: 14px; font-weight: 800;" id="dark-proj-title" contenteditable="true">WEEKLY PROJECT UPDATES</h1>
@@ -235,7 +245,7 @@
 
         <div class="dark-grid" id="dark-grid-container">
             
-            <!-- ROW 1 -->
+            <!-- ROW 1 (Dark) -->
             <div class="dark-panel col-span-1" id="card-1">
                 <div class="card-controls"><span>⠿ Card 1</span></div>
                 <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">PROJECT TIMELINE & ELAPSED DAYS</div>
@@ -279,7 +289,7 @@
                 <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;" id="d-design-desc" contenteditable="true">Design completed in September. Process took ~4 months (2-month delay).</div>
             </div>
 
-            <!-- ROW 2 -->
+            <!-- ROW 2 (Dark) -->
             <div class="dark-panel col-span-1" id="card-4">
                 <div class="card-controls"><span>⠿ Card 4</span></div>
                 <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">CONSTRUCTION SCHEDULE & VARIANCE</div>
@@ -332,25 +342,50 @@
                 </div>
             </div>
 
-            <div class="light-kpi-row">
-                <div class="light-kpi-card">
-                    <div class="light-kpi-label">Total Budget</div>
-                    <div class="light-kpi-value" id="l-kpi-budget" contenteditable="true">$10,845,990.00</div>
+            <!-- NEW TOP KPI SECTION FOR LIGHT OPTION (Mirrors Dark Option exactly) -->
+            <div class="light-main-grid" style="grid-template-columns: 1fr 1fr 1.25fr; margin-bottom: 12px;">
+                <div class="light-card">
+                    <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">PROJECT TIMELINE & ELAPSED DAYS</div>
+                    <div class="radial-flex">
+                        <div class="radial-container">
+                            <svg class="radial-svg" viewBox="0 0 64 64">
+                                <circle class="radial-bg" cx="32" cy="32" r="28" style="stroke: #e2e8f0;"></circle>
+                                <circle class="radial-val" id="l-ring-time" cx="32" cy="32" r="28" stroke="#3b82f6" stroke-dasharray="175.93" stroke-dashoffset="110.3"></circle>
+                            </svg>
+                            <div class="radial-text" style="color: #3b82f6;" id="l-ring-time-val">37.3%</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 18px; font-weight: 800; color: #0f172a;" id="l-rem-days" contenteditable="true">1,067 Days Rem</div>
+                            <div style="font-size: 10px; color: #64748b;" id="l-elapsed-days" contenteditable="true">636 of 1,703 Days Elapsed</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="light-kpi-card">
-                    <div class="light-kpi-label">Expensed Amount</div>
-                    <div class="light-kpi-value" id="l-kpi-expensed" style="color: #059669;" contenteditable="true">$2,009,685.02</div>
+
+                <div class="light-card">
+                    <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">FINANCIAL EXECUTION RATE</div>
+                    <div class="radial-flex">
+                        <div class="radial-container">
+                            <svg class="radial-svg" viewBox="0 0 64 64">
+                                <circle class="radial-bg" cx="32" cy="32" r="28" style="stroke: #e2e8f0;"></circle>
+                                <circle class="radial-val" id="l-ring-fin" cx="32" cy="32" r="28" stroke="#059669" stroke-dasharray="175.93" stroke-dashoffset="143.3"></circle>
+                            </svg>
+                            <div class="radial-text" style="color: #059669;" id="l-ring-fin-val">18.5%</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: $10,845,990</div>
+                            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: $2,009,685.02</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="light-kpi-card">
-                    <div class="light-kpi-label">Expenditure Rate</div>
-                    <div class="light-kpi-value" id="l-kpi-rate" style="color: #2563eb;" contenteditable="true">18.53% Expensed</div>
-                </div>
-                <div class="light-kpi-card">
-                    <div class="light-kpi-label">Project Duration</div>
-                    <div class="light-kpi-value" id="l-kpi-days" style="color: #d97706;" contenteditable="true">1,067 Days Rem</div>
+
+                <div class="light-card" style="border-left: 3px solid #059669;">
+                    <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase;" id="l-design-head">IPMG DESIGN APPROVAL</div>
+                    <div style="font-size: 14px; font-weight: 800; color: #059669;" id="l-design-status" contenteditable="true">APPROVED / 100% DONE</div>
+                    <div style="font-size: 10px; color: #64748b; margin-top: 4px;" id="l-design-desc" contenteditable="true">Design completed in September. Process took ~4 months (2-month delay).</div>
                 </div>
             </div>
 
+            <!-- MAIN CONTENT AREA -->
             <div class="light-main-grid">
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                     <div class="light-card">
@@ -408,6 +443,7 @@
 
     <script>
         let handlesOn = true; let undoStack = []; let redoStack = []; let customBlockCount = 0;
+        let currentZoom = 1;
 
         const projectData = {
             nimule: {
@@ -417,7 +453,7 @@
                 delayBadge: "SCHEDULE DELAY: -5.5 MOS",
                 timePct: 37.3, finPct: 18.5,
                 remDays: "1,067 Days Rem", elapsedDays: "636 of 1,703 Days Elapsed",
-                budgetTotal: "$10,845,990.00", budgetExp: "\$2,009,685.02", expRate: "18.53% Expensed",
+                budgetTotal: "Total: $10,845,990.00", budgetExp: "Exp: $2,009,685.02",
                 designHead: "IPMG DESIGN APPROVAL", designStatus: "APPROVED / 100% DONE", designDesc: "Design completed in September. Process took ~4 months (2-month delay).",
                 procHead: "🚨 Procurement Stage Active", procText: "Roofing works implementation scheduled for Sept 2026 has not commenced because works procurement solicitation is still active.",
                 gapHead: "⚠️ Schedule Discrepancies", gapText: "All 21 inception phase activities are complete, but actual start/end dates remain unrecorded.",
@@ -444,7 +480,7 @@
                 delayBadge: "ON SCHEDULE / NORMAL",
                 timePct: 42.5, finPct: 54.2,
                 remDays: "420 Days Rem", elapsedDays: "310 of 730 Days Elapsed",
-                budgetTotal: "\$6,000,000.00", budgetExp: "\$3,250,000.00", expRate: "54.20% Expensed",
+                budgetTotal: "Total: $6,000,000.00", budgetExp: "Exp: $3,250,000.00",
                 designHead: "PHASE STATUS", designStatus: "APPROVED", designDesc: "Design phase fully approved and documented.",
                 procHead: "✅ Procurement On-Track", procText: "Equipment procurement ongoing smoothly; 80% of materials delivered to site.",
                 gapHead: "ℹ️ Minor Discrepancies", gapText: "Minor variance in regional transport cost tracking.",
@@ -471,7 +507,7 @@
                 delayBadge: "42.57% PROGRESS GAP",
                 timePct: 70.2, finPct: 25.6,
                 remDays: "End: 31 Mar 2027", elapsedDays: "70.25% Elapsed / 27.68% Physical",
-                budgetTotal: "\$9,860,000.00", budgetExp: "\$2,500,000.00", expRate: "25.61% Expensed",
+                budgetTotal: "Total: $9,860,000.00", budgetExp: "Exp: $2,500,000.00",
                 designHead: "INCEPTION & ASSESSMENT", designStatus: "IN PROGRESS", designDesc: "Preparation of Technical documents and design approval for Water Yards remains In Progress (planned for June 1, 2026).",
                 procHead: "🚨 Procurement Blocked", procText: "5 activities: 2 completed, 1 in progress (4 mo behind), 2 not started (4 mo behind).",
                 gapHead: "⚠️ Execution Delay", gapText: "Under works and contract management, 8 activities planned: 2 completed, 1 in progress, 5 not started. Overall 6 month delay.",
@@ -483,12 +519,12 @@
                     "Procurement: 1 activity in progress is 4 months behind schedule (June 17, 2026).",
                     "Procurement: 2 activities not started, 4 months behind schedule (July 4, 2026).",
                     "Works & Contract Management: 6-month delay overall. 5 activities not started.",
-                    "Over forecasting trend noticed with a total forecasted value of -\$7.85M over the past 10 months."
+                    "Over forecasting trend noticed with a total forecasted value of -$7.85M over the past 10 months."
                 ],
                 table: [
                     {cat: 'Progress', color: 'red', impact: 'HIGH', txt: 'Address the 42.57% point gap between time and physical progress.'},
                     {cat: 'Schedule', color: 'red', impact: 'HIGH', txt: 'Expedite technical documents and design approval.'},
-                    {cat: 'Forecast', color: 'red', impact: 'HIGH', txt: 'Reassess financial forecast trend (-\$7.85M variance).'}
+                    {cat: 'Forecast', color: 'red', impact: 'HIGH', txt: 'Reassess financial forecast trend (-$7.85M variance).'}
                 ]
             }
         };
@@ -502,20 +538,38 @@
             }
         }
 
-        // isUserTriggered helps us prevent overwriting shared URL state with base defaults
+        // Change Font Type
+        function changeFont(isUserTriggered = false) {
+            if(isUserTriggered) saveState();
+            const font = document.getElementById('select-font').value;
+            document.body.style.fontFamily = font;
+            document.documentElement.style.setProperty('--font-sans', font);
+        }
+
+        // Change Font Zoom (Size)
+        function changeZoom(delta, isUserTriggered = false) {
+            if(isUserTriggered) saveState();
+            currentZoom += delta;
+            if(currentZoom < 0.5) currentZoom = 0.5;
+            if(currentZoom > 2.0) currentZoom = 2.0;
+            document.getElementById('option1').style.zoom = currentZoom;
+            document.getElementById('option2').style.zoom = currentZoom;
+        }
+
         function changeProject(isUserTriggered = false) {
             if(isUserTriggered) saveState();
             const p = projectData[document.getElementById('select-project').value];
             const m = document.getElementById('select-month').value;
             const w = document.getElementById('select-week').value;
 
+            // Update Dark Values
             document.getElementById('dark-proj-title').innerHTML = p.title;
             document.getElementById('dark-sub-title').innerHTML = `${p.subTitle} (${m} ${w})`;
             document.getElementById('dark-delay-badge').innerHTML = p.delayBadge;
             document.getElementById('d-rem-days').innerHTML = p.remDays;
             document.getElementById('d-elapsed-days').innerHTML = p.elapsedDays;
-            document.getElementById('d-budget-total').innerHTML = `Total: ${p.budgetTotal}`;
-            document.getElementById('d-budget-exp').innerHTML = `Exp: ${p.budgetExp}`;
+            document.getElementById('d-budget-total').innerHTML = p.budgetTotal;
+            document.getElementById('d-budget-exp').innerHTML = p.budgetExp;
             document.getElementById('d-design-head').innerHTML = p.designHead;
             document.getElementById('d-design-status').innerHTML = p.designStatus;
             document.getElementById('d-design-desc').innerHTML = p.designDesc;
@@ -538,15 +592,24 @@
                 tbody.appendChild(tr);
             });
 
+            // Update Light Values
             document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
             document.getElementById('l-sub-title').innerHTML = p.subTitle;
             document.getElementById('l-location-tag').innerHTML = p.location;
-            document.getElementById('l-kpi-budget').innerHTML = p.budgetTotal;
-            document.getElementById('l-kpi-expensed').innerHTML = p.budgetExp;
-            document.getElementById('l-kpi-rate').innerHTML = p.expRate;
-            document.getElementById('l-kpi-days').innerHTML = p.remDays;
+            
+            document.getElementById('l-rem-days').innerHTML = p.remDays;
+            document.getElementById('l-elapsed-days').innerHTML = p.elapsedDays;
+            document.getElementById('l-budget-total').innerHTML = p.budgetTotal;
+            document.getElementById('l-budget-exp').innerHTML = p.budgetExp;
+            document.getElementById('l-design-head').innerHTML = p.designHead;
+            document.getElementById('l-design-status').innerHTML = p.designStatus;
+            document.getElementById('l-design-desc').innerHTML = p.designDesc;
             document.getElementById('l-delay-tag').innerHTML = p.delayBadge;
             document.getElementById('l-recommendation').innerHTML = p.recommendation;
+
+            document.getElementById('l-ring-time-val').innerHTML = p.timePct + '%';
+            document.getElementById('l-ring-fin-val').innerHTML = p.finPct + '%';
+            setTimeout(() => { setRing('l-ring-time', p.timePct); setRing('l-ring-fin', p.finPct); }, 50);
             
             for(let i=0; i<4; i++) {
                 const pipeEl = document.getElementById(`pipe-${i+1}`);
@@ -598,7 +661,6 @@
         // ==========================================
         async function shareDashboard() {
             const edits = {};
-            // Grab all editable text on screen
             document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
                 if(!el.id) el.id = 'edit_' + index;
                 edits[el.id] = el.innerHTML;
@@ -608,11 +670,12 @@
                 p: document.getElementById('select-project').value,
                 m: document.getElementById('select-month').value,
                 w: document.getElementById('select-week').value,
+                f: document.getElementById('select-font').value, 
+                z: currentZoom, // save zoom size
                 t: document.getElementById('option2').classList.contains('active') ? 'opt2' : 'opt1',
                 edits: edits
             };
 
-            // Compress payload into URL
             const encoded = btoa(encodeURIComponent(JSON.stringify(state)));
             const shareUrl = window.location.origin + window.location.pathname + '?s=' + encoded;
 
@@ -648,13 +711,20 @@
                     if(state.m) document.getElementById('select-month').value = state.m;
                     if(state.w) document.getElementById('select-week').value = state.w;
                     
-                    // Load base project data first
+                    if(state.f) {
+                        document.getElementById('select-font').value = state.f;
+                        changeFont(false);
+                    }
+
+                    if(state.z) {
+                        currentZoom = state.z;
+                        changeZoom(0, false);
+                    }
+                    
                     changeProject(false); 
                     
-                    // Switch theme based on shared link
                     if(state.t) switchTheme(state.t);
 
-                    // Apply the sender's custom text edits over the base template
                     if(state.edits) {
                         for (const id in state.edits) {
                             const el = document.getElementById(id);
@@ -662,10 +732,8 @@
                         }
                     }
                     
-                    // Clean up URL in the address bar so it looks nice
                     window.history.replaceState({}, document.title, window.location.pathname);
                 } catch(e) {
-                    console.error("Failed to load shared state", e);
                     changeProject(false);
                 }
             } else {
