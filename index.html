@@ -115,7 +115,7 @@
         .dark-table { width: 100%; border-collapse: collapse; font-size: 10px; }
         .dark-table th { text-align: left; color: var(--text-muted); font-weight: 700; padding-bottom: 6px; border-bottom: 1px solid var(--panel-border); }
         .dark-table td { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; line-height: 1.3; }
-        .badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+        .badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-block;}
         .badge-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
         .badge-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
 
@@ -135,8 +135,6 @@
         .light-card-title { font-size: 11px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; margin-bottom: 8px; }
 
         .red-flag-item { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 11px; line-height: 1.35; }
-        
-        /* Changed from Numbers to Bullets */
         .red-flag-bullet { color: #ef4444; font-size: 18px; line-height: 1; margin-top: -3px; font-weight: bold; }
 
         .pipeline-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
@@ -149,6 +147,7 @@
         .light-recommendation-bar { background: #0f172a; color: white; padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 12px; }
         .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; }
 
+        [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
         [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
 
@@ -162,20 +161,29 @@
         <!-- PROJECT DROPDOWN -->
         <div class="bar-group">
             <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📁 Project:</span>
-            <select class="dropdown-select" id="select-project" onchange="changeProject()">
+            <select class="dropdown-select" id="select-project" onchange="changeProject(true)">
                 <option value="nimule">Nimule One Stop Border Post</option>
                 <option value="japan">Japan Infrastructure Project</option>
                 <option value="flood">Flood Mitigation Project</option>
             </select>
         </div>
 
-        <!-- PERIOD DROPDOWN -->
+        <!-- PERIOD DROPDOWN (All 12 Months Added) -->
         <div class="bar-group">
             <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📅 Period:</span>
             <select class="dropdown-select" id="select-month" onchange="updatePeriodLabel()">
                 <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
                 <option value="October" selected>October</option>
                 <option value="November">November</option>
+                <option value="December">December</option>
             </select>
             <select class="dropdown-select" id="select-week" onchange="updatePeriodLabel()">
                 <option value="Week 1">Week 1</option>
@@ -199,10 +207,11 @@
             <button class="btn-studio" id="btn-redo" onclick="redo()" disabled>↪️ Redo</button>
         </div>
 
-        <!-- EXPORT -->
+        <!-- EXPORT & SHARE -->
         <div class="bar-group">
             <button class="btn-action-green" onclick="saveLayout()">💾 Save Layout</button>
             <button class="btn-studio" onclick="window.print()">🖨️ Export PDF</button>
+            <button class="btn-studio" onclick="shareDashboard()" style="background: #2563eb; color: white; border-color: #3b82f6;">📤 Share Collab Link</button>
         </div>
     </div>
 
@@ -258,7 +267,7 @@
                     </div>
                     <div>
                         <div style="font-size: 13px; font-weight: 800; color: #fff;" id="d-budget-total" contenteditable="true">Total: $10,845,990</div>
-                        <div style="font-size: 11px; font-weight: 700; color: #10b981; margin-top: 2px;" id="d-budget-exp" contenteditable="true">Exp: \$2,009,685.02</div>
+                        <div style="font-size: 11px; font-weight: 700; color: #10b981; margin-top: 2px;" id="d-budget-exp" contenteditable="true">Exp: $2,009,685.02</div>
                     </div>
                 </div>
             </div>
@@ -275,14 +284,14 @@
                 <div class="card-controls"><span>⠿ Card 4</span></div>
                 <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">CONSTRUCTION SCHEDULE & VARIANCE</div>
                 <div style="font-size: 11px; font-weight: 700; color: #ef4444; margin-bottom: 4px;" id="d-procurement-head" contenteditable="true">🚨 Procurement Stage Active</div>
-                <p style="font-size: 11px; color: var(--text-muted);" id="d-procurement-text" contenteditable="true">Roofing works implementation scheduled for Sept 2026 has not commenced because works procurement solicitation is still active (5.5-month variance).</p>
+                <div style="font-size: 11px; color: var(--text-muted);" id="d-procurement-text" contenteditable="true">Roofing works implementation scheduled for Sept 2026 has not commenced because works procurement solicitation is still active (5.5-month variance).</div>
             </div>
 
             <div class="dark-panel col-span-1" id="card-5">
                 <div class="card-controls"><span>⠿ Card 5</span></div>
                 <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">DATA TRACKING & DISCREPANCIES</div>
                 <div style="font-size: 11px; font-weight: 700; color: #f59e0b; margin-bottom: 4px;" id="d-gap-head" contenteditable="true">⚠️ Schedule Discrepancies</div>
-                <p style="font-size: 11px; color: var(--text-muted);" id="d-gap-text" contenteditable="true">All 21 inception phase activities are complete, but actual start/end dates remain unrecorded. Dashboard vs oneUNOPS variance exists.</p>
+                <div style="font-size: 11px; color: var(--text-muted);" id="d-gap-text" contenteditable="true">All 21 inception phase activities are complete, but actual start/end dates remain unrecorded. Dashboard vs oneUNOPS variance exists.</div>
             </div>
 
             <div class="dark-panel col-span-1" id="card-6" style="border-left: 3px solid #ef4444;">
@@ -291,9 +300,9 @@
                 <table class="dark-table">
                     <thead><tr><th>CATEGORY</th><th>IMPACT</th><th>ACTION REQUIRED</th></tr></thead>
                     <tbody id="dark-action-table">
-                        <tr><td><span class="badge badge-red">Schedule</span></td><td style="color:#ef4444; font-weight:700;">HIGH</td><td contenteditable="true">Revise construction timelines for Admin & Market bldgs.</td></tr>
-                        <tr><td><span class="badge badge-amber">Data Qual</span></td><td style="color:#fbbf24; font-weight:700;">MODERATE</td><td contenteditable="true">Systematically record dates across all work plans.</td></tr>
-                        <tr><td><span class="badge badge-amber">Sync</span></td><td style="color:#fbbf24; font-weight:700;">MODERATE</td><td contenteditable="true">Align reporting dashboard metrics with oneUNOPS.</td></tr>
+                        <tr><td><span class="badge badge-red">Schedule</span></td><td style="color:#ef4444; font-weight:700;">HIGH</td><td id="dtbl-1" contenteditable="true">Revise construction timelines for Admin & Market bldgs.</td></tr>
+                        <tr><td><span class="badge badge-amber">Data Qual</span></td><td style="color:#fbbf24; font-weight:700;">MODERATE</td><td id="dtbl-2" contenteditable="true">Systematically record dates across all work plans.</td></tr>
+                        <tr><td><span class="badge badge-amber">Sync</span></td><td style="color:#fbbf24; font-weight:700;">MODERATE</td><td id="dtbl-3" contenteditable="true">Align reporting dashboard metrics with oneUNOPS.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -302,9 +311,9 @@
             <div class="dark-panel col-span-3" id="card-7" style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.3);">
                 <div class="card-controls"><span>⠿ Card 7</span></div>
                 <div style="font-size: 11px; font-weight: 800; color: #fbbf24; margin-bottom: 4px;">🎯 KEY RECOMMENDATIONS</div>
-                <p style="font-size: 11px; color: #e2e8f0; line-height: 1.4;" id="d-recommendation" contenteditable="true">
+                <div style="font-size: 11px; color: #e2e8f0; line-height: 1.4;" id="d-recommendation" contenteditable="true">
                     It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.
-                </p>
+                </div>
             </div>
         </div>
     </div>
@@ -326,11 +335,11 @@
             <div class="light-kpi-row">
                 <div class="light-kpi-card">
                     <div class="light-kpi-label">Total Budget</div>
-                    <div class="light-kpi-value" id="l-kpi-budget" contenteditable="true">\$10,845,990.00</div>
+                    <div class="light-kpi-value" id="l-kpi-budget" contenteditable="true">$10,845,990.00</div>
                 </div>
                 <div class="light-kpi-card">
                     <div class="light-kpi-label">Expensed Amount</div>
-                    <div class="light-kpi-value" id="l-kpi-expensed" style="color: #059669;" contenteditable="true">\$2,009,685.02</div>
+                    <div class="light-kpi-value" id="l-kpi-expensed" style="color: #059669;" contenteditable="true">$2,009,685.02</div>
                 </div>
                 <div class="light-kpi-card">
                     <div class="light-kpi-label">Expenditure Rate</div>
@@ -359,19 +368,19 @@
                         <div class="pipeline-container">
                             <div class="pipeline-step completed">
                                 <div class="pipeline-step-name">Inception</div>
-                                <div class="pipeline-step-status" id="pipe-1">Completed</div>
+                                <div class="pipeline-step-status" id="pipe-1" contenteditable="true">Completed</div>
                             </div>
                             <div class="pipeline-step completed">
                                 <div class="pipeline-step-name">Design/IPMG</div>
-                                <div class="pipeline-step-status" id="pipe-2">Approved</div>
+                                <div class="pipeline-step-status" id="pipe-2" contenteditable="true">Approved</div>
                             </div>
                             <div class="pipeline-step active">
                                 <div class="pipeline-step-name">Procurement</div>
-                                <div class="pipeline-step-status" id="pipe-3">Active</div>
+                                <div class="pipeline-step-status" id="pipe-3" contenteditable="true">Active</div>
                             </div>
                             <div class="pipeline-step">
                                 <div class="pipeline-step-name">Construction</div>
-                                <div class="pipeline-step-status" id="pipe-4">Pending</div>
+                                <div class="pipeline-step-status" id="pipe-4" contenteditable="true">Pending</div>
                             </div>
                         </div>
                     </div>
@@ -379,7 +388,6 @@
 
                 <div class="light-card" style="border-left: 4px solid #ef4444;">
                     <div class="light-card-title" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
-                    <!-- Bullets applied here instead of numbers -->
                     <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-1" contenteditable="true">Project is <strong>5 to 6 months behind</strong> baseline schedule.</div></div>
                     <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-2" contenteditable="true">Roofing works <strong>not commenced</strong> due to active procurement.</div></div>
                     <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-3" contenteditable="true">IPMG Design approval observed 2 months delay.</div></div>
@@ -401,7 +409,6 @@
     <script>
         let handlesOn = true; let undoStack = []; let redoStack = []; let customBlockCount = 0;
 
-        // DB setup
         const projectData = {
             nimule: {
                 title: "WEEKLY PROJECT UPDATES — Nimule OSBP",
@@ -410,7 +417,7 @@
                 delayBadge: "SCHEDULE DELAY: -5.5 MOS",
                 timePct: 37.3, finPct: 18.5,
                 remDays: "1,067 Days Rem", elapsedDays: "636 of 1,703 Days Elapsed",
-                budgetTotal: "\$10,845,990.00", budgetExp: "\$2,009,685.02", expRate: "18.53% Expensed",
+                budgetTotal: "$10,845,990.00", budgetExp: "\$2,009,685.02", expRate: "18.53% Expensed",
                 designHead: "IPMG DESIGN APPROVAL", designStatus: "APPROVED / 100% DONE", designDesc: "Design completed in September. Process took ~4 months (2-month delay).",
                 procHead: "🚨 Procurement Stage Active", procText: "Roofing works implementation scheduled for Sept 2026 has not commenced because works procurement solicitation is still active.",
                 gapHead: "⚠️ Schedule Discrepancies", gapText: "All 21 inception phase activities are complete, but actual start/end dates remain unrecorded.",
@@ -489,75 +496,76 @@
         function setRing(id, pct) {
             const circle = document.getElementById(id);
             if(circle) {
-                const circumference = 175.93; // 2 * pi * 28
+                const circumference = 175.93; 
                 const offset = circumference - (pct / 100 * circumference);
                 circle.style.strokeDashoffset = offset;
             }
         }
 
-        function changeProject() {
-            saveState();
+        // isUserTriggered helps us prevent overwriting shared URL state with base defaults
+        function changeProject(isUserTriggered = false) {
+            if(isUserTriggered) saveState();
             const p = projectData[document.getElementById('select-project').value];
             const m = document.getElementById('select-month').value;
             const w = document.getElementById('select-week').value;
 
-            // Update Dark text
-            document.getElementById('dark-proj-title').innerText = p.title;
-            document.getElementById('dark-sub-title').innerText = `${p.subTitle} (${m} ${w})`;
-            document.getElementById('dark-delay-badge').innerText = p.delayBadge;
-            document.getElementById('d-rem-days').innerText = p.remDays;
-            document.getElementById('d-elapsed-days').innerText = p.elapsedDays;
-            document.getElementById('d-budget-total').innerText = `Total: ${p.budgetTotal}`;
-            document.getElementById('d-budget-exp').innerText = `Exp: ${p.budgetExp}`;
-            document.getElementById('d-design-head').innerText = p.designHead;
-            document.getElementById('d-design-status').innerText = p.designStatus;
-            document.getElementById('d-design-desc').innerText = p.designDesc;
-            document.getElementById('d-procurement-head').innerText = p.procHead;
-            document.getElementById('d-procurement-text').innerText = p.procText;
-            document.getElementById('d-gap-head').innerText = p.gapHead;
-            document.getElementById('d-gap-text').innerText = p.gapText;
-            document.getElementById('d-recommendation').innerText = p.recommendation;
+            document.getElementById('dark-proj-title').innerHTML = p.title;
+            document.getElementById('dark-sub-title').innerHTML = `${p.subTitle} (${m} ${w})`;
+            document.getElementById('dark-delay-badge').innerHTML = p.delayBadge;
+            document.getElementById('d-rem-days').innerHTML = p.remDays;
+            document.getElementById('d-elapsed-days').innerHTML = p.elapsedDays;
+            document.getElementById('d-budget-total').innerHTML = `Total: ${p.budgetTotal}`;
+            document.getElementById('d-budget-exp').innerHTML = `Exp: ${p.budgetExp}`;
+            document.getElementById('d-design-head').innerHTML = p.designHead;
+            document.getElementById('d-design-status').innerHTML = p.designStatus;
+            document.getElementById('d-design-desc').innerHTML = p.designDesc;
+            document.getElementById('d-procurement-head').innerHTML = p.procHead;
+            document.getElementById('d-procurement-text').innerHTML = p.procText;
+            document.getElementById('d-gap-head').innerHTML = p.gapHead;
+            document.getElementById('d-gap-text').innerHTML = p.gapText;
+            document.getElementById('d-recommendation').innerHTML = p.recommendation;
 
-            // Rings
-            document.getElementById('d-ring-time-val').innerText = p.timePct + '%';
-            document.getElementById('d-ring-fin-val').innerText = p.finPct + '%';
+            document.getElementById('d-ring-time-val').innerHTML = p.timePct + '%';
+            document.getElementById('d-ring-fin-val').innerHTML = p.finPct + '%';
             setTimeout(() => { setRing('d-ring-time', p.timePct); setRing('d-ring-fin', p.finPct); }, 50);
 
-            // Table
             const tbody = document.getElementById('dark-action-table');
             tbody.innerHTML = '';
-            p.table.forEach(r => {
+            p.table.forEach((r, i) => {
                 const tr = document.createElement('tr');
                 const colorCode = r.color === 'red' ? '#ef4444' : '#fbbf24';
-                tr.innerHTML = `<td><span class="badge badge-${r.color}">${r.cat}</span></td><td style="color:${colorCode}; font-weight:700;">${r.impact}</td><td contenteditable="true">${r.txt}</td>`;
+                tr.innerHTML = `<td><span class="badge badge-${r.color}">${r.cat}</span></td><td style="color:${colorCode}; font-weight:700;">${r.impact}</td><td id="dtbl-${i+1}" contenteditable="true">${r.txt}</td>`;
                 tbody.appendChild(tr);
             });
 
-            // Update Light Text
-            document.getElementById('l-main-title').innerText = p.title.replace('—', '').trim();
-            document.getElementById('l-sub-title').innerText = p.subTitle;
-            document.getElementById('l-location-tag').innerText = p.location;
-            document.getElementById('l-kpi-budget').innerText = p.budgetTotal;
-            document.getElementById('l-kpi-expensed').innerText = p.budgetExp;
-            document.getElementById('l-kpi-rate').innerText = p.expRate;
-            document.getElementById('l-kpi-days').innerText = p.remDays;
-            document.getElementById('l-delay-tag').innerText = p.delayBadge;
-            document.getElementById('l-recommendation').innerText = p.recommendation;
+            document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
+            document.getElementById('l-sub-title').innerHTML = p.subTitle;
+            document.getElementById('l-location-tag').innerHTML = p.location;
+            document.getElementById('l-kpi-budget').innerHTML = p.budgetTotal;
+            document.getElementById('l-kpi-expensed').innerHTML = p.budgetExp;
+            document.getElementById('l-kpi-rate').innerHTML = p.expRate;
+            document.getElementById('l-kpi-days').innerHTML = p.remDays;
+            document.getElementById('l-delay-tag').innerHTML = p.delayBadge;
+            document.getElementById('l-recommendation').innerHTML = p.recommendation;
             
-            for(let i=0; i<4; i++) document.getElementById(`pipe-${i+1}`).innerText = p.pipe[i];
+            for(let i=0; i<4; i++) {
+                const pipeEl = document.getElementById(`pipe-${i+1}`);
+                if(pipeEl) pipeEl.innerHTML = p.pipe[i];
+            }
             for(let i=0; i<6; i++) {
                 const el = document.getElementById(`rf-${i+1}`);
-                if (el) el.innerText = p.redFlags[i] || "";
+                if (el) el.innerHTML = p.redFlags[i] || "";
             }
-            updatePeriodLabel();
+            updatePeriodLabel(isUserTriggered);
         }
 
-        function updatePeriodLabel() {
+        function updatePeriodLabel(isUserTriggered = false) {
+            if(isUserTriggered) saveState();
             const m = document.getElementById('select-month').value;
             const w = document.getElementById('select-week').value;
-            document.getElementById('l-period-tag').innerText = `${m} 2026 - ${w}`;
+            document.getElementById('l-period-tag').innerHTML = `${m} 2026 - ${w}`;
             const p = projectData[document.getElementById('select-project').value];
-            document.getElementById('dark-sub-title').innerText = `${p.subTitle} (${m} ${w})`;
+            document.getElementById('dark-sub-title').innerHTML = `${p.subTitle} (${m} ${w})`;
         }
 
         function switchTheme(option) {
@@ -585,8 +593,85 @@
             else { btn.innerHTML = '🛠️ Handles: OFF'; grid.classList.add('handles-off'); }
         }
 
-        // Initialize Rings on Load
-        window.onload = () => { changeProject(); }
+        // ==========================================
+        // ADVANCED SHARING LOGIC (URL STATE ENCODING)
+        // ==========================================
+        async function shareDashboard() {
+            const edits = {};
+            // Grab all editable text on screen
+            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                if(!el.id) el.id = 'edit_' + index;
+                edits[el.id] = el.innerHTML;
+            });
+            
+            const state = {
+                p: document.getElementById('select-project').value,
+                m: document.getElementById('select-month').value,
+                w: document.getElementById('select-week').value,
+                t: document.getElementById('option2').classList.contains('active') ? 'opt2' : 'opt1',
+                edits: edits
+            };
+
+            // Compress payload into URL
+            const encoded = btoa(encodeURIComponent(JSON.stringify(state)));
+            const shareUrl = window.location.origin + window.location.pathname + '?s=' + encoded;
+
+            const shareData = {
+                title: 'UNOPS HAMCO - Weekly Project Updates',
+                text: 'Check out the executive weekly project updates. I have added some edits, and you can edit them too!',
+                url: shareUrl
+            };
+
+            try {
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                } else {
+                    await navigator.clipboard.writeText(shareUrl);
+                    alert("✅ Collaborative link copied to clipboard!\n\nWhen your colleagues open this link, they will see your exact custom edits (like new text or bullet points) and can continue editing from their own browser.");
+                }
+            } catch (err) {
+                await navigator.clipboard.writeText(shareUrl);
+                alert("✅ Collaborative link copied to clipboard!");
+            }
+        }
+
+        // LOAD SHARED STATE FROM URL ON BOOT
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            const shared = params.get('s');
+            
+            if (shared) {
+                try {
+                    const state = JSON.parse(decodeURIComponent(atob(shared)));
+                    
+                    if(state.p) document.getElementById('select-project').value = state.p;
+                    if(state.m) document.getElementById('select-month').value = state.m;
+                    if(state.w) document.getElementById('select-week').value = state.w;
+                    
+                    // Load base project data first
+                    changeProject(false); 
+                    
+                    // Switch theme based on shared link
+                    if(state.t) switchTheme(state.t);
+
+                    // Apply the sender's custom text edits over the base template
+                    if(state.edits) {
+                        for (const id in state.edits) {
+                            const el = document.getElementById(id);
+                            if (el) el.innerHTML = state.edits[id];
+                        }
+                    }
+                    
+                    // Clean up URL in the address bar so it looks nice
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } catch(e) {
+                    console.error("Failed to load shared state", e);
+                    changeProject(false);
+                }
+            } else {
+                changeProject(false);
+            }
+        }
 
         // State Engine (Undo/Redo)
         function saveState() {
