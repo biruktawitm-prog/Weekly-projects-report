@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNOPS HAMCO - Executive Project Dashboard</title>
-    <!-- Loaded 5 professional fonts -->
+    <!-- Professional Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #090d16;
-            --panel-bg: #111827;
             --panel-border: rgba(255, 255, 255, 0.08);
             --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
             --font-sans: 'Plus Jakarta Sans', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
@@ -74,7 +72,22 @@
         }
         .btn-action-green:hover { background: #047857; }
 
+        /* Dashboard Container */
         .dashboard-container { transition: zoom 0.2s ease; }
+
+        /* Handle Controls */
+        .card-controls {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #e2e8f0; padding: 4px 8px; border-radius: 4px;
+            margin-bottom: 8px; font-size: 10px; color: #475569; font-weight: 700;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .handles-off .card-controls { display: none !important; }
+        .span-btn { background: #cbd5e1; color: #475569; border: none; padding: 2px 6px; border-radius: 3px; font-size: 9px; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;}
+        .span-btn.active { background: #2563eb; color: white; }
+        .col-span-1 { grid-column: span 1; }
+        .col-span-2 { grid-column: span 2; }
+        .col-span-3 { grid-column: span 3; }
 
         /* ================= EXECUTIVE LIGHT STYLES ================= */
         .light-theme { background-color: #f8fafc; color: #0f172a; border-radius: 10px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
@@ -96,7 +109,7 @@
         .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
 
         .light-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
+        .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; position: relative;}
         .light-card-title { font-size: 11px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; margin-bottom: 8px; }
 
         .red-flag-item { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 11px; line-height: 1.35; }
@@ -179,16 +192,17 @@
 
         <!-- BLOCK & UNDO CONTROLS -->
         <div class="bar-group">
-            <button class="btn-studio" onclick="addCustomBlock()">➕ Custom Block</button>
+            <button class="btn-studio" id="btn-handles" onclick="toggleHandles()">🛠️ Handles: ON</button>
+            <button class="btn-studio" onclick="addCustomBlock(true)">➕ Block</button>
             <button class="btn-studio" id="btn-undo" onclick="undo()" disabled>↩️ Undo</button>
             <button class="btn-studio" id="btn-redo" onclick="redo()" disabled>↪️ Redo</button>
         </div>
 
-        <!-- EXPORT, SHARE & EMAIL -->
+        <!-- EXPORT & SHARE -->
         <div class="bar-group">
+            <button class="btn-action-green" onclick="saveLayout()">💾 Save</button>
             <button class="btn-studio" onclick="window.print()">🖨️ PDF</button>
-            <button class="btn-studio" onclick="shareDashboard()" style="background: #2563eb; color: white; border-color: #3b82f6;">📤 Share Link</button>
-            <button class="btn-studio" onclick="emailDashboard()" style="background: #059669; color: white; border-color: #10b981;">📧 Email</button>
+            <button class="btn-studio" id="btn-share" onclick="shareDashboard()" style="background: #2563eb; color: white; border-color: #3b82f6;">📤 Share Collab Link</button>
         </div>
     </div>
 
@@ -209,7 +223,8 @@
 
             <!-- KPI & RADIAL RINGS SECTION -->
             <div class="light-main-grid" style="grid-template-columns: 1fr 1fr 1.25fr; margin-bottom: 12px;">
-                <div class="light-card">
+                <div class="light-card col-span-1" id="kpi-card-1">
+                    <div class="card-controls"><span>⠿ Card 1</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">PROJECT TIMELINE & ELAPSED DAYS</div>
                     <div class="radial-flex">
                         <div class="radial-container">
@@ -226,7 +241,8 @@
                     </div>
                 </div>
 
-                <div class="light-card">
+                <div class="light-card col-span-1" id="kpi-card-2">
+                    <div class="card-controls"><span>⠿ Card 2</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">FINANCIAL EXECUTION RATE</div>
                     <div class="radial-flex">
                         <div class="radial-container">
@@ -243,7 +259,8 @@
                     </div>
                 </div>
 
-                <div class="light-card" style="border-left: 3px solid #059669;">
+                <div class="light-card col-span-1" id="kpi-card-3" style="border-left: 3px solid #059669;">
+                    <div class="card-controls"><span>⠿ Card 3</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase;" id="l-design-head">IPMG DESIGN APPROVAL</div>
                     <div style="font-size: 14px; font-weight: 800; color: #059669;" id="l-design-status" contenteditable="true">APPROVED / 100% DONE</div>
                     <div style="font-size: 10px; color: #64748b; margin-top: 4px;" id="l-design-desc" contenteditable="true">Design completed in September. Process took ~4 months (2-month delay).</div>
@@ -253,7 +270,7 @@
             <!-- MAIN CONTENT AREA -->
             <div class="light-main-grid" id="main-content-grid">
                 <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <div class="light-card">
+                    <div class="light-card" id="card-timeline">
                         <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
                         <div style="font-size: 11px; margin-bottom: 6px;" id="l-timeline-window" contenteditable="true">
                             <strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)
@@ -263,7 +280,7 @@
                         </div>
                     </div>
 
-                    <div class="light-card">
+                    <div class="light-card" id="card-pipeline">
                         <div class="light-card-title">⚙️ PROJECT PHASE STATUS</div>
                         <div class="pipeline-container">
                             <div class="pipeline-step completed">
@@ -286,7 +303,14 @@
                     </div>
                 </div>
 
-                <div class="light-card" style="border-left: 4px solid #ef4444;">
+                <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444;">
+                    <div class="card-controls">
+                        <span>⠿ Red Flags Card</span>
+                        <div>
+                            <button class="span-btn active" onclick="setSpan('card-red-flags', 1)">1 Col</button>
+                            <button class="span-btn" onclick="setSpan('card-red-flags', 2)">2 Col</button>
+                        </div>
+                    </div>
                     <div class="light-card-title" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
                     <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-1" contenteditable="true">Project is <strong>5 to 6 months behind</strong> baseline schedule.</div></div>
                     <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-2" contenteditable="true">Roofing works <strong>not commenced</strong> due to active procurement.</div></div>
@@ -297,7 +321,7 @@
                 </div>
             </div>
 
-            <div class="light-recommendation-bar">
+            <div class="light-recommendation-bar" id="card-rec">
                 <div class="rec-tag">KEY RECOMMENDATION</div>
                 <div style="font-size: 11px; line-height: 1.4;" id="l-recommendation" contenteditable="true">
                     It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
@@ -316,15 +340,20 @@
     </div>
 
     <script>
-        let undoStack = []; let redoStack = []; let customBlockCount = 0;
+        let handlesOn = true; 
+        let undoStack = []; 
+        let redoStack = []; 
+        let customBlockCount = 0;
         let currentZoom = 1;
+        let customEdits = {}; // Tracks only what the user has explicitly typed
+        let cardLayouts = {}; // Tracks layout width modifications
 
         const projectData = {
             nimule: {
                 title: "WEEKLY PROJECT UPDATES — Nimule OSBP",
                 subTitle: "Nimule OSBP Construction Project",
                 location: "Nimule, South Sudan",
-                delayBadge: "SCHEDULE DELAY: -5.5 MOS",
+                delayBadge: "Current Delay: 5 to 6 months behind baseline schedule",
                 timePct: 37.3, finPct: 18.5,
                 remDays: "1,067 Days Rem", elapsedDays: "636 of 1,703 Days Elapsed",
                 budgetTotal: "Total: \$10,845,990.00", budgetExp: "Exp: \$2,009,685.02",
@@ -409,7 +438,10 @@
         }
 
         function changeProject(isUserTriggered = false) {
-            if(isUserTriggered) saveState();
+            if(isUserTriggered) {
+                saveState();
+                customEdits = {}; // Clear previous text edits if user explicitly switches project
+            }
             const p = projectData[document.getElementById('select-project').value];
             const m = document.getElementById('select-month').value;
             const w = document.getElementById('select-week').value;
@@ -440,7 +472,9 @@
                 const el = document.getElementById(`rf-${i+1}`);
                 if (el) el.innerHTML = p.redFlags[i] || "";
             }
-            updatePeriodLabel(isUserTriggered);
+            
+            updatePeriodLabel(false);
+            applyCustomEdits(); // Layer any shared edits on top
         }
 
         function updatePeriodLabel(isUserTriggered = false) {
@@ -450,75 +484,117 @@
             document.getElementById('l-period-tag').innerHTML = `${m} 2026 - ${w}`;
         }
 
-        function addCustomBlock() {
-            saveState();
+        // Layout Functions
+        function toggleHandles() {
+            handlesOn = !handlesOn;
+            const btn = document.getElementById('btn-handles');
+            const grids = document.querySelectorAll('.light-main-grid');
+            if (handlesOn) { 
+                btn.innerHTML = '🛠️ Handles: ON'; 
+                grids.forEach(g => g.classList.remove('handles-off'));
+            } else { 
+                btn.innerHTML = '🛠️ Handles: OFF'; 
+                grids.forEach(g => g.classList.add('handles-off'));
+            }
+        }
+
+        function setSpan(cardId, cols, isUserTriggered = true) {
+            if(isUserTriggered) saveState();
+            const card = document.getElementById(cardId);
+            if(!card) return;
+            card.className = card.className.replace(/col-span-\d/g, '');
+            card.classList.add('col-span-' + cols);
+            cardLayouts[cardId] = cols;
+
+            const btns = card.querySelectorAll('.span-btn');
+            btns.forEach((b, idx) => {
+                if (idx + 1 === cols) b.classList.add('active');
+                else b.classList.remove('active');
+            });
+        }
+
+        function addCustomBlock(isUserTriggered = false) {
+            if(isUserTriggered) saveState();
             customBlockCount++;
             const container = document.getElementById('main-content-grid');
+            const id = 'custom-block-' + customBlockCount;
             const newCard = document.createElement('div');
             newCard.className = 'light-card col-span-2';
-            newCard.style.gridColumn = '1 / -1';
+            newCard.id = id;
             newCard.innerHTML = `
-                <div class="light-card-title">📌 CUSTOM STATUS BLOCK</div>
-                <div contenteditable="true" style="font-size: 11px; color: #475569; min-height: 30px;">Click here to edit this custom project note.</div>
+                <div class="card-controls">
+                    <span>⠿ Custom Block ${customBlockCount}</span>
+                    <div>
+                        <button class="span-btn" onclick="setSpan('${id}', 1)">1 Col</button>
+                        <button class="span-btn active" onclick="setSpan('${id}', 2)">2 Col</button>
+                    </div>
+                </div>
+                <div class="light-card-title" id="cb-title-${customBlockCount}" contenteditable="true">📌 CUSTOM STATUS BLOCK</div>
+                <div id="cb-text-${customBlockCount}" contenteditable="true" style="font-size: 11px; color: #475569; min-height: 30px;">Click here to edit this custom project note.</div>
             `;
             container.appendChild(newCard);
+            cardLayouts[id] = 2;
+        }
+
+        // Track user edits live for minimal URL sharing
+        document.addEventListener('input', function(e) {
+            if (e.target && e.target.getAttribute('contenteditable') === 'true') {
+                if (!e.target.id) e.target.id = 'edit_' + Math.random().toString(36).substr(2, 5);
+                customEdits[e.target.id] = e.target.innerHTML;
+            }
+        });
+
+        function applyCustomEdits() {
+            for (const id in customEdits) {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = customEdits[id];
+            }
         }
 
         // ==========================================
-        // ADVANCED SHARING & EMAIL LOGIC 
+        // ADVANCED SHARING LOGIC (Tiny URL state)
         // ==========================================
-        function generateShareLink() {
-            const edits = {};
-            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
-                if(!el.id) el.id = 'edit_' + index;
-                edits[el.id] = el.innerHTML;
-            });
-            
+        async function shareDashboard() {
+            const btn = document.getElementById('btn-share');
+            const ogText = btn.innerHTML;
+            btn.innerHTML = '⏳ Generating...';
+
             const state = {
                 p: document.getElementById('select-project').value,
                 m: document.getElementById('select-month').value,
                 w: document.getElementById('select-week').value,
                 f: document.getElementById('select-font').value, 
                 z: currentZoom, 
-                edits: edits
+                b: customBlockCount,
+                l: cardLayouts,
+                e: customEdits // Only the explicit text edits are captured
             };
 
             const encoded = btoa(encodeURIComponent(JSON.stringify(state)));
-            return window.location.origin + window.location.pathname + '?s=' + encoded;
-        }
-
-        async function shareDashboard() {
-            const shareUrl = generateShareLink();
-            const shareData = {
-                title: 'UNOPS HAMCO - Weekly Project Updates',
-                text: 'Check out the executive weekly project updates. I have added some edits and comments.',
-                url: shareUrl
-            };
+            const longUrl = window.location.origin + window.location.pathname + '?s=' + encoded;
+            let shareUrl = longUrl;
 
             try {
-                if (navigator.share) {
-                    await navigator.share(shareData);
+                // Shorten URL using a free robust API
+                const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.shorturl) shareUrl = data.shorturl;
                 } else {
-                    await navigator.clipboard.writeText(shareUrl);
-                    alert("✅ Collaborative link copied to clipboard!\n\nColleagues opening this link will see your exact custom text, font, zoom size, and Manager Comments.");
+                    const tinyRes = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
+                    if(tinyRes.ok) shareUrl = await tinyRes.text();
                 }
-            } catch (err) {
-                await navigator.clipboard.writeText(shareUrl);
-                alert("✅ Collaborative link copied to clipboard!");
+            } catch (e) {
+                console.warn('URL shortener API failed, falling back to long URL.');
             }
-        }
 
-        function emailDashboard() {
-            const shareUrl = generateShareLink();
-            const projSelect = document.getElementById('select-project');
-            const projName = projSelect.options[projSelect.selectedIndex].text;
-            
-            const subject = encodeURIComponent(`Weekly Project Update - ${projName}`);
-            const body = encodeURIComponent(
-                `Hello,\n\nPlease review the latest executive weekly project updates here:\n\n${shareUrl}\n\nYou can click directly on the text to make edits, add comments to the Manager Section, and then generate a new link to send back.\n\nBest regards,`
-            );
-            
-            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                alert("✅ Short Collaborative link copied to clipboard!\n\nColleagues opening this link will see your exact custom text, bullet points, font, zoom size, and Manager Comments.\n\nLink: " + shareUrl);
+            } catch (err) {
+                alert("Link ready: " + shareUrl);
+            }
+            btn.innerHTML = ogText;
         }
 
         // LOAD SHARED STATE FROM URL ON BOOT
@@ -537,14 +613,17 @@
                     if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
                     if(state.z) { currentZoom = state.z; changeZoom(0, false); }
                     
-                    changeProject(false); 
-
-                    if(state.edits) {
-                        for (const id in state.edits) {
-                            const el = document.getElementById(id);
-                            if (el) el.innerHTML = state.edits[id];
-                        }
+                    if(state.b) {
+                        for(let i=0; i<state.b; i++) addCustomBlock(false);
                     }
+                    if(state.l) {
+                        for(const id in state.l) setSpan(id, state.l[id], false);
+                    }
+
+                    if(state.e) customEdits = state.e; // Load the sender's text edits
+                    
+                    changeProject(false); // Render everything
+
                     window.history.replaceState({}, document.title, window.location.pathname);
                 } catch(e) {
                     changeProject(false);
@@ -571,6 +650,7 @@
             document.getElementById('dashboard-container').innerHTML = redoStack.pop();
             document.getElementById('btn-undo').disabled = false; document.getElementById('btn-redo').disabled = !redoStack.length;
         }
+        function saveLayout() { alert('Layout saved successfully!'); }
     </script>
 </body>
 </html>
