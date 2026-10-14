@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Project Updates - UNOPS HAMCO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --panel-bg: #111827;
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            height: 100vh;
+            overflow: hidden;
+            padding: 12px 18px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 48px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--panel-border);
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #fff;
+            font-weight: 800;
+            font-size: 11px;
+            padding: 5px 9px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-titles h1 {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .brand-titles p {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .status-tag {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #fbbf24;
+            box-shadow: 0 0 6px #fbbf24;
+        }
+
+        .btn {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        /* Dashboard Grid Layout - Fits 100vh */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.05fr 1fr 1.35fr;
+            grid-template-rows: auto 1fr;
+            gap: 10px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        /* Panels */
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .panel-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Metric Highlights */
+        .metric-hero {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .metric-val {
+            font-family: var(--font-mono);
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .metric-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Progress Bars & Rings */
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            height: 8px;
+            width: 100%;
+            overflow: hidden;
+            margin: 6px 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.4s ease;
+        }
+
+        /* Radial gauge container */
+        .radial-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 8px 0;
+        }
+
+        .radial-box {
+            text-align: center;
+            position: relative;
+        }
+
+        .radial-svg {
+            transform: rotate(-90deg);
+            width: 80px;
+            height: 80px;
+        }
+
+        .radial-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.08);
+            stroke-width: 6;
+        }
+
+        .radial-val {
+            fill: none;
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .radial-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        /* Tables & Lists */
+        .issue-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .issue-table th {
+            text-align: left;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--panel-border);
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .issue-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            vertical-align: top;
+        }
+
+        .badge-red {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .badge-amber {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        /* Editable elements focus style */
+        [contenteditable="true"] {
+            outline: none;
+            border-radius: 2px;
+            transition: background 0.2s;
+        }
+
+        [contenteditable="true"]:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        [contenteditable="true"]:focus {
+            background: rgba(59, 130, 246, 0.15);
+            box-shadow: 0 0 0 1px #3b82f6;
+        }
+
+        /* Grid Item Span adjustments */
+        .col-span-2 { grid-column: span 2; }
+        .row-span-2 { grid-row: span 2; }
+
+        /* Print Override */
+        @media print {
+            body {
+                background: #fff;
+                color: #000;
+                height: auto;
+                overflow: visible;
+                padding: 0;
+            }
+            .header-actions { display: none; }
+            .panel {
+                background: #fff;
+                border: 1px solid #ddd;
+                color: #000;
+                box-shadow: none;
+            }
+            .metric-val, .brand-titles h1 { color: #000; }
+            .progress-bar-bg { background: #eee; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="brand">
+            <div class="brand-badge">UNOPS</div>
+            <div class="brand-titles">
+                <h1 contenteditable="true" id="header-title">WEEKLY PROJECT UPDATES UNOPS HAMCO</h1>
+                <p contenteditable="true" id="header-sub">Nimule OSBP Construction Project • Executive Status Review</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="status-tag">
+                <span class="status-dot"></span>
+                <span contenteditable="true">Schedule Delay: -5.5 Mos</span>
+            </div>
+            <button class="btn" onclick="saveData()">💾 Save</button>
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Export PDF</button>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Grid (Fits Exactly 1 Page) -->
+    <div class="dashboard-grid">
+
+        <!-- Column 1, Row 1: Timeline & Lifecycle -->
+        <div class="panel">
+            <div class="panel-title">
+                <span>PROJECT TIMELINE & ELAPSED DAYS</span>
+                <span style="color: var(--accent-blue);" font-family="var(--font-mono)">37.3% Elapsed</span>
+            </div>
+            <div class="radial-container">
+                <div class="radial-box">
+                    <svg class="radial-svg">
+                        <circle class="radial-bg" cx="40" cy="40" r="32"></circle>
+                        <circle class="radial-val" cx="40" cy="40" r="32" stroke="#3b82f6" stroke-dasharray="201" stroke-dashoffset="126"></circle>
+                    </svg>
+                    <div class="radial-text" style="color: #3b82f6;" contenteditable="true" id="val-elapsed-pct">37.3%</div>
+                </div>
+                <div style="flex-grow: 1; margin-left: 14px;">
+                    <div class="metric-hero">
+                        <span class="metric-val" contenteditable="true" id="val-days-rem">1,067</span>
+                        <span class="metric-sub">Days Remaining</span>
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-muted);" contenteditable="true" id="val-days-elapsed-sub">
+                        636 of 1,703 Days Elapsed
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 37.3%; background: #3b82f6;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--text-muted); margin-top: 2px;">
+                        <span>Jan 1, 2025</span>
+                        <span>Aug 31, 2029</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 2, Row 1: Financial Summary -->
+        <div class="panel">
+            <div class="panel-title">
+                <span>FINANCIAL EXECUTION RATE</span>
+                <span style="color: var(--accent-green);" font-family="var(--font-mono)">18.53% Expensed</span>
+            </div>
+            <div class="radial-container">
+                <div class="radial-box">
+                    <svg class="radial-svg">
+                        <circle class="radial-bg" cx="40" cy="40" r="32"></circle>
+                        <circle class="radial-val" cx="40" cy="40" r="32" stroke="#10b981" stroke-dasharray="201" stroke-dashoffset="163"></circle>
+                    </svg>
+                    <div class="radial-text" style="color: #10b981;" contenteditable="true" id="val-burn-rate">18.53%</div>
+                </div>
+                <div style="flex-grow: 1; margin-left: 14px;">
+                    <div style="font-size: 10px; color: var(--text-muted);">Total Budget</div>
+                    <div style="font-size: 15px; font-weight: 700; color: #fff; font-family: var(--font-mono)" contenteditable="true" id="val-budget-total">$10,845,990.00</div>
+                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Expensed Amount</div>
+                    <div style="font-size: 13px; font-weight: 700; color: #10b981; font-family: var(--font-mono)" contenteditable="true" id="val-budget-exp">$2,009,685.02</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 3, Row 1: Key Design Status -->
+        <div class="panel" style="border-left: 3px solid var(--accent-green);">
+            <div class="panel-title">
+                <span>IPMG DESIGN APPROVAL</span>
+                <span class="badge-amber">2 Mos Delay</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                <span style="font-size: 16px; font-weight: 800; color: var(--accent-green);" contenteditable="true">APPROVED / 100% DONE</span>
+                <span style="font-size: 10px; color: var(--text-muted);" contenteditable="true">Planned: Mar–May | Actual: Apr–Sept</span>
+            </div>
+            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.3;" contenteditable="true">
+                Design submission and approval by IPMG was completed in September. The process took ~4 months to fully complete against a 2-month planned baseline, incurring a 2-month overall delay.
+            </p>
+        </div>
+
+        <!-- Column 1 & 2, Row 2: Construction & Gap Breakdown -->
+        <div class="panel col-span-2">
+            <div class="panel-title">
+                <span>CONSTRUCTION SCHEDULE & CRITICAL VARIANCE ANALYSIS</span>
+                <span class="badge-red">5 to 6 Months Variance</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex-grow: 1;">
+                <div style="background: rgba(255,255,255,0.02); padding: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size: 11px; font-weight: 700; color: var(--accent-red); margin-bottom: 4px;" contenteditable="true">
+                        🚨 Procurement Stage Active (Blocked)
+                    </div>
+                    <p style="font-size: 10.5px; color: var(--text-muted); line-height: 1.35;" contenteditable="true">
+                        Roofing works implementation was scheduled to start in September 2026. However, site construction has not commenced as works procurement solicitation, bidding, evaluation, and award are still active (5.5-month solicitation variance).
+                    </p>
+                </div>
+                <div style="background: rgba(255,255,255,0.02); padding: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size: 11px; font-weight: 700; color: var(--accent-amber); margin-bottom: 4px;" contenteditable="true">
+                        ⚠️ Data Tracking & Schedule Discrepancies
+                    </div>
+                    <p style="font-size: 10.5px; color: var(--text-muted); line-height: 1.35;" contenteditable="true">
+                        All 21 inception phase activities are complete, but actual start/end dates remain unrecorded. Furthermore, a discrepancy exists between dashboard timelines and the primary oneUNOPS project schedule.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 3, Row 2: Red Flags & Key Recommendations -->
+        <div class="panel" style="border-left: 3px solid var(--accent-red);">
+            <div class="panel-title">
+                <span>RED FLAGS & REQUIRED MANAGEMENT ACTION</span>
+            </div>
+            <table class="issue-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Impact</th>
+                        <th>Action Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge-red">Schedule</span></td>
+                        <td style="color: var(--accent-red); font-weight: 700;">HIGH</td>
+                        <td contenteditable="true">Revise construction timelines for OSBP Admin & Market buildings to reset baseline.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge-amber">Data Quality</span></td>
+                        <td style="color: var(--accent-amber); font-weight: 700;">MODERATE</td>
+                        <td contenteditable="true">Systematically record actual start/end dates across all site work plans.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge-amber">Sync</span></td>
+                        <td style="color: var(--accent-amber); font-weight: 700;">MODERATE</td>
+                        <td contenteditable="true">Align reporting dashboard metrics with the official oneUNOPS project database.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        // Simple local storage persistence for edits
+        function saveData() {
+            const elements = document.querySelectorAll('[contenteditable="true"]');
+            const data = {};
+            elements.forEach((el, idx) => {
+                const id = el.id || 'editable_' + idx;
+                data[id] = el.innerHTML;
+            });
+            localStorage.setItem('unops_dashboard_data', JSON.stringify(data));
+            alert('Dashboard changes saved successfully!');
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('unops_dashboard_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                Object.keys(data).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = data[id];
+                });
+            }
+        }
+
+        window.onload = loadData;
+    </script>
+</body>
+</html>
