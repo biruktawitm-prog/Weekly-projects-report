@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNOPS HAMCO - Executive Dashboard Studio</title>
+    <title>UNOPS HAMCO - Multi-Project Executive Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -30,7 +30,7 @@
             align-items: center;
             background: #111827;
             border: 1px solid var(--panel-border);
-            padding: 8px 16px;
+            padding: 10px 16px;
             border-radius: 8px;
             margin-bottom: 12px;
             gap: 10px;
@@ -41,6 +41,23 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .dropdown-select {
+            background: #1f2937;
+            color: #f3f4f6;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .dropdown-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.4);
         }
 
         .btn-studio {
@@ -108,7 +125,6 @@
             position: relative;
         }
 
-        /* Controls inside cards when Layout Handles is ON */
         .card-controls {
             display: flex;
             justify-content: space-between;
@@ -135,7 +151,6 @@
 
         .span-btn.active { background: #2563eb; color: white; }
 
-        /* Column Span Classes */
         .col-span-1 { grid-column: span 1; }
         .col-span-2 { grid-column: span 2; }
         .col-span-3 { grid-column: span 3; }
@@ -269,7 +284,6 @@
             white-space: nowrap;
         }
 
-        /* Editing Highlights */
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
         [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
 
@@ -283,22 +297,59 @@
 
     <!-- TOP CONTROL TOOLBAR -->
     <div class="top-studio-bar">
+        <!-- 1. PROJECT SELECTION DROPDOWN -->
         <div class="bar-group">
-            <button class="btn-studio active" id="btn-opt1" onclick="switchTheme('opt1')">Option 1: Dark Studio</button>
-            <button class="btn-studio" id="btn-opt2" onclick="switchTheme('opt2')">Option 2: Light Red Flag Report</button>
+            <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📁 Project:</span>
+            <select class="dropdown-select" id="select-project" onchange="changeProject()">
+                <option value="nimule">Nimule One Stop Border Post (OSBP)</option>
+                <option value="japan">Japan Infrastructure Project</option>
+                <option value="flood">Flood Mitigation Project</option>
+            </select>
         </div>
 
+        <!-- 2. MONTH AND WEEK SELECTION DROPDOWN -->
         <div class="bar-group">
-            <!-- REQUESTED BUTTONS ADDED BELOW -->
-            <button class="btn-studio" id="btn-handles" onclick="toggleHandles()">🛠️ Layout Handles: ON</button>
-            <button class="btn-studio" onclick="addCustomBlock()">➕ Add Custom Block</button>
+            <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📅 Period:</span>
+            <select class="dropdown-select" id="select-month" onchange="updatePeriodLabel()">
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October" selected>October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+            </select>
+            <select class="dropdown-select" id="select-week" onchange="updatePeriodLabel()">
+                <option value="Week 1">Week 1</option>
+                <option value="Week 2">Week 2</option>
+                <option value="Week 3">Week 3</option>
+                <option value="Week 4" selected>Week 4</option>
+            </select>
+        </div>
+
+        <!-- THEME SWITCHER -->
+        <div class="bar-group">
+            <button class="btn-studio active" id="btn-opt1" onclick="switchTheme('opt1')">Option 1: Dark</button>
+            <button class="btn-studio" id="btn-opt2" onclick="switchTheme('opt2')">Option 2: Light</button>
+        </div>
+
+        <!-- LAYOUT & UNDO BUTTONS -->
+        <div class="bar-group">
+            <button class="btn-studio" id="btn-handles" onclick="toggleHandles()">🛠️ Handles: ON</button>
+            <button class="btn-studio" onclick="addCustomBlock()">➕ Custom Block</button>
             <button class="btn-studio" id="btn-undo" onclick="undo()" disabled>↩️ Undo</button>
             <button class="btn-studio" id="btn-redo" onclick="redo()" disabled>↪️ Redo</button>
         </div>
 
+        <!-- SAVE & EXPORT -->
         <div class="bar-group">
             <button class="btn-action-green" onclick="saveLayout()">💾 Save Layout</button>
-            <button class="btn-studio" onclick="window.print()">🖨️ Export PDF / Print</button>
+            <button class="btn-studio" onclick="window.print()">🖨️ Export PDF</button>
         </div>
     </div>
 
@@ -311,11 +362,11 @@
                     <span class="badge-hamco">HAMCO</span>
                 </div>
                 <div>
-                    <h1 style="font-size: 14px; font-weight: 800;" contenteditable="true">WEEKLY PROJECT UPDATES</h1>
-                    <p style="font-size: 10px; color: var(--text-muted);" contenteditable="true">Nimule OSBP Construction Project • Executive Review</p>
+                    <h1 style="font-size: 14px; font-weight: 800;" id="dark-proj-title" contenteditable="true">WEEKLY PROJECT UPDATES — Nimule OSBP</h1>
+                    <p style="font-size: 10px; color: var(--text-muted);" id="dark-sub-title" contenteditable="true">Nimule OSBP Construction Project • Executive Review (October Week 4)</p>
                 </div>
             </div>
-            <div style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700;" contenteditable="true">
+            <div style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700;" id="dark-delay-badge" contenteditable="true">
                 SCHEDULE DELAY: -5.5 MOS
             </div>
         </div>
@@ -332,8 +383,8 @@
                     </div>
                 </div>
                 <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">PROJECT TIMELINE & ELAPSED DAYS</div>
-                <div style="font-size: 20px; font-weight: 800; color: #fff;" contenteditable="true">1,067 Days Remaining</div>
-                <div style="font-size: 11px; color: var(--text-muted);" contenteditable="true">636 of 1,703 Days Elapsed (37.3%)</div>
+                <div style="font-size: 20px; font-weight: 800; color: #fff;" id="d-rem-days" contenteditable="true">1,067 Days Remaining</div>
+                <div style="font-size: 11px; color: var(--text-muted);" id="d-elapsed-days" contenteditable="true">636 of 1,703 Days Elapsed (37.3%)</div>
             </div>
 
             <!-- Card 2 -->
@@ -347,8 +398,8 @@
                     </div>
                 </div>
                 <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">FINANCIAL EXECUTION RATE</div>
-                <div style="font-size: 20px; font-weight: 800; color: #10b981;" contenteditable="true">18.53% Expensed</div>
-                <div style="font-size: 11px; color: var(--text-muted);" contenteditable="true">\$2,009,685.02 of \$10,845,990.00</div>
+                <div style="font-size: 20px; font-weight: 800; color: #10b981;" id="d-exp-rate" contenteditable="true">18.53% Expensed</div>
+                <div style="font-size: 11px; color: var(--text-muted);" id="d-budget-vals" contenteditable="true">$2,009,685.02 of \$10,845,990.00</div>
             </div>
 
             <!-- Card 3 -->
@@ -361,9 +412,9 @@
                         <button class="span-btn" onclick="setSpan('card-3', 3)">Full</button>
                     </div>
                 </div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">IPMG DESIGN APPROVAL</div>
-                <div style="font-size: 14px; font-weight: 800; color: #10b981;" contenteditable="true">APPROVED / 100% DONE</div>
-                <div style="font-size: 10px; color: var(--text-muted);" contenteditable="true">Completed in Sept (~4 months duration, 2-month delay).</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">DESIGN & MILESTONE APPROVAL</div>
+                <div style="font-size: 14px; font-weight: 800; color: #10b981;" id="d-design-status" contenteditable="true">APPROVED / 100% DONE</div>
+                <div style="font-size: 10px; color: var(--text-muted);" id="d-design-desc" contenteditable="true">Completed in Sept (~4 months duration, 2-month delay).</div>
             </div>
 
             <!-- Card 4 -->
@@ -376,8 +427,8 @@
                         <button class="span-btn" onclick="setSpan('card-4', 3)">Full</button>
                     </div>
                 </div>
-                <div style="font-size: 11px; font-weight: 700; color: #ef4444; margin-bottom: 4px;" contenteditable="true">🚨 Procurement Stage Active (Blocked)</div>
-                <p style="font-size: 11px; color: var(--text-muted);" contenteditable="true">Roofing works implementation scheduled for Sept 2026 has not commenced because procurement solicitation is still active (5.5-month variance).</p>
+                <div style="font-size: 11px; font-weight: 700; color: #ef4444; margin-bottom: 4px;" id="d-procurement-head" contenteditable="true">🚨 Procurement Stage Active (Blocked)</div>
+                <p style="font-size: 11px; color: var(--text-muted);" id="d-procurement-text" contenteditable="true">Roofing works implementation scheduled for Sept 2026 has not commenced because procurement solicitation is still active (5.5-month variance).</p>
             </div>
 
             <!-- Card 5 -->
@@ -390,8 +441,8 @@
                         <button class="span-btn" onclick="setSpan('card-5', 3)">Full</button>
                     </div>
                 </div>
-                <div style="font-size: 11px; font-weight: 700; color: #f59e0b; margin-bottom: 4px;" contenteditable="true">⚠️ Data Tracking & Schedule Discrepancies</div>
-                <p style="font-size: 11px; color: var(--text-muted);" contenteditable="true">All 21 inception phase activities are complete, but actual start/end dates remain blank. Discrepancy noted between dashboard and oneUNOPS schedule.</p>
+                <div style="font-size: 11px; font-weight: 700; color: #f59e0b; margin-bottom: 4px;" id="d-gap-head" contenteditable="true">⚠️ Data Tracking & Schedule Discrepancies</div>
+                <p style="font-size: 11px; color: var(--text-muted);" id="d-gap-text" contenteditable="true">All 21 inception phase activities are complete, but actual start/end dates remain blank. Discrepancy noted between dashboard and oneUNOPS schedule.</p>
             </div>
 
             <!-- Card 6: Recommendation Footer -->
@@ -405,7 +456,7 @@
                     </div>
                 </div>
                 <div style="font-size: 11px; font-weight: 800; color: #fbbf24; margin-bottom: 4px;">🎯 KEY RECOMMENDATION</div>
-                <p style="font-size: 11px; color: #e2e8f0; line-height: 1.4;" contenteditable="true">
+                <p style="font-size: 11px; color: #e2e8f0; line-height: 1.4;" id="d-recommendation" contenteditable="true">
                     It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.
                 </p>
             </div>
@@ -417,31 +468,31 @@
         <div class="light-theme">
             <div class="light-header-banner">
                 <div class="light-header-title">
-                    <h2 contenteditable="true">WEEKLY RED FLAG REPORT</h2>
-                    <p contenteditable="true">Nimule One Stop Border Post (OSBP) Construction Project • UNOPS HAMCO</p>
+                    <h2 id="l-main-title" contenteditable="true">WEEKLY RED FLAG REPORT — Nimule OSBP</h2>
+                    <p id="l-sub-title" contenteditable="true">Nimule One Stop Border Post (OSBP) Construction Project • UNOPS HAMCO</p>
                 </div>
-                <div style="text-align: right; font-size: 11px;" contenteditable="true">
-                    <div><strong>Reporting Period:</strong> October 2026</div>
-                    <div><strong>Location:</strong> Nimule, South Sudan</div>
+                <div style="text-align: right; font-size: 11px;">
+                    <div><strong>Reporting Period:</strong> <span id="l-period-tag" contenteditable="true">October 2026 - Week 4</span></div>
+                    <div><strong>Location:</strong> <span id="l-location-tag" contenteditable="true">Nimule, South Sudan</span></div>
                 </div>
             </div>
 
             <div class="light-kpi-row">
                 <div class="light-kpi-card">
                     <div class="light-kpi-label">Total Budget</div>
-                    <div class="light-kpi-value" contenteditable="true">\$10,845,990.00</div>
+                    <div class="light-kpi-value" id="l-kpi-budget" contenteditable="true">\$10,845,990.00</div>
                 </div>
                 <div class="light-kpi-card">
                     <div class="light-kpi-label">Expensed Amount</div>
-                    <div class="light-kpi-value" style="color: #059669;" contenteditable="true">\$2,009,685.02</div>
+                    <div class="light-kpi-value" id="l-kpi-expensed" style="color: #059669;" contenteditable="true">\$2,009,685.02</div>
                 </div>
                 <div class="light-kpi-card">
                     <div class="light-kpi-label">Expenditure Rate</div>
-                    <div class="light-kpi-value" style="color: #2563eb;" contenteditable="true">18.53%</div>
+                    <div class="light-kpi-value" id="l-kpi-rate" style="color: #2563eb;" contenteditable="true">18.53%</div>
                 </div>
                 <div class="light-kpi-card">
                     <div class="light-kpi-label">Project Duration</div>
-                    <div class="light-kpi-value" style="color: #d97706;" contenteditable="true">1,067 Days Rem</div>
+                    <div class="light-kpi-value" id="l-kpi-days" style="color: #d97706;" contenteditable="true">1,067 Days Rem</div>
                 </div>
             </div>
 
@@ -449,10 +500,10 @@
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                     <div class="light-card">
                         <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
-                        <div style="font-size: 11px; margin-bottom: 6px;" contenteditable="true">
+                        <div style="font-size: 11px; margin-bottom: 6px;" id="l-timeline-window" contenteditable="true">
                             <strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)
                         </div>
-                        <div style="font-size: 11px; color: #dc2626; font-weight: 700;" contenteditable="true">
+                        <div style="font-size: 11px; color: #dc2626; font-weight: 700;" id="l-delay-tag" contenteditable="true">
                             Current Delay: 5 to 6 months behind baseline schedule
                         </div>
                     </div>
@@ -470,11 +521,11 @@
                             </div>
                             <div class="pipeline-step active">
                                 <div class="pipeline-step-name">Procurement</div>
-                                <div class="pipeline-step-status">Active (5.5m)</div>
+                                <div class="pipeline-step-status">Active</div>
                             </div>
                             <div class="pipeline-step">
                                 <div class="pipeline-step-name">Construction</div>
-                                <div class="pipeline-step-status">Not Started</div>
+                                <div class="pipeline-step-status">Pending</div>
                             </div>
                         </div>
                     </div>
@@ -482,31 +533,154 @@
 
                 <div class="light-card" style="border-left: 4px solid #ef4444;">
                     <div class="light-card-title" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
-                    <div class="red-flag-item"><div class="red-flag-num">1</div><div contenteditable="true">Project is <strong>5 to 6 months behind</strong> baseline schedule.</div></div>
-                    <div class="red-flag-item"><div class="red-flag-num">2</div><div contenteditable="true">Roofing works <strong>not commenced</strong> due to active procurement.</div></div>
-                    <div class="red-flag-item"><div class="red-flag-num">3</div><div contenteditable="true">IPMG Design approval observed 2 months delay.</div></div>
-                    <div class="red-flag-item"><div class="red-flag-num">4</div><div contenteditable="true">Solicitation phase has a 5.5-month variance.</div></div>
-                    <div class="red-flag-item"><div class="red-flag-num">5</div><div contenteditable="true">Inception dates remain blank across actual tracking.</div></div>
-                    <div class="red-flag-item"><div class="red-flag-num">6</div><div contenteditable="true">Schedule discrepancy between dashboard and oneUNOPS.</div></div>
+                    <div class="red-flag-item"><div class="red-flag-num">1</div><div id="rf-1" contenteditable="true">Project is <strong>5 to 6 months behind</strong> baseline schedule.</div></div>
+                    <div class="red-flag-item"><div class="red-flag-num">2</div><div id="rf-2" contenteditable="true">Roofing works <strong>not commenced</strong> due to active procurement.</div></div>
+                    <div class="red-flag-item"><div class="red-flag-num">3</div><div id="rf-3" contenteditable="true">IPMG Design approval observed 2 months delay.</div></div>
+                    <div class="red-flag-item"><div class="red-flag-num">4</div><div id="rf-4" contenteditable="true">Solicitation phase has a 5.5-month variance.</div></div>
+                    <div class="red-flag-item"><div class="red-flag-num">5</div><div id="rf-5" contenteditable="true">Inception dates remain blank across actual tracking.</div></div>
+                    <div class="red-flag-item"><div class="red-flag-num">6</div><div id="rf-6" contenteditable="true">Schedule discrepancy between dashboard and oneUNOPS.</div></div>
                 </div>
             </div>
 
             <div class="light-recommendation-bar">
                 <div class="rec-tag">KEY RECOMMENDATION</div>
-                <div style="font-size: 11px; line-height: 1.4;" contenteditable="true">
+                <div style="font-size: 11px; line-height: 1.4;" id="l-recommendation" contenteditable="true">
                     It is essential to update and revise construction timelines for the <strong>OSBP Admin Building and Market Building</strong> to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages.
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT: THEMES, HANDLES, CUSTOM BLOCKS, UNDO ENGINE -->
+    <!-- JAVASCRIPT LOGIC FOR MULTI-PROJECT, MONTH/WEEK SELECTOR, HANDLES & UNDO -->
     <script>
         let handlesOn = true;
         let undoStack = [];
         let redoStack = [];
         let customBlockCount = 0;
 
+        // Project Database
+        const projectData = {
+            nimule: {
+                title: "WEEKLY PROJECT UPDATES — Nimule OSBP",
+                subTitle: "Nimule OSBP Construction Project • Executive Review",
+                location: "Nimule, South Sudan",
+                delayBadge: "SCHEDULE DELAY: -5.5 MOS",
+                remDays: "1,067 Days Remaining",
+                elapsedDays: "636 of 1,703 Days Elapsed (37.3%)",
+                expRate: "18.53% Expensed",
+                budgetVals: "\$2,009,685.02 of \$10,845,990.00",
+                budgetTotal: "\$10,845,990.00",
+                budgetExp: "\$2,009,685.02",
+                designStatus: "APPROVED / 100% DONE",
+                procurementText: "Roofing works implementation scheduled for Sept 2026 has not commenced because procurement solicitation is still active (5.5-month variance).",
+                recommendation: "It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.",
+                redFlags: [
+                    "Project is 5 to 6 months behind baseline schedule.",
+                    "Roofing works not commenced due to active procurement.",
+                    "IPMG Design approval observed 2 months delay.",
+                    "Solicitation phase has a 5.5-month variance.",
+                    "Inception dates remain blank across actual tracking.",
+                    "Schedule discrepancy between dashboard and oneUNOPS."
+                ]
+            },
+            japan: {
+                title: "WEEKLY PROJECT UPDATES — Japan Infrastructure",
+                subTitle: "Japan Grant Aid Infrastructure Support • Executive Review",
+                location: "Juba, South Sudan",
+                delayBadge: "ON SCHEDULE / NORMAL",
+                remDays: "420 Days Remaining",
+                elapsedDays: "310 of 730 Days Elapsed (42.5%)",
+                expRate: "54.20% Expensed",
+                budgetVals: "\$3,250,000.00 of \$6,000,000.00",
+                budgetTotal: "\$6,000,000.00",
+                budgetExp: "\$3,250,000.00",
+                designStatus: "APPROVED / COMPLETED",
+                procurementText: "Equipment procurement ongoing smoothly; 80% of materials delivered to site.",
+                recommendation: "Maintain close coordination with local port authorities to expedite remaining logistics clearance.",
+                redFlags: [
+                    "Port clearance delays experienced at Mombasa terminal.",
+                    "Minor fuel cost variance observed in regional transport.",
+                    "Site civil works progressing within expected timelines.",
+                    "Quality assurance audit scheduled for end of month.",
+                    "Environmental impact assessment updated and approved.",
+                    "Stakeholder committee review completed with positive feedback."
+                ]
+            },
+            flood: {
+                title: "WEEKLY PROJECT UPDATES — Flood Mitigation",
+                subTitle: "Emergency Flood Mitigation & Dike Construction • Executive Review",
+                location: "Bentiu & Malakal, South Sudan",
+                delayBadge: "HIGH RISK / CRITICAL DELAY",
+                remDays: "180 Days Remaining",
+                elapsedDays: "360 of 540 Days Elapsed (66.7%)",
+                expRate: "72.10% Expensed",
+                budgetVals: "\$5,407,500.00 of \$7,500,000.00",
+                budgetTotal: "\$7,500,000.00",
+                budgetExp: "\$5,407,500.00",
+                designStatus: "REVISED / ACTIVE",
+                procurementText: "Heavy machinery procurement delayed due to seasonal heavy rain and access road blockage.",
+                recommendation: "Deploy amphibious excavators urgently and reinforce temporary dikes before water levels rise.",
+                redFlags: [
+                    "Rising water levels threatening temporary dike integrity.",
+                    "Heavy machinery mobilization blocked by flooded access routes.",
+                    "Fuel supply shortages in remote site depots.",
+                    "Community displacement requiring additional emergency barriers.",
+                    "Contractor requesting 45-day extension for section B dike.",
+                    "Real-time satellite monitoring active to track overflow."
+                ]
+            }
+        };
+
+        // Switch Projects
+        function changeProject() {
+            saveState();
+            const projKey = document.getElementById('select-project').value;
+            const data = projectData[projKey];
+            const m = document.getElementById('select-month').value;
+            const w = document.getElementById('select-week').value;
+
+            // Dark Studio Updates
+            document.getElementById('dark-proj-title').innerText = data.title;
+            document.getElementById('dark-sub-title').innerText = `${data.subTitle} (${m} ${w})`;
+            document.getElementById('dark-delay-badge').innerText = data.delayBadge;
+            document.getElementById('d-rem-days').innerText = data.remDays;
+            document.getElementById('d-elapsed-days').innerText = data.elapsedDays;
+            document.getElementById('d-exp-rate').innerText = data.expRate;
+            document.getElementById('d-budget-vals').innerText = data.budgetVals;
+            document.getElementById('d-design-status').innerText = data.designStatus;
+            document.getElementById('d-procurement-text').innerText = data.procurementText;
+            document.getElementById('d-recommendation').innerText = data.recommendation;
+
+            // Light Executive Updates
+            document.getElementById('l-main-title').innerText = data.title;
+            document.getElementById('l-sub-title').innerText = data.subTitle;
+            document.getElementById('l-location-tag').innerText = data.location;
+            document.getElementById('l-kpi-budget').innerText = data.budgetTotal;
+            document.getElementById('l-kpi-expensed').innerText = data.budgetExp;
+            document.getElementById('l-kpi-rate').innerText = data.expRate;
+            document.getElementById('l-kpi-days').innerText = data.remDays;
+            document.getElementById('l-recommendation').innerText = data.recommendation;
+
+            // Update Red Flags
+            for (let i = 0; i < 6; i++) {
+                const rfEl = document.getElementById(`rf-${i+1}`);
+                if (rfEl && data.redFlags[i]) rfEl.innerText = data.redFlags[i];
+            }
+
+            updatePeriodLabel();
+        }
+
+        // Update Month/Week Label
+        function updatePeriodLabel() {
+            const m = document.getElementById('select-month').value;
+            const w = document.getElementById('select-week').value;
+            document.getElementById('l-period-tag').innerText = `${m} 2026 - ${w}`;
+            const projKey = document.getElementById('select-project').value;
+            const data = projectData[projKey];
+            document.getElementById('dark-sub-title').innerText = `${data.subTitle} (${m} ${w})`;
+        }
+
+        // Switch Theme Option
         function switchTheme(option) {
             saveState();
             document.getElementById('option1').classList.remove('active');
@@ -525,28 +699,27 @@
             }
         }
 
-        // Toggle Layout Handles ON / OFF
+        // Toggle Layout Handles
         function toggleHandles() {
             handlesOn = !handlesOn;
             const btn = document.getElementById('btn-handles');
             const grid = document.getElementById('dark-grid-container');
             if (handlesOn) {
-                btn.innerHTML = '🛠️ Layout Handles: ON';
+                btn.innerHTML = '🛠️ Handles: ON';
                 grid.classList.remove('handles-off');
             } else {
-                btn.innerHTML = '🛠️ Layout Handles: OFF';
+                btn.innerHTML = '🛠️ Handles: OFF';
                 grid.classList.add('handles-off');
             }
         }
 
-        // Set Card Column Span
+        // Set Card Span
         function setSpan(cardId, cols) {
             saveState();
             const card = document.getElementById(cardId);
             card.className = card.className.replace(/col-span-\d/g, '');
             card.classList.add('col-span-' + cols);
 
-            // Update active state on buttons inside card
             const btns = card.querySelectorAll('.span-btn');
             btns.forEach((b, idx) => {
                 if (idx + 1 === cols) b.classList.add('active');
@@ -573,13 +746,13 @@
                         <button class="span-btn" onclick="setSpan('${id}', 3)">Full</button>
                     </div>
                 </div>
-                <div style="font-size: 11px; font-weight: 700; color: #3b82f6; margin-bottom: 4px;" contenteditable="true">📌 New Status Block Header</div>
-                <p style="font-size: 11px; color: var(--text-muted);" contenteditable="true">Click here to edit this custom project description or notes.</p>
+                <div style="font-size: 11px; font-weight: 700; color: #3b82f6; margin-bottom: 4px;" contenteditable="true">📌 Custom Status Title</div>
+                <p style="font-size: 11px; color: var(--text-muted);" contenteditable="true">Click here to write notes or custom updates for this week.</p>
             `;
             container.appendChild(newCard);
         }
 
-        // Undo / Redo Engine
+        // Undo/Redo Functions
         function saveState() {
             const state = {
                 opt1: document.getElementById('option1').innerHTML,
@@ -624,10 +797,10 @@
         }
 
         function saveLayout() {
-            alert('Layout and changes saved successfully!');
+            alert('Project updates and layout saved successfully!');
         }
 
-        // Keyboard shortcuts Ctrl+Z and Ctrl+Y
+        // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
             if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
                 if (e.shiftKey) redo();
