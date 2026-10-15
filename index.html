@@ -81,6 +81,7 @@
             background: #e2e8f0; padding: 4px 8px; border-radius: 4px;
             margin-bottom: 8px; font-size: 10px; color: #475569; font-weight: 700;
             font-family: 'Plus Jakarta Sans', sans-serif;
+            cursor: grab;
         }
         .handles-off .card-controls { display: none !important; }
         .span-btn { background: #cbd5e1; color: #475569; border: none; padding: 2px 6px; border-radius: 3px; font-size: 9px; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;}
@@ -108,8 +109,10 @@
         .light-kpi-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif;}
         .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
 
-        .light-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .light-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; }
         .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; position: relative;}
+        .light-card.dragging { opacity: 0.5; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        
         .light-card-title { font-size: 11px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; margin-bottom: 8px; }
 
         .red-flag-item { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 11px; line-height: 1.35; }
@@ -125,11 +128,9 @@
         .light-recommendation-bar { background: #0f172a; color: white; padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 12px; }
         .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif;}
 
-        /* Content Editable Styles & Placeholders */
         [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
         [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
-        [contenteditable="true"]:empty:before { content: attr(data-placeholder); color: #94a3b8; pointer-events: none; }
 
         /* ================= PERFECT PDF PRINT SETTINGS ================= */
         @media print { 
@@ -146,7 +147,7 @@
 
     <!-- TOP CONTROL TOOLBAR -->
     <div class="top-studio-bar">
-        <!-- PROJECT DROPDOWN -->
+        <!-- PROJECT DROPDOWN & ADD BUTTON -->
         <div class="bar-group">
             <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📁 Project:</span>
             <select class="dropdown-select" id="select-project" onchange="changeProject(true)">
@@ -154,12 +155,13 @@
                 <option value="japan">Japan Infrastructure Project</option>
                 <option value="flood">Flood Mitigation Project</option>
             </select>
+            <button class="btn-studio" onclick="addNewProject()" title="Add New Project" style="padding: 6px 10px;">➕</button>
         </div>
 
         <!-- PERIOD DROPDOWN -->
         <div class="bar-group">
             <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📅 Period:</span>
-            <select class="dropdown-select" id="select-month" onchange="updatePeriodLabel(true)">
+            <select class="dropdown-select" id="select-month" onchange="changeProject(true)">
                 <option value="January">January</option>
                 <option value="February">February</option>
                 <option value="March">March</option>
@@ -173,11 +175,11 @@
                 <option value="November">November</option>
                 <option value="December">December</option>
             </select>
-            <select class="dropdown-select" id="select-week" onchange="updatePeriodLabel(true)">
-                <option value="Week 1">Week 1</option>
+            <select class="dropdown-select" id="select-week" onchange="changeProject(true)">
+                <option value="Week 1" selected>Week 1</option>
                 <option value="Week 2">Week 2</option>
                 <option value="Week 3">Week 3</option>
-                <option value="Week 4" selected>Week 4</option>
+                <option value="Week 4">Week 4</option>
             </select>
         </div>
 
@@ -222,7 +224,7 @@
                     <p id="l-sub-title" contenteditable="true">Nimule OSBP Construction Project • UNOPS HAMCO</p>
                 </div>
                 <div style="text-align: right; font-size: 11px;">
-                    <div><strong>Reporting Period:</strong> <span id="l-period-tag" contenteditable="true">October 2026 - Week 4</span></div>
+                    <div><strong>Reporting Period:</strong> <span id="l-period-tag" contenteditable="true">October 2026 - Week 1</span></div>
                     <div><strong>Location:</strong> <span id="l-location-tag" contenteditable="true">Nimule, South Sudan</span></div>
                 </div>
             </div>
@@ -260,7 +262,7 @@
                         </div>
                         <div>
                             <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: $10,845,990</div>
-                            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: \$2,009,685.02</div>
+                            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: $2,009,685.02</div>
                         </div>
                     </div>
                 </div>
@@ -275,43 +277,21 @@
 
             <!-- MAIN CONTENT AREA -->
             <div class="light-main-grid handles-off" id="main-content-grid">
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <div class="light-card" id="card-timeline">
-                        <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
-                        <div style="font-size: 11px; margin-bottom: 6px;" id="l-timeline-window" contenteditable="true">
-                            <strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)
-                        </div>
-                        <div style="font-size: 11px; color: #dc2626; font-weight: 700;" id="l-delay-tag" contenteditable="true">
-                            Current Delay: 5 to 6 months behind baseline schedule
-                        </div>
+                <!-- Grouping column elements allows standard flow, but cards become draggable -->
+                <div class="light-card" id="card-timeline">
+                    <div class="card-controls"><span>⠿ Drag Timeline Card</span></div>
+                    <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
+                    <div style="font-size: 11px; margin-bottom: 6px;" id="l-timeline-window" contenteditable="true">
+                        <strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)
                     </div>
-
-                    <div class="light-card" id="card-pipeline">
-                        <div class="light-card-title">⚙️ PROJECT PHASE STATUS</div>
-                        <div class="pipeline-container">
-                            <div class="pipeline-step completed">
-                                <div class="pipeline-step-name">Inception</div>
-                                <div class="pipeline-step-status" id="pipe-1" contenteditable="true">Completed</div>
-                            </div>
-                            <div class="pipeline-step completed">
-                                <div class="pipeline-step-name">Design/IPMG</div>
-                                <div class="pipeline-step-status" id="pipe-2" contenteditable="true">Approved</div>
-                            </div>
-                            <div class="pipeline-step active">
-                                <div class="pipeline-step-name">Procurement</div>
-                                <div class="pipeline-step-status" id="pipe-3" contenteditable="true">Active</div>
-                            </div>
-                            <div class="pipeline-step">
-                                <div class="pipeline-step-name">Construction</div>
-                                <div class="pipeline-step-status" id="pipe-4" contenteditable="true">Pending</div>
-                            </div>
-                        </div>
+                    <div style="font-size: 11px; color: #dc2626; font-weight: 700;" id="l-delay-tag" contenteditable="true">
+                        Current Delay: 5 to 6 months behind baseline schedule
                     </div>
                 </div>
 
                 <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444;">
                     <div class="card-controls">
-                        <span>⠿ Red Flags Card</span>
+                        <span>⠿ Drag Red Flags</span>
                         <div>
                             <button class="span-btn active" onclick="setSpan('card-red-flags', 1)">1 Col</button>
                             <button class="span-btn" onclick="setSpan('card-red-flags', 2)">2 Col</button>
@@ -324,6 +304,29 @@
                     <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-4" contenteditable="true">Solicitation phase has a 5.5-month variance.</div></div>
                     <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-5" contenteditable="true">Inception dates remain blank across actual tracking.</div></div>
                     <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-6" contenteditable="true">Schedule discrepancy between dashboard and oneUNOPS.</div></div>
+                </div>
+
+                <div class="light-card" id="card-pipeline">
+                    <div class="card-controls"><span>⠿ Drag Phase Status Card</span></div>
+                    <div class="light-card-title">⚙️ PROJECT PHASE STATUS</div>
+                    <div class="pipeline-container">
+                        <div class="pipeline-step completed">
+                            <div class="pipeline-step-name">Inception</div>
+                            <div class="pipeline-step-status" id="pipe-1" contenteditable="true">Completed</div>
+                        </div>
+                        <div class="pipeline-step completed">
+                            <div class="pipeline-step-name">Design/IPMG</div>
+                            <div class="pipeline-step-status" id="pipe-2" contenteditable="true">Approved</div>
+                        </div>
+                        <div class="pipeline-step active">
+                            <div class="pipeline-step-name">Procurement</div>
+                            <div class="pipeline-step-status" id="pipe-3" contenteditable="true">Active</div>
+                        </div>
+                        <div class="pipeline-step">
+                            <div class="pipeline-step-name">Construction</div>
+                            <div class="pipeline-step-status" id="pipe-4" contenteditable="true">Pending</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -338,10 +341,10 @@
             <div class="no-print" style="margin-top: 20px; background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 8px; padding: 12px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">💬 Manager Comments / Next Steps (Hidden in PDF)</div>
-                    <button onclick="emailManagerComment()" style="background: #0ea5e9; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; transition: background 0.2s;">Send</button>
+                    <button onclick="emailManagerComment()" style="background: #0ea5e9; color: white; border: none; padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s;">Send</button>
                 </div>
-                <!-- Using data-placeholder for the clean CSS hint effect -->
-                <div id="manager-comments" contenteditable="true" data-placeholder="Click here to leave a comment, layout feedback, or notes for the next reporting cycle..." style="font-size: 12px; color: #334155; min-height: 50px; background: white; padding: 10px; border-radius: 4px; border: 1px solid #cbd5e1;"></div>
+                <!-- Box defaults completely empty as requested -->
+                <div id="manager-comments" contenteditable="true" style="font-size: 12px; color: #334155; min-height: 50px; background: white; padding: 10px; border-radius: 4px; border: 1px solid #cbd5e1;"></div>
             </div>
 
         </div>
@@ -364,7 +367,7 @@
                 delayBadge: "Current Delay: 5 to 6 months behind baseline schedule",
                 timePct: 37.3, finPct: 18.5,
                 remDays: "1,067 Days Rem", elapsedDays: "636 of 1,703 Days Elapsed",
-                budgetTotal: "Total: \$10,845,990.00", budgetExp: "Exp: \$2,009,685.02",
+                budgetTotal: "Total: $10,845,990.00", budgetExp: "Exp: $2,009,685.02",
                 designHead: "IPMG DESIGN APPROVAL", designStatus: "APPROVED / 100% DONE", designDesc: "Design completed in September. Process took ~4 months (2-month delay).",
                 pipe: ["Completed", "Approved", "Active (5.5m)", "Pending"],
                 recommendation: "It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.",
@@ -443,61 +446,129 @@
             document.getElementById('dashboard-container').style.zoom = currentZoom;
         }
 
+        function addNewProject() {
+            const name = prompt("Enter new project name:");
+            if(name) {
+                const id = 'proj_' + Math.random().toString(36).substr(2, 5);
+                projectData[id] = {
+                    title: "WEEKLY PROJECT UPDATES — " + name,
+                    subTitle: name + " Construction Project",
+                    location: "TBD",
+                    delayBadge: "NEW PROJECT",
+                    timePct: 0, finPct: 0,
+                    remDays: "TBD Days Rem", elapsedDays: "0 Days Elapsed",
+                    budgetTotal: "Total: \$0.00", budgetExp: "Exp: \$0.00",
+                    designHead: "PHASE STATUS", designStatus: "PENDING", designDesc: "Not yet started.",
+                    pipe: ["Pending", "Pending", "Pending", "Pending"],
+                    recommendation: "New project added. Awaiting first status report.",
+                    redFlags: ["No data submitted yet."]
+                };
+                const opt = document.createElement('option');
+                opt.value = id;
+                opt.innerHTML = name;
+                document.getElementById('select-project').appendChild(opt);
+                document.getElementById('select-project').value = id;
+                changeProject(true);
+            }
+        }
+
         function changeProject(isUserTriggered = false) {
             if(isUserTriggered) {
                 saveStateForUndo();
                 customEdits = {}; 
             }
             const p = projectData[document.getElementById('select-project').value];
-            
+            const m = document.getElementById('select-month').value;
+            const w = document.getElementById('select-week').value;
+
+            // Only October Week 1 has the active data by default. Other weeks show as not updated.
+            const hasData = (m === 'October' && w === 'Week 1') || p.delayBadge === "NEW PROJECT";
+
             document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
             document.getElementById('l-sub-title').innerHTML = p.subTitle;
             document.getElementById('l-location-tag').innerHTML = p.location;
+            document.getElementById('l-period-tag').innerHTML = `${m} 2026 - ${w}`;
             
-            document.getElementById('l-rem-days').innerHTML = p.remDays;
-            document.getElementById('l-elapsed-days').innerHTML = p.elapsedDays;
-            document.getElementById('l-budget-total').innerHTML = p.budgetTotal;
-            document.getElementById('l-budget-exp').innerHTML = p.budgetExp;
-            document.getElementById('l-design-head').innerHTML = p.designHead;
-            document.getElementById('l-design-status').innerHTML = p.designStatus;
-            document.getElementById('l-design-desc').innerHTML = p.designDesc;
-            document.getElementById('l-delay-tag').innerHTML = p.delayBadge;
-            document.getElementById('l-recommendation').innerHTML = p.recommendation;
+            document.getElementById('l-rem-days').innerHTML = hasData ? p.remDays : "--";
+            document.getElementById('l-elapsed-days').innerHTML = hasData ? p.elapsedDays : "Not yet updated for this period.";
+            document.getElementById('l-budget-total').innerHTML = hasData ? p.budgetTotal : "Total: --";
+            document.getElementById('l-budget-exp').innerHTML = hasData ? p.budgetExp : "Exp: --";
+            document.getElementById('l-design-head').innerHTML = hasData ? p.designHead : "PHASE STATUS";
+            document.getElementById('l-design-status').innerHTML = hasData ? p.designStatus : "PENDING";
+            document.getElementById('l-design-desc').innerHTML = hasData ? p.designDesc : "Awaiting weekly update.";
+            document.getElementById('l-delay-tag').innerHTML = hasData ? p.delayBadge : "No data submitted.";
+            document.getElementById('l-recommendation').innerHTML = hasData ? p.recommendation : "No recommendation submitted for this period.";
 
-            document.getElementById('l-ring-time-val').innerHTML = p.timePct + '%';
-            document.getElementById('l-ring-fin-val').innerHTML = p.finPct + '%';
-            setTimeout(() => { setRing('l-ring-time', p.timePct); setRing('l-ring-fin', p.finPct); }, 50);
+            document.getElementById('l-ring-time-val').innerHTML = hasData ? p.timePct + '%' : '0%';
+            document.getElementById('l-ring-fin-val').innerHTML = hasData ? p.finPct + '%' : '0%';
+            setTimeout(() => { 
+                setRing('l-ring-time', hasData ? p.timePct : 0); 
+                setRing('l-ring-fin', hasData ? p.finPct : 0); 
+            }, 50);
             
             for(let i=0; i<4; i++) {
                 const pipeEl = document.getElementById(`pipe-${i+1}`);
-                if(pipeEl) pipeEl.innerHTML = p.pipe[i];
+                if(pipeEl) pipeEl.innerHTML = hasData ? p.pipe[i] : "-";
             }
             for(let i=0; i<6; i++) {
                 const el = document.getElementById(`rf-${i+1}`);
-                if (el) el.innerHTML = p.redFlags[i] || "";
+                if (el) el.innerHTML = hasData ? (p.redFlags[i] || "") : "";
+            }
+            if(!hasData && document.getElementById('rf-1')) {
+                document.getElementById('rf-1').innerHTML = "No red flags or data submitted for this period yet.";
             }
             
-            updatePeriodLabel(false);
             applyCustomEdits(); 
         }
 
-        function updatePeriodLabel(isUserTriggered = false) {
-            if(isUserTriggered) saveStateForUndo();
-            const m = document.getElementById('select-month').value;
-            const w = document.getElementById('select-week').value;
-            document.getElementById('l-period-tag').innerHTML = `${m} 2026 - ${w}`;
-        }
+        // ==========================================
+        // DRAG AND DROP LAYOUT ENGINE
+        // ==========================================
+        let draggedCard = null;
+
+        document.addEventListener("dragstart", function(event) {
+            if(handlesOn && event.target.classList.contains('light-card')) {
+                draggedCard = event.target;
+                setTimeout(() => event.target.classList.add('dragging'), 0);
+            }
+        });
+
+        document.addEventListener("dragend", function(event) {
+            if(handlesOn && event.target.classList.contains('light-card')) {
+                event.target.classList.remove('dragging');
+                draggedCard = null;
+                saveStateForUndo();
+            }
+        });
+
+        document.addEventListener("dragover", function(event) {
+            if(handlesOn && draggedCard) {
+                event.preventDefault();
+                const container = document.getElementById('main-content-grid');
+                const targetCard = event.target.closest('.light-card');
+                
+                if (targetCard && targetCard !== draggedCard && targetCard.parentNode === container) {
+                    const rect = targetCard.getBoundingClientRect();
+                    const next = (event.clientY - rect.top) / (rect.bottom - rect.top) > .5;
+                    container.insertBefore(draggedCard, next ? targetCard.nextSibling : targetCard);
+                }
+            }
+        });
 
         function toggleHandles() {
             handlesOn = !handlesOn;
             const btn = document.getElementById('btn-handles');
             const grids = document.querySelectorAll('.light-main-grid');
+            const cards = document.querySelectorAll('#main-content-grid .light-card');
+            
             if (handlesOn) { 
                 btn.innerHTML = '🛠️ Handles: ON'; 
                 grids.forEach(g => g.classList.remove('handles-off'));
+                cards.forEach(c => c.setAttribute('draggable', 'true'));
             } else { 
                 btn.innerHTML = '🛠️ Handles: OFF'; 
                 grids.forEach(g => g.classList.add('handles-off'));
+                cards.forEach(c => c.removeAttribute('draggable'));
             }
         }
 
@@ -524,9 +595,10 @@
             const newCard = document.createElement('div');
             newCard.className = 'light-card col-span-2';
             newCard.id = id;
+            if(handlesOn) newCard.setAttribute('draggable', 'true');
             newCard.innerHTML = `
                 <div class="card-controls">
-                    <span>⠿ Custom Block ${customBlockCount}</span>
+                    <span>⠿ Drag Custom Block ${customBlockCount}</span>
                     <div>
                         <button class="span-btn" onclick="setSpan('${id}', 1)">1 Col</button>
                         <button class="span-btn active" onclick="setSpan('${id}', 2)">2 Col</button>
@@ -554,23 +626,24 @@
         }
 
         // ==========================================
-        // SEND COMMENT TO PM
+        // SEND DIRECT EMAIL LIKE A TEXT
         // ==========================================
         function emailManagerComment() {
-            const commentText = document.getElementById('manager-comments').innerText.trim();
+            const commentBox = document.getElementById('manager-comments');
+            const commentText = commentBox.innerText.trim();
             const projSelect = document.getElementById('select-project');
             const projName = projSelect.options[projSelect.selectedIndex].text;
-            const month = document.getElementById('select-month').value;
-            const week = document.getElementById('select-week').value;
 
             if(!commentText) {
-                alert("Please write a comment before sending!");
+                alert("Please write a comment in the box before clicking Send.");
                 return;
             }
 
-            const subject = encodeURIComponent(`Manager Comment: ${projName} (${month} - ${week})`);
+            // Secure hand-off to default mail app natively
+            alert("Opening your email app to instantly route this message to biruktawitm@unops.org...");
+            
+            const subject = encodeURIComponent(`Dashboard Comment: ${projName}`);
             const body = encodeURIComponent(commentText);
-
             window.location.href = `mailto:biruktawitm@unops.org?subject=${subject}&body=${body}`;
         }
 
@@ -592,7 +665,8 @@
                 z: currentZoom, 
                 b: customBlockCount,
                 l: cardLayouts,
-                e: customEdits
+                e: customEdits,
+                html: document.getElementById('main-content-grid').innerHTML // saves drag/drop positions
             };
 
             let shareUrl = window.location.href;
@@ -652,7 +726,8 @@
                 z: currentZoom, 
                 b: customBlockCount,
                 l: cardLayouts,
-                e: customEdits
+                e: customEdits,
+                html: document.getElementById('main-content-grid').innerHTML
             };
 
             localStorage.setItem('hamco_dashboard_save', JSON.stringify(state));
@@ -666,9 +741,13 @@
             if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
             if(state.z) { currentZoom = state.z; changeZoom(0, false); }
             
-            if(state.b) {
+            // If they reorganized the grid, load the raw grid HTML directly to preserve card order
+            if(state.html) {
+                document.getElementById('main-content-grid').innerHTML = state.html;
+            } else if(state.b) {
                 for(let i=0; i<state.b; i++) addCustomBlock(false);
             }
+
             if(state.l) {
                 for(const id in state.l) setSpan(id, state.l[id], false);
             }
