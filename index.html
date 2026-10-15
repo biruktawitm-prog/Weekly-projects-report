@@ -87,7 +87,6 @@
         .span-btn { background: #cbd5e1; color: #475569; border: none; padding: 2px 6px; border-radius: 3px; font-size: 9px; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;}
         .span-btn.active { background: #2563eb; color: white; }
         
-        /* Grid Span Overrides */
         .col-span-1 { grid-column: span 1 !important; }
         .col-span-2 { grid-column: 1 / -1 !important; }
 
@@ -110,7 +109,7 @@
         .light-kpi-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif;}
         .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
 
-        /* Main Auto-Flowing Dense Grid (Fills Gaps Like a Puzzle) */
+        /* EQUAL COLUMNS & DENSE FLOW FOR PERFECT SNAPPING */
         .light-main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; grid-auto-flow: row dense; }
         
         .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; position: relative; page-break-inside: avoid; break-inside: avoid;}
@@ -142,7 +141,7 @@
                 background: #f8fafc !important; 
                 -webkit-print-color-adjust: exact !important; 
                 print-color-adjust: exact !important; 
-                zoom: 0.75; /* Perfect zoom for single page export */
+                zoom: 0.65; /* Shrunk aggressively to force 1 page fit */
             }
             .top-studio-bar { display: none !important; } 
             .no-print { display: none !important; }
@@ -277,7 +276,8 @@
                 </div>
             </div>
 
-            <!-- MAIN CONTENT AREA WITH FLATTENED GRID FOR PUZZLE SNAPPING -->
+            <!-- MAIN CONTENT AREA WITH FLATTENED GRID -->
+            <!-- All cards are direct children here. 'grid-auto-flow: dense' will automatically fill gaps -->
             <div class="light-main-grid handles-off" id="main-content-grid">
                 
                 <div class="light-card col-span-1" id="card-timeline">
@@ -343,19 +343,18 @@
                     </div>
                 </div>
 
-                <!-- KEY RECOMMENDATION / ACHIEVEMENT BAR (Restored exact look + added Col/Drag features) -->
-                <div class="light-card col-span-2" id="card-rec" style="background: #0f172a; border: none; padding: 12px 16px;">
+                <!-- Key Recommendation: Resizable and Draggable -->
+                <div class="light-card col-span-2" id="card-rec" style="background: #0f172a; color: white; padding: 12px 16px;">
                     <div class="card-controls" style="background: rgba(255,255,255,0.15); color: #e2e8f0; border: none; margin-bottom: 12px;">
-                        <span>⠿ Drag Key Block</span>
+                        <span>⠿ Drag Key Recommendation</span>
                         <div>
                             <button class="span-btn" onclick="setSpan('card-rec', 1)" style="color: #cbd5e1; background: rgba(0,0,0,0.3);">1 Col</button>
                             <button class="span-btn active" onclick="setSpan('card-rec', 2)" style="color: white; background: #2563eb;">2 Col</button>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <!-- Tag is editable so you can freely type "KEY ACHIEVEMENT" if needed -->
-                        <div class="rec-tag" id="rec-tag-title" contenteditable="true">KEY RECOMMENDATION</div>
-                        <div style="font-size: 11px; line-height: 1.4; color: white; flex: 1;" id="l-recommendation" contenteditable="true">
+                    <div style="display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+                        <div class="rec-tag">KEY RECOMMENDATION</div>
+                        <div style="font-size: 11px; line-height: 1.4; color: white; flex: 1; min-width: 200px;" id="l-recommendation" contenteditable="true">
                             It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
                         </div>
                     </div>
@@ -369,7 +368,7 @@
                     <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">💬 Manager Comments / Next Steps (Hidden in PDF)</div>
                     <button onclick="emailManagerComment()" style="background: #0ea5e9; color: white; border: none; padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s;">Send</button>
                 </div>
-                <!-- Absolutely Empty Div for Manager Comments -->
+                <!-- Box defaults completely empty -->
                 <div id="manager-comments" contenteditable="true" style="font-size: 12px; color: #334155; min-height: 50px; background: white; padding: 10px; border-radius: 4px; border: 1px solid #cbd5e1;"></div>
             </div>
 
@@ -576,25 +575,14 @@
 
         document.addEventListener("dragover", function(event) {
             if(handlesOn && draggedCard) {
-                event.preventDefault(); 
-            }
-        });
-
-        document.addEventListener("drop", function(event) {
-            if(handlesOn && draggedCard) {
                 event.preventDefault();
                 const container = document.getElementById('main-content-grid');
                 const targetCard = event.target.closest('.light-card');
                 
                 if (targetCard && targetCard !== draggedCard && targetCard.parentNode === container) {
                     const rect = targetCard.getBoundingClientRect();
-                    const isAfter = (event.clientY - rect.top) > (rect.height / 2);
-                    
-                    if (isAfter) {
-                        container.insertBefore(draggedCard, targetCard.nextSibling);
-                    } else {
-                        container.insertBefore(draggedCard, targetCard);
-                    }
+                    const next = (event.clientY - rect.top) / (rect.bottom - rect.top) > .5;
+                    container.insertBefore(draggedCard, next ? targetCard.nextSibling : targetCard);
                 }
             }
         });
@@ -620,8 +608,7 @@
             if(isUserTriggered) saveStateForUndo();
             const card = document.getElementById(cardId);
             if(!card) return;
-            
-            card.classList.remove('col-span-1', 'col-span-2');
+            card.className = card.className.replace(/col-span-\d/g, '');
             card.classList.add('col-span-' + cols);
             cardLayouts[cardId] = cols;
 
@@ -635,7 +622,9 @@
         function addCustomBlock(isUserTriggered = false) {
             if(isUserTriggered) saveStateForUndo();
             
-            if (!handlesOn) toggleHandles();
+            if (!handlesOn) {
+                toggleHandles();
+            }
 
             customBlockCount++;
             const container = document.getElementById('main-content-grid');
@@ -655,11 +644,13 @@
                 <div class="light-card-title" id="cb-title-${customBlockCount}" contenteditable="true">📌 CUSTOM STATUS BLOCK</div>
                 <div id="cb-text-${customBlockCount}" contenteditable="true" style="font-size: 11px; color: #475569; min-height: 30px;">Click here to edit this custom project note.</div>
             `;
-            
+            // Add block right before the Key Recommendation bar
             const recBar = document.getElementById('card-rec');
-            if(recBar) container.insertBefore(newCard, recBar);
-            else container.appendChild(newCard);
-            
+            if(recBar) {
+                container.insertBefore(newCard, recBar);
+            } else {
+                container.appendChild(newCard);
+            }
             cardLayouts[id] = 2;
         }
 
@@ -676,11 +667,6 @@
                 if (el) {
                     el.innerHTML = customEdits[id];
                 }
-            }
-            // Aggressive empty force for Manager Comments to clear old local memory
-            const commentBox = document.getElementById('manager-comments');
-            if(commentBox && commentBox.innerHTML.includes("Click here to leave a comment")) {
-                commentBox.innerHTML = "";
             }
         }
 
@@ -842,10 +828,13 @@
                     }
                 } else {
                     changeProject(false); 
-                    // Make completely sure the comment box is empty on first boot
-                    const cBox = document.getElementById('manager-comments');
-                    if(cBox) cBox.innerHTML = "";
                 }
+            }
+
+            // Absolute force clearance of the comment box if a rogue text gets saved locally
+            const cBox = document.getElementById('manager-comments');
+            if(cBox && cBox.innerText.includes("Click here to leave a comment")) {
+                cBox.innerText = "";
             }
         }
 
