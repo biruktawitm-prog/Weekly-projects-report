@@ -117,13 +117,8 @@
         
         .light-card-title { font-size: 11px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; margin-bottom: 8px; }
 
-        /* NEW SMART NATIVE RED FLAG LIST STYLE */
-        .red-flag-list { list-style: none; padding: 2px 4px; margin: -2px -4px; outline: none; transition: background 0.2s; border-radius: 4px; }
-        .red-flag-list li { position: relative; padding-left: 12px; padding-bottom: 6px; padding-top: 6px; border-bottom: 1px dashed #e2e8f0; font-size: 11px; line-height: 1.35; margin-left: 4px;}
-        .red-flag-list li:last-child { border-bottom: none; }
-        .red-flag-list li::before { content: '•'; position: absolute; left: 0; top: 6px; color: #ef4444; font-size: 18px; line-height: 1; font-weight: bold; font-family: Arial, sans-serif; margin-top: -3px; }
-        .red-flag-list:hover { background: rgba(59, 130, 246, 0.04); outline: 1px dashed #3b82f6; }
-        .red-flag-list:focus { background: rgba(59, 130, 246, 0.08); outline: 2px solid #3b82f6; }
+        .red-flag-item { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 11px; line-height: 1.35; }
+        .red-flag-bullet { color: #ef4444; font-size: 18px; line-height: 1; margin-top: -3px; font-weight: bold; font-family: Arial, sans-serif;}
 
         .pipeline-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
         .pipeline-step { background: #f1f5f9; padding: 8px 6px; border-radius: 6px; text-align: center; border: 1px solid #cbd5e1; }
@@ -135,8 +130,8 @@
         .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif;}
 
         [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
-        [contenteditable="true"]:hover:not(.red-flag-list) { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
-        [contenteditable="true"]:focus:not(.red-flag-list) { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
+        [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
+        [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
 
         /* ENSURES BULLET LISTS SHOW CORRECTLY INSIDE TEXT BOXES */
         [contenteditable="true"] ul, [contenteditable="true"] ol { margin: 4px 0 4px 24px; padding: 0; }
@@ -213,7 +208,7 @@
         <div class="bar-group">
             <button class="btn-studio" id="btn-handles" onclick="toggleHandles()">🛠️ Handles: ON</button>
             <button class="btn-studio" onclick="addCustomBlock(true)">➕ Block</button>
-            <!-- Bullets format button for general text areas -->
+            <!-- Bullets format button -->
             <button class="btn-studio" onmousedown="event.preventDefault(); document.execCommand('insertUnorderedList')" title="Format as Bullet List">⠇ Bullets</button>
             <button class="btn-studio" id="btn-undo" onclick="undo()" disabled>↩️ Undo</button>
             <button class="btn-studio" id="btn-redo" onclick="redo()" disabled>↪️ Redo</button>
@@ -312,21 +307,19 @@
                     <div class="card-controls">
                         <span>⠿ Drag Red Flags</span>
                         <div>
+                            <button class="span-btn" onclick="addRedFlag(event)" title="Add Red Flag Bullet">➕ Bullet</button>
                             <button class="span-btn active" onclick="setSpan('card-red-flags', 1)">1 Col</button>
                             <button class="span-btn" onclick="setSpan('card-red-flags', 2)">2 Col</button>
                             <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-red-flags', event)">❌</button>
                         </div>
                     </div>
                     <div class="light-card-title" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
-                    <!-- NATIVE SMART LIST: Pressing Enter automatically makes a new Red Bullet -->
-                    <ul id="rf-list" class="red-flag-list" contenteditable="true">
-                        <li>Project is <strong>5 to 6 months behind</strong> baseline schedule.</li>
-                        <li>Roofing works <strong>not commenced</strong> due to active procurement.</li>
-                        <li>IPMG Design approval observed 2 months delay.</li>
-                        <li>Solicitation phase has a 5.5-month variance.</li>
-                        <li>Inception dates remain blank across actual tracking.</li>
-                        <li>Schedule discrepancy between dashboard and oneUNOPS.</li>
-                    </ul>
+                    <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-1" contenteditable="true">Project is <strong>5 to 6 months behind</strong> baseline schedule.</div></div>
+                    <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-2" contenteditable="true">Roofing works <strong>not commenced</strong> due to active procurement.</div></div>
+                    <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-3" contenteditable="true">IPMG Design approval observed 2 months delay.</div></div>
+                    <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-4" contenteditable="true">Solicitation phase has a 5.5-month variance.</div></div>
+                    <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-5" contenteditable="true">Inception dates remain blank across actual tracking.</div></div>
+                    <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-6" contenteditable="true">Schedule discrepancy between dashboard and oneUNOPS.</div></div>
                 </div>
 
                 <div class="light-card col-span-1" id="card-pipeline">
@@ -589,14 +582,12 @@
                 const pipeEl = document.getElementById(`pipe-${i+1}`);
                 if(pipeEl) pipeEl.innerHTML = hasData ? p.pipe[i] : "-";
             }
-            
-            const rfList = document.getElementById('rf-list');
-            if(rfList) {
-                if(hasData && p.redFlags && p.redFlags.length > 0) {
-                    rfList.innerHTML = p.redFlags.map(rf => `<li>${rf}</li>`).join('');
-                } else {
-                    rfList.innerHTML = `<li>No red flags or data submitted for this period yet.</li>`;
-                }
+            for(let i=0; i<6; i++) {
+                const el = document.getElementById(`rf-${i+1}`);
+                if (el) el.innerHTML = hasData ? (p.redFlags[i] || "") : "";
+            }
+            if(!hasData && document.getElementById('rf-1')) {
+                document.getElementById('rf-1').innerHTML = "No red flags or data submitted for this period yet.";
             }
 
             if (stateDB[activeKey]) {
@@ -702,10 +693,24 @@
 
             const btns = card.querySelectorAll('.span-btn');
             btns.forEach((b, idx) => {
-                if (b.innerText === '❌') return; 
+                if (b.innerText === '❌' || b.innerText === '➕ Bullet') return; 
                 if (idx + 1 === cols) b.classList.add('active');
                 else b.classList.remove('active');
             });
+        }
+
+        // Function to add a new Red Flag bullet row
+        function addRedFlag(event) {
+            if(event) event.stopPropagation();
+            saveStateForUndo();
+            const container = document.getElementById('card-red-flags');
+            if(!container) return;
+            const newId = 'rf-' + Math.random().toString(36).substr(2, 5);
+            const div = document.createElement('div');
+            div.className = 'red-flag-item';
+            div.innerHTML = `<div class="red-flag-bullet">•</div><div id="${newId}" contenteditable="true">Click to edit new red flag...</div>`;
+            container.appendChild(div);
+            customEdits[newId] = "Click to edit new red flag...";
         }
 
         // Function to delete a block completely
@@ -861,7 +866,9 @@
                 db: stateDB
             };
 
+            // PERMANENT MASTER SAVE KEY - Do not change this line so user never loses data
             localStorage.setItem('hamco_dashboard_master', JSON.stringify(state));
+            
             if(showAlert) alert('✅ Dashboard saved successfully for this specific Project and Period!');
         }
 
@@ -907,6 +914,7 @@
                     window.history.replaceState({}, document.title, window.location.pathname);
                 } catch(e) { changeProject(false); }
             } else {
+                // Check for master save, gracefully fallback to older versions if they exist
                 const localSave = localStorage.getItem('hamco_dashboard_master') 
                     || localStorage.getItem('hamco_dashboard_v8') 
                     || localStorage.getItem('hamco_dashboard_v7') 
