@@ -88,7 +88,6 @@
         .span-btn.active { background: #2563eb; color: white; }
         .col-span-1 { grid-column: span 1; }
         .col-span-2 { grid-column: span 2; }
-        .col-span-3 { grid-column: span 3; }
 
         /* ================= EXECUTIVE LIGHT STYLES ================= */
         .light-theme { background-color: #f8fafc; color: #0f172a; border-radius: 10px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
@@ -109,7 +108,9 @@
         .light-kpi-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif;}
         .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
 
-        .light-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; }
+        /* Smart dense grid allows blocks to slide into empty spaces naturally */
+        .light-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; grid-auto-flow: dense; }
+        
         .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; position: relative;}
         .light-card.dragging { opacity: 0.5; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         
@@ -231,7 +232,7 @@
 
             <!-- KPI & RADIAL RINGS SECTION -->
             <div class="light-main-grid handles-off" style="grid-template-columns: 1fr 1fr 1.25fr; margin-bottom: 12px;" id="kpi-grid">
-                <div class="light-card col-span-1" id="kpi-card-1">
+                <div class="light-card col-span-1" id="kpi-card-1" style="grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Card 1</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">PROJECT TIMELINE & ELAPSED DAYS</div>
                     <div class="radial-flex">
@@ -249,7 +250,7 @@
                     </div>
                 </div>
 
-                <div class="light-card col-span-1" id="kpi-card-2">
+                <div class="light-card col-span-1" id="kpi-card-2" style="grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Card 2</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">FINANCIAL EXECUTION RATE</div>
                     <div class="radial-flex">
@@ -267,7 +268,7 @@
                     </div>
                 </div>
 
-                <div class="light-card col-span-1" id="kpi-card-3" style="border-left: 3px solid #059669;">
+                <div class="light-card col-span-1" id="kpi-card-3" style="border-left: 3px solid #059669; grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Card 3</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase;" id="l-design-head">IPMG DESIGN APPROVAL</div>
                     <div style="font-size: 14px; font-weight: 800; color: #059669;" id="l-design-status" contenteditable="true">APPROVED / 100% DONE</div>
@@ -275,10 +276,10 @@
                 </div>
             </div>
 
-            <!-- MAIN CONTENT AREA -->
-            <div class="light-main-grid handles-off" id="main-content-grid">
-                <!-- Grouping column elements allows standard flow, but cards become draggable -->
-                <div class="light-card" id="card-timeline">
+            <!-- MAIN CONTENT AREA WITH FLATTENED DENSE GRID -->
+            <div class="light-main-grid handles-off" id="main-content-grid" style="grid-auto-flow: dense;">
+                
+                <div class="light-card col-span-1" id="card-timeline" style="grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Drag Timeline Card</span></div>
                     <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
                     <div style="font-size: 11px; margin-bottom: 6px;" id="l-timeline-window" contenteditable="true">
@@ -289,7 +290,8 @@
                     </div>
                 </div>
 
-                <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444;">
+                <!-- grid-row: span 2 ensures the red flags card stretches naturally down the right side -->
+                <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444; grid-column: span 1; grid-row: span 2;">
                     <div class="card-controls">
                         <span>⠿ Drag Red Flags</span>
                         <div>
@@ -306,7 +308,7 @@
                     <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-6" contenteditable="true">Schedule discrepancy between dashboard and oneUNOPS.</div></div>
                 </div>
 
-                <div class="light-card" id="card-pipeline">
+                <div class="light-card col-span-1" id="card-pipeline" style="grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Drag Phase Status Card</span></div>
                     <div class="light-card-title">⚙️ PROJECT PHASE STATUS</div>
                     <div class="pipeline-container">
@@ -328,6 +330,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="light-recommendation-bar" id="card-rec">
@@ -343,7 +346,7 @@
                     <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">💬 Manager Comments / Next Steps (Hidden in PDF)</div>
                     <button onclick="emailManagerComment()" style="background: #0ea5e9; color: white; border: none; padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s;">Send</button>
                 </div>
-                <!-- Box defaults completely empty as requested -->
+                <!-- Absolutely Empty Div for Manager Comments -->
                 <div id="manager-comments" contenteditable="true" style="font-size: 12px; color: #334155; min-height: 50px; background: white; padding: 10px; border-radius: 4px; border: 1px solid #cbd5e1;"></div>
             </div>
 
@@ -367,7 +370,7 @@
                 delayBadge: "Current Delay: 5 to 6 months behind baseline schedule",
                 timePct: 37.3, finPct: 18.5,
                 remDays: "1,067 Days Rem", elapsedDays: "636 of 1,703 Days Elapsed",
-                budgetTotal: "Total: $10,845,990.00", budgetExp: "Exp: \$2,009,685.02",
+                budgetTotal: "Total: $10,845,990.00", budgetExp: "Exp: $2,009,685.02",
                 designHead: "IPMG DESIGN APPROVAL", designStatus: "APPROVED / 100% DONE", designDesc: "Design completed in September. Process took ~4 months (2-month delay).",
                 pipe: ["Completed", "Approved", "Active (5.5m)", "Pending"],
                 recommendation: "It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.",
@@ -387,7 +390,7 @@
                 delayBadge: "ON SCHEDULE / NORMAL",
                 timePct: 42.5, finPct: 54.2,
                 remDays: "420 Days Rem", elapsedDays: "310 of 730 Days Elapsed",
-                budgetTotal: "Total: \$6,000,000.00", budgetExp: "Exp: \$3,250,000.00",
+                budgetTotal: "Total: $6,000,000.00", budgetExp: "Exp: $3,250,000.00",
                 designHead: "PHASE STATUS", designStatus: "APPROVED", designDesc: "Design phase fully approved and documented.",
                 pipe: ["Completed", "Approved", "Active", "Pending"],
                 recommendation: "Maintain close coordination with local port authorities to expedite remaining logistics clearance.",
@@ -407,7 +410,7 @@
                 delayBadge: "42.57% PROGRESS GAP",
                 timePct: 70.2, finPct: 25.6,
                 remDays: "End: 31 Mar 2027", elapsedDays: "70.25% Elapsed / 27.68% Physical",
-                budgetTotal: "Total: \$9,860,000.00", budgetExp: "Exp: \$2,500,000.00",
+                budgetTotal: "Total: $9,860,000.00", budgetExp: "Exp: $2,500,000.00",
                 designHead: "INCEPTION & ASSESSMENT", designStatus: "IN PROGRESS", designDesc: "Preparation of Technical documents and design approval for Water Yards remains In Progress (planned for June 1, 2026).",
                 pipe: ["In Progress", "Delayed", "Active", "Delayed (6m)"],
                 recommendation: "In the forecast to delivery percentage, there is an over forecasting trend noticed with a total forecasted value of -7,859,796.48 USD over the past 10 months.",
@@ -417,7 +420,7 @@
                     "Procurement: 1 activity in progress is 4 months behind schedule (June 17, 2026).",
                     "Procurement: 2 activities not started, 4 months behind schedule (July 4, 2026).",
                     "Works & Contract Management: 6-month delay overall. 5 activities not started.",
-                    "Over forecasting trend noticed with a total forecasted value of -\$7.85M over the past 10 months."
+                    "Over forecasting trend noticed with a total forecasted value of -$7.85M over the past 10 months."
                 ]
             }
         };
@@ -457,7 +460,7 @@
                     delayBadge: "NEW PROJECT",
                     timePct: 0, finPct: 0,
                     remDays: "TBD Days Rem", elapsedDays: "0 Days Elapsed",
-                    budgetTotal: "Total: \$0.00", budgetExp: "Exp: \$0.00",
+                    budgetTotal: "Total: $0.00", budgetExp: "Exp: $0.00",
                     designHead: "PHASE STATUS", designStatus: "PENDING", designDesc: "Not yet started.",
                     pipe: ["Pending", "Pending", "Pending", "Pending"],
                     recommendation: "New project added. Awaiting first status report.",
@@ -481,7 +484,7 @@
             const m = document.getElementById('select-month').value;
             const w = document.getElementById('select-week').value;
 
-            // Only October Week 1 has the active data by default. Other weeks show as not updated.
+            // Only October Week 1 has the active data by default.
             const hasData = (m === 'October' && w === 'Week 1') || p.delayBadge === "NEW PROJECT";
 
             document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
@@ -519,6 +522,13 @@
             }
             
             applyCustomEdits(); 
+        }
+
+        function updatePeriodLabel(isUserTriggered = false) {
+            if(isUserTriggered) saveStateForUndo();
+            const m = document.getElementById('select-month').value;
+            const w = document.getElementById('select-week').value;
+            document.getElementById('l-period-tag').innerHTML = `${m} 2026 - ${w}`;
         }
 
         // ==========================================
@@ -580,6 +590,13 @@
             card.classList.add('col-span-' + cols);
             cardLayouts[cardId] = cols;
 
+            // Enforce proper CSS Grid column spreading
+            if(cols === 2) {
+                card.style.gridColumn = '1 / -1';
+            } else {
+                card.style.gridColumn = 'span 1';
+            }
+
             const btns = card.querySelectorAll('.span-btn');
             btns.forEach((b, idx) => {
                 if (idx + 1 === cols) b.classList.add('active');
@@ -590,7 +607,7 @@
         function addCustomBlock(isUserTriggered = false) {
             if(isUserTriggered) saveStateForUndo();
             
-            // Turn handles ON automatically so user immediately sees the resize/drag buttons
+            // Turn handles ON automatically so user immediately sees resize/drag buttons
             if (!handlesOn) {
                 toggleHandles();
             }
@@ -601,6 +618,7 @@
             const newCard = document.createElement('div');
             newCard.className = 'light-card col-span-2';
             newCard.id = id;
+            newCard.style.gridColumn = '1 / -1'; // Ensure it spans full width by default
             if(handlesOn) newCard.setAttribute('draggable', 'true');
             newCard.innerHTML = `
                 <div class="card-controls">
@@ -716,6 +734,92 @@
         }
 
         // ==========================================
+        // ROBUST UNDO / REDO ENGINE
+        // ==========================================
+        function saveStateForUndo() {
+            // Update edits map before saving state
+            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                if(!el.id) el.id = 'edit_' + index;
+                customEdits[el.id] = el.innerHTML;
+            });
+
+            undoStack.push({
+                dash: document.getElementById('dashboard-container').innerHTML,
+                proj: document.getElementById('select-project').value,
+                month: document.getElementById('select-month').value,
+                week: document.getElementById('select-week').value,
+                font: document.getElementById('select-font').value,
+                zoom: currentZoom
+            });
+            redoStack = []; 
+            document.getElementById('btn-undo').disabled = false; 
+            document.getElementById('btn-redo').disabled = true;
+        }
+
+        function undo() {
+            if (!undoStack.length) return;
+            
+            redoStack.push({
+                dash: document.getElementById('dashboard-container').innerHTML,
+                proj: document.getElementById('select-project').value,
+                month: document.getElementById('select-month').value,
+                week: document.getElementById('select-week').value,
+                font: document.getElementById('select-font').value,
+                zoom: currentZoom
+            });
+
+            const s = undoStack.pop();
+            
+            document.getElementById('dashboard-container').innerHTML = s.dash;
+            document.getElementById('select-project').value = s.proj;
+            document.getElementById('select-month').value = s.month;
+            document.getElementById('select-week').value = s.week;
+            document.getElementById('select-font').value = s.font;
+            
+            currentZoom = s.zoom;
+            document.getElementById('dashboard-container').style.zoom = currentZoom;
+            
+            document.getElementById('btn-undo').disabled = !undoStack.length; 
+            document.getElementById('btn-redo').disabled = false;
+            
+            // Re-apply drag listeners if handles were left ON
+            if(handlesOn) {
+                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
+            }
+        }
+
+        function redo() {
+            if (!redoStack.length) return;
+            
+            undoStack.push({
+                dash: document.getElementById('dashboard-container').innerHTML,
+                proj: document.getElementById('select-project').value,
+                month: document.getElementById('select-month').value,
+                week: document.getElementById('select-week').value,
+                font: document.getElementById('select-font').value,
+                zoom: currentZoom
+            });
+
+            const s = redoStack.pop();
+            
+            document.getElementById('dashboard-container').innerHTML = s.dash;
+            document.getElementById('select-project').value = s.proj;
+            document.getElementById('select-month').value = s.month;
+            document.getElementById('select-week').value = s.week;
+            document.getElementById('select-font').value = s.font;
+            
+            currentZoom = s.zoom;
+            document.getElementById('dashboard-container').style.zoom = currentZoom;
+            
+            document.getElementById('btn-undo').disabled = false; 
+            document.getElementById('btn-redo').disabled = !redoStack.length;
+
+            if(handlesOn) {
+                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
+            }
+        }
+
+        // ==========================================
         // LOCAL SAVE & LOAD 
         // ==========================================
         function saveLayout(showAlert = true) {
@@ -747,7 +851,6 @@
             if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
             if(state.z) { currentZoom = state.z; changeZoom(0, false); }
             
-            // If they reorganized the grid, load the raw grid HTML directly to preserve card order
             if(state.html) {
                 document.getElementById('main-content-grid').innerHTML = state.html;
             } else if(state.b) {
@@ -793,23 +896,6 @@
                     changeProject(false); 
                 }
             }
-        }
-
-        function saveStateForUndo() {
-            undoStack.push(document.getElementById('dashboard-container').innerHTML);
-            redoStack = []; document.getElementById('btn-undo').disabled = false; document.getElementById('btn-redo').disabled = true;
-        }
-        function undo() {
-            if (!undoStack.length) return;
-            redoStack.push(document.getElementById('dashboard-container').innerHTML);
-            document.getElementById('dashboard-container').innerHTML = undoStack.pop();
-            document.getElementById('btn-undo').disabled = !undoStack.length; document.getElementById('btn-redo').disabled = false;
-        }
-        function redo() {
-            if (!redoStack.length) return;
-            undoStack.push(document.getElementById('dashboard-container').innerHTML);
-            document.getElementById('dashboard-container').innerHTML = redoStack.pop();
-            document.getElementById('btn-undo').disabled = false; document.getElementById('btn-redo').disabled = !redoStack.length;
         }
     </script>
 </body>
