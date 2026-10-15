@@ -208,7 +208,7 @@
         <div class="bar-group">
             <button class="btn-studio" id="btn-handles" onclick="toggleHandles()">🛠️ Handles: ON</button>
             <button class="btn-studio" onclick="addCustomBlock(true)">➕ Block</button>
-            <!-- NEW: Bullets format button -->
+            <!-- Bullets format button -->
             <button class="btn-studio" onmousedown="event.preventDefault(); document.execCommand('insertUnorderedList')" title="Format as Bullet List">⠇ Bullets</button>
             <button class="btn-studio" id="btn-undo" onclick="undo()" disabled>↩️ Undo</button>
             <button class="btn-studio" id="btn-redo" onclick="redo()" disabled>↪️ Redo</button>
@@ -307,7 +307,6 @@
                     <div class="card-controls">
                         <span>⠿ Drag Red Flags</span>
                         <div>
-                            <!-- NEW: Add Bullet specific to Red Flags -->
                             <button class="span-btn" onclick="addRedFlag(event)" title="Add Red Flag Bullet">➕ Bullet</button>
                             <button class="span-btn active" onclick="setSpan('card-red-flags', 1)">1 Col</button>
                             <button class="span-btn" onclick="setSpan('card-red-flags', 2)">2 Col</button>
@@ -529,6 +528,17 @@
             if(isUserTriggered) {
                 saveStateForUndo();
                 saveCurrentViewToDB();
+                
+                // AUTO-SAVE to localStorage when dropdown changes so data is never lost
+                const tempState = {
+                    p: document.getElementById('select-project').value,
+                    m: document.getElementById('select-month').value,
+                    w: document.getElementById('select-week').value,
+                    f: document.getElementById('select-font').value, 
+                    z: currentZoom, 
+                    db: stateDB
+                };
+                localStorage.setItem('hamco_dashboard_master', JSON.stringify(tempState));
             }
             
             const pId = document.getElementById('select-project').value;
@@ -689,7 +699,7 @@
             });
         }
 
-        // NEW: Function to add a specific Red Flag bullet row
+        // Function to add a new Red Flag bullet row
         function addRedFlag(event) {
             if(event) event.stopPropagation();
             saveStateForUndo();
@@ -856,8 +866,10 @@
                 db: stateDB
             };
 
-            localStorage.setItem('hamco_dashboard_v8', JSON.stringify(state));
-            if(showAlert) alert('✅ Everything saved locally!');
+            // PERMANENT MASTER SAVE KEY - Do not change this line so user never loses data
+            localStorage.setItem('hamco_dashboard_master', JSON.stringify(state));
+            
+            if(showAlert) alert('✅ Dashboard saved successfully for this specific Project and Period!');
         }
 
         function loadState(state) {
@@ -902,7 +914,12 @@
                     window.history.replaceState({}, document.title, window.location.pathname);
                 } catch(e) { changeProject(false); }
             } else {
-                const localSave = localStorage.getItem('hamco_dashboard_v8');
+                // Check for master save, gracefully fallback to older versions if they exist
+                const localSave = localStorage.getItem('hamco_dashboard_master') 
+                    || localStorage.getItem('hamco_dashboard_v8') 
+                    || localStorage.getItem('hamco_dashboard_v7') 
+                    || localStorage.getItem('hamco_dashboard_save');
+
                 if (localSave) {
                     try {
                         loadState(JSON.parse(localSave));
