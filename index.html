@@ -284,99 +284,7 @@
 
             <!-- MAIN CONTENT AREA WITH FLATTENED GRID -->
             <div class="light-main-grid handles-off" id="main-content-grid">
-                
-                <div class="light-card col-span-1" id="card-timeline">
-                    <div class="card-controls">
-                        <span>⠿ Drag Timeline</span>
-                        <div>
-                            <button class="span-btn active" onclick="setSpan('card-timeline', 1)">1 Col</button>
-                            <button class="span-btn" onclick="setSpan('card-timeline', 2)">2 Col</button>
-                            <!-- DELETE BUTTON INCLUDED HERE -->
-                            <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-timeline', event)">❌</button>
-                        </div>
-                    </div>
-                    <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
-                    <div style="font-size: 11px; margin-bottom: 6px;" id="l-timeline-window" contenteditable="true">
-                        <strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)
-                    </div>
-                    <div style="font-size: 11px; color: #dc2626; font-weight: 700;" id="l-delay-tag" contenteditable="true">
-                        Current Delay: 5 to 6 months behind baseline schedule
-                    </div>
-                </div>
-
-                <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444; grid-row: span 2;">
-                    <div class="card-controls">
-                        <span>⠿ Drag Red Flags</span>
-                        <div>
-                            <!-- ADD RED BULLET BUTTON INCLUDED HERE -->
-                            <button class="span-btn" onclick="addRedFlag(event)" style="color: #ef4444; font-weight: bold;" title="Add Red Flag Bullet">➕ Bullet</button>
-                            <button class="span-btn active" onclick="setSpan('card-red-flags', 1)">1 Col</button>
-                            <button class="span-btn" onclick="setSpan('card-red-flags', 2)">2 Col</button>
-                            <!-- DELETE BUTTON INCLUDED HERE -->
-                            <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-red-flags', event)">❌</button>
-                        </div>
-                    </div>
-                    <div class="light-card-title" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
-                    <div id="red-flags-container">
-                        <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-1" contenteditable="true" style="flex: 1; font-size: 11px;">Project is <strong>5 to 6 months behind</strong> baseline schedule.</div></div>
-                        <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-2" contenteditable="true" style="flex: 1; font-size: 11px;">Roofing works <strong>not commenced</strong> due to active procurement.</div></div>
-                        <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-3" contenteditable="true" style="flex: 1; font-size: 11px;">IPMG Design approval observed 2 months delay.</div></div>
-                        <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-4" contenteditable="true" style="flex: 1; font-size: 11px;">Solicitation phase has a 5.5-month variance.</div></div>
-                        <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-5" contenteditable="true" style="flex: 1; font-size: 11px;">Inception dates remain blank across actual tracking.</div></div>
-                        <div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-6" contenteditable="true" style="flex: 1; font-size: 11px;">Schedule discrepancy between dashboard and oneUNOPS.</div></div>
-                    </div>
-                </div>
-
-                <div class="light-card col-span-1" id="card-pipeline">
-                    <div class="card-controls">
-                        <span>⠿ Drag Phase Status</span>
-                        <div>
-                            <button class="span-btn active" onclick="setSpan('card-pipeline', 1)">1 Col</button>
-                            <button class="span-btn" onclick="setSpan('card-pipeline', 2)">2 Col</button>
-                            <!-- DELETE BUTTON INCLUDED HERE -->
-                            <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-pipeline', event)">❌</button>
-                        </div>
-                    </div>
-                    <div class="light-card-title">⚙️ PROJECT PHASE STATUS</div>
-                    <div class="pipeline-container">
-                        <div class="pipeline-step completed">
-                            <div class="pipeline-step-name">Inception</div>
-                            <div class="pipeline-step-status" id="pipe-1" contenteditable="true">Completed</div>
-                        </div>
-                        <div class="pipeline-step completed">
-                            <div class="pipeline-step-name">Design/IPMG</div>
-                            <div class="pipeline-step-status" id="pipe-2" contenteditable="true">Approved</div>
-                        </div>
-                        <div class="pipeline-step active">
-                            <div class="pipeline-step-name">Procurement</div>
-                            <div class="pipeline-step-status" id="pipe-3" contenteditable="true">Active</div>
-                        </div>
-                        <div class="pipeline-step">
-                            <div class="pipeline-step-name">Construction</div>
-                            <div class="pipeline-step-status" id="pipe-4" contenteditable="true">Pending</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- KEY RECOMMENDATION BLOCK -->
-                <div class="light-card col-span-2" id="card-rec" style="background: #0f172a; color: white; padding: 12px 16px;">
-                    <div class="card-controls" style="background: rgba(255,255,255,0.15); color: #e2e8f0; border: none; margin-bottom: 12px;">
-                        <span>⠿ Drag Key Recommendation</span>
-                        <div>
-                            <button class="span-btn" onclick="setSpan('card-rec', 1)" style="color: #cbd5e1; background: rgba(0,0,0,0.3);">1 Col</button>
-                            <button class="span-btn active" onclick="setSpan('card-rec', 2)" style="color: white; background: #2563eb;">2 Col</button>
-                            <!-- DELETE BUTTON INCLUDED HERE -->
-                            <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px; background: rgba(0,0,0,0.3);" title="Delete Block" onclick="deleteBlock('card-rec', event)">❌</button>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
-                        <div class="rec-tag">KEY RECOMMENDATION</div>
-                        <div style="font-size: 11px; line-height: 1.4; color: white; flex: 1; min-width: 200px;" id="l-recommendation" contenteditable="true">
-                            It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
-                        </div>
-                    </div>
-                </div>
-
+                <!-- Javascript will instantly load the pure template here -->
             </div>
 
             <!-- MANAGER COMMENT SECTION (HIDDEN ON PDF) -->
@@ -385,11 +293,97 @@
                     <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">💬 Manager Comments / Next Steps (Hidden in PDF)</div>
                     <button onclick="emailManagerComment()" style="background: #0ea5e9; color: white; border: none; padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s;">Send</button>
                 </div>
+                <!-- Box defaults completely empty -->
                 <div id="manager-comments" contenteditable="true" style="font-size: 12px; color: #334155; min-height: 50px; background: white; padding: 10px; border-radius: 4px; border: 1px solid #cbd5e1;"></div>
             </div>
 
         </div>
     </div>
+
+    <!-- PURE TEMPLATE: Protects the default layout from caching bugs across weeks -->
+    <template id="default-grid-template">
+        <div class="light-card col-span-1" id="card-timeline">
+            <div class="card-controls">
+                <span>⠿ Drag Timeline</span>
+                <div>
+                    <button class="span-btn active" onclick="setSpan('card-timeline', 1)">1 Col</button>
+                    <button class="span-btn" onclick="setSpan('card-timeline', 2)">2 Col</button>
+                    <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-timeline', event)">❌</button>
+                </div>
+            </div>
+            <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
+            <div style="font-size: 11px; margin-bottom: 6px;" id="l-timeline-window" contenteditable="true">
+                <strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)
+            </div>
+            <div style="font-size: 11px; color: #dc2626; font-weight: 700;" id="l-delay-tag" contenteditable="true">
+                Current Delay: 5 to 6 months behind baseline schedule
+            </div>
+        </div>
+
+        <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444; grid-row: span 2;">
+            <div class="card-controls">
+                <span>⠿ Drag Red Flags</span>
+                <div>
+                    <!-- ADD RED BULLET BUTTON -->
+                    <button class="span-btn" onclick="addRedFlag(event)" style="color: #ef4444; font-weight: bold;" title="Add Red Flag Bullet">➕ Bullet</button>
+                    <button class="span-btn active" onclick="setSpan('card-red-flags', 1)">1 Col</button>
+                    <button class="span-btn" onclick="setSpan('card-red-flags', 2)">2 Col</button>
+                    <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-red-flags', event)">❌</button>
+                </div>
+            </div>
+            <div class="light-card-title" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
+            <div id="red-flags-container">
+                <!-- Generated Dynamically -->
+            </div>
+        </div>
+
+        <div class="light-card col-span-1" id="card-pipeline">
+            <div class="card-controls">
+                <span>⠿ Drag Phase Status</span>
+                <div>
+                    <button class="span-btn active" onclick="setSpan('card-pipeline', 1)">1 Col</button>
+                    <button class="span-btn" onclick="setSpan('card-pipeline', 2)">2 Col</button>
+                    <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-pipeline', event)">❌</button>
+                </div>
+            </div>
+            <div class="light-card-title">⚙️ PROJECT PHASE STATUS</div>
+            <div class="pipeline-container">
+                <div class="pipeline-step completed">
+                    <div class="pipeline-step-name">Inception</div>
+                    <div class="pipeline-step-status" id="pipe-1" contenteditable="true">Completed</div>
+                </div>
+                <div class="pipeline-step completed">
+                    <div class="pipeline-step-name">Design/IPMG</div>
+                    <div class="pipeline-step-status" id="pipe-2" contenteditable="true">Approved</div>
+                </div>
+                <div class="pipeline-step active">
+                    <div class="pipeline-step-name">Procurement</div>
+                    <div class="pipeline-step-status" id="pipe-3" contenteditable="true">Active</div>
+                </div>
+                <div class="pipeline-step">
+                    <div class="pipeline-step-name">Construction</div>
+                    <div class="pipeline-step-status" id="pipe-4" contenteditable="true">Pending</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="light-card col-span-2" id="card-rec" style="background: #0f172a; color: white; padding: 12px 16px;">
+            <div class="card-controls" style="background: rgba(255,255,255,0.15); color: #e2e8f0; border: none; margin-bottom: 12px;">
+                <span>⠿ Drag Key Recommendation</span>
+                <div>
+                    <button class="span-btn" onclick="setSpan('card-rec', 1)" style="color: #cbd5e1; background: rgba(0,0,0,0.3);">1 Col</button>
+                    <button class="span-btn active" onclick="setSpan('card-rec', 2)" style="color: white; background: #2563eb;">2 Col</button>
+                    <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px; background: rgba(0,0,0,0.3);" title="Delete Block" onclick="deleteBlock('card-rec', event)">❌</button>
+                </div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+                <div class="rec-tag">KEY RECOMMENDATION</div>
+                <div style="font-size: 11px; line-height: 1.4; color: white; flex: 1; min-width: 200px;" id="l-recommendation" contenteditable="true">
+                    It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
+                </div>
+            </div>
+        </div>
+    </template>
 
     <script>
         let handlesOn = false; 
@@ -551,9 +545,11 @@
             const w = document.getElementById('select-week').value;
             activeKey = pId + "_" + m + "_" + w;
 
+            // Step 1: Wipe the layout back to absolute default pristine state
             if(defaultGridHTML) {
                 document.getElementById('main-content-grid').innerHTML = defaultGridHTML;
             }
+            
             customEdits = {}; 
             cardLayouts = {};
             customBlockCount = 0;
@@ -588,7 +584,20 @@
                 if(pipeEl) pipeEl.innerHTML = hasData ? p.pipe[i] : "-";
             }
 
-            // Restore state if exists
+            // Step 2: Dynamically rebuild the red flags container so empty bullets NEVER show
+            const rfContainer = document.getElementById('red-flags-container');
+            if (rfContainer) {
+                rfContainer.innerHTML = ''; 
+                if (hasData && p.redFlags && p.redFlags.length > 0) {
+                    p.redFlags.forEach((rf, idx) => {
+                        rfContainer.innerHTML += `<div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-${idx+1}" contenteditable="true" style="flex: 1; font-size: 11px;">${rf}</div></div>`;
+                    });
+                } else {
+                    rfContainer.innerHTML = `<div class="red-flag-item"><div class="red-flag-bullet" style="color:transparent;">•</div><div id="rf-1" contenteditable="true" style="flex: 1; font-size: 11px; color: #ef4444; font-weight: bold;">No red flags or data submitted for this period yet.</div></div>`;
+                }
+            }
+
+            // Step 3: Overlay user's saved data IF it exists for this specific week
             if (stateDB[activeKey]) {
                 const saved = stateDB[activeKey];
                 customBlockCount = saved.b || 0;
@@ -692,7 +701,6 @@
 
             const btns = card.querySelectorAll('.span-btn');
             btns.forEach((b, idx) => {
-                // Ensure we don't highlight the delete or add bullet buttons
                 if (b.innerText === '❌' || b.innerText === '➕ Bullet') return; 
                 if (idx + 1 === cols) b.classList.add('active');
                 else b.classList.remove('active');
@@ -746,7 +754,6 @@
                     <div>
                         <button class="span-btn" onclick="setSpan('${id}', 1)">1 Col</button>
                         <button class="span-btn active" onclick="setSpan('${id}', 2)">2 Col</button>
-                        <!-- DELETE BUTTON INCLUDED HERE -->
                         <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('${id}', event)">❌</button>
                     </div>
                 </div>
@@ -897,7 +904,7 @@
         }
 
         window.onload = async () => {
-            defaultGridHTML = document.getElementById('main-content-grid').innerHTML;
+            defaultGridHTML = document.getElementById('default-grid-template').innerHTML;
             activeKey = document.getElementById('select-project').value + "_" + document.getElementById('select-month').value + "_" + document.getElementById('select-week').value;
 
             const params = new URLSearchParams(window.location.search);
