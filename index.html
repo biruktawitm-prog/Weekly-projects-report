@@ -109,8 +109,8 @@
         .light-kpi-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif;}
         .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
 
-        /* EQUAL COLUMNS & DENSE FLOW FOR PERFECT SNAPPING */
-        .light-main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; grid-auto-flow: row dense; }
+        /* The Grid matches original width proportions without forced spacing gaps */
+        .light-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; }
         
         .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; position: relative; page-break-inside: avoid; break-inside: avoid;}
         .light-card.dragging { opacity: 0.4; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px dashed #3b82f6; }
@@ -127,26 +127,17 @@
         .pipeline-step-name { font-size: 10px; font-weight: 700; color: #0f172a; }
         .pipeline-step-status { font-size: 9px; color: #64748b; margin-top: 2px; }
 
+        .light-recommendation-bar { background: #0f172a; color: white; padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 12px; }
         .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif;}
 
         [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
         [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
 
-        /* ENSURES BULLET LISTS SHOW CORRECTLY INSIDE TEXT BOXES */
-        [contenteditable="true"] ul, [contenteditable="true"] ol { margin: 4px 0 4px 24px; padding: 0; }
-        [contenteditable="true"] li { margin-bottom: 4px; display: list-item; list-style-position: outside; }
-
-        /* ================= PERFECT 1-PAGE PDF PRINT SETTINGS ================= */
+        /* ================= PERFECT PDF PRINT SETTINGS ================= */
         @media print { 
-            @page { size: landscape; margin: 5mm; }
-            body { 
-                padding: 0; 
-                background: #f8fafc !important; 
-                -webkit-print-color-adjust: exact !important; 
-                print-color-adjust: exact !important; 
-                zoom: 0.75; 
-            }
+            @page { size: landscape; margin: 10mm; }
+            body { padding: 0; background: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .top-studio-bar { display: none !important; } 
             .no-print { display: none !important; }
             .light-theme { box-shadow: none !important; padding: 0 !important; }
@@ -158,6 +149,7 @@
 
     <!-- TOP CONTROL TOOLBAR -->
     <div class="top-studio-bar">
+        <!-- PROJECT DROPDOWN & ADD BUTTON -->
         <div class="bar-group">
             <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📁 Project:</span>
             <select class="dropdown-select" id="select-project" onchange="changeProject(true)">
@@ -168,6 +160,7 @@
             <button class="btn-studio" onclick="addNewProject()" title="Add New Project" style="padding: 6px 10px;">➕</button>
         </div>
 
+        <!-- PERIOD DROPDOWN -->
         <div class="bar-group">
             <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📅 Period:</span>
             <select class="dropdown-select" id="select-month" onchange="changeProject(true)">
@@ -192,6 +185,7 @@
             </select>
         </div>
 
+        <!-- FONT & ZOOM SWITCHER -->
         <div class="bar-group">
             <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">Aa Font:</span>
             <select class="dropdown-select" id="select-font" onchange="changeFont(true)">
@@ -201,19 +195,20 @@
                 <option value="'Poppins', sans-serif">Poppins (Round)</option>
                 <option value="'Merriweather', serif">Merriweather (Serif)</option>
             </select>
+            
             <button class="btn-studio" onclick="changeZoom(-0.05, true)" title="Minimize Text">A-</button>
             <button class="btn-studio" onclick="changeZoom(0.05, true)" title="Maximize Text">A+</button>
         </div>
 
+        <!-- BLOCK & UNDO CONTROLS -->
         <div class="bar-group">
             <button class="btn-studio" id="btn-handles" onclick="toggleHandles()">🛠️ Handles: ON</button>
             <button class="btn-studio" onclick="addCustomBlock(true)">➕ Block</button>
-            <!-- Bullets format button -->
-            <button class="btn-studio" onmousedown="event.preventDefault(); document.execCommand('insertUnorderedList')" title="Format as Bullet List">⠇ Bullets</button>
             <button class="btn-studio" id="btn-undo" onclick="undo()" disabled>↩️ Undo</button>
             <button class="btn-studio" id="btn-redo" onclick="redo()" disabled>↪️ Redo</button>
         </div>
 
+        <!-- EXPORT & SHARE -->
         <div class="bar-group">
             <button class="btn-action-green" onclick="saveLayout()">💾 Save</button>
             <button class="btn-studio" onclick="window.print()">🖨️ PDF</button>
@@ -227,8 +222,8 @@
             
             <div class="light-header-banner">
                 <div class="light-header-title">
-                    <h2 id="l-main-title" contenteditable="true">WEEKLY PROJECT UPDATES NIMULE OSBP</h2>
-                    <p id="l-sub-title" contenteditable="true">Nimule OSBP Construction Project</p>
+                    <h2 id="l-main-title" contenteditable="true">WEEKLY RED FLAG REPORT</h2>
+                    <p id="l-sub-title" contenteditable="true">Nimule OSBP Construction Project • UNOPS HAMCO</p>
                 </div>
                 <div style="text-align: right; font-size: 11px;">
                     <div><strong>Reporting Period:</strong> <span id="l-period-tag" contenteditable="true">October 2026 - Week 1</span></div>
@@ -238,7 +233,7 @@
 
             <!-- KPI & RADIAL RINGS SECTION -->
             <div class="light-main-grid handles-off" style="grid-template-columns: 1fr 1fr 1.25fr; margin-bottom: 12px;" id="kpi-grid">
-                <div class="light-card col-span-1" id="kpi-card-1" style="grid-column: span 1;">
+                <div class="light-card col-span-1" id="kpi-card-1">
                     <div class="card-controls"><span>⠿ Card 1</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">PROJECT TIMELINE & ELAPSED DAYS</div>
                     <div class="radial-flex">
@@ -256,7 +251,7 @@
                     </div>
                 </div>
 
-                <div class="light-card col-span-1" id="kpi-card-2" style="grid-column: span 1;">
+                <div class="light-card col-span-1" id="kpi-card-2">
                     <div class="card-controls"><span>⠿ Card 2</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">FINANCIAL EXECUTION RATE</div>
                     <div class="radial-flex">
@@ -274,7 +269,7 @@
                     </div>
                 </div>
 
-                <div class="light-card col-span-1" id="kpi-card-3" style="border-left: 3px solid #059669; grid-column: span 1;">
+                <div class="light-card col-span-1" id="kpi-card-3" style="border-left: 3px solid #059669;">
                     <div class="card-controls"><span>⠿ Card 3</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase;" id="l-design-head">IPMG DESIGN APPROVAL</div>
                     <div style="font-size: 14px; font-weight: 800; color: #059669;" id="l-design-status" contenteditable="true">APPROVED / 100% DONE</div>
@@ -282,18 +277,11 @@
                 </div>
             </div>
 
-            <!-- MAIN CONTENT AREA WITH FLATTENED GRID -->
+            <!-- MAIN CONTENT AREA -->
             <div class="light-main-grid handles-off" id="main-content-grid">
                 
                 <div class="light-card col-span-1" id="card-timeline">
-                    <div class="card-controls">
-                        <span>⠿ Drag Timeline</span>
-                        <div>
-                            <button class="span-btn active" onclick="setSpan('card-timeline', 1)">1 Col</button>
-                            <button class="span-btn" onclick="setSpan('card-timeline', 2)">2 Col</button>
-                            <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-timeline', event)">❌</button>
-                        </div>
-                    </div>
+                    <div class="card-controls"><span>⠿ Drag Timeline Card</span></div>
                     <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
                     <div style="font-size: 11px; margin-bottom: 6px;" id="l-timeline-window" contenteditable="true">
                         <strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)
@@ -303,14 +291,13 @@
                     </div>
                 </div>
 
-                <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444; grid-row: span 2;">
+                <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444;">
                     <div class="card-controls">
                         <span>⠿ Drag Red Flags</span>
                         <div>
                             <button class="span-btn" onclick="addRedFlag(event)" title="Add Red Flag Bullet">➕ Bullet</button>
                             <button class="span-btn active" onclick="setSpan('card-red-flags', 1)">1 Col</button>
                             <button class="span-btn" onclick="setSpan('card-red-flags', 2)">2 Col</button>
-                            <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-red-flags', event)">❌</button>
                         </div>
                     </div>
                     <div class="light-card-title" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
@@ -323,14 +310,7 @@
                 </div>
 
                 <div class="light-card col-span-1" id="card-pipeline">
-                    <div class="card-controls">
-                        <span>⠿ Drag Phase Status</span>
-                        <div>
-                            <button class="span-btn active" onclick="setSpan('card-pipeline', 1)">1 Col</button>
-                            <button class="span-btn" onclick="setSpan('card-pipeline', 2)">2 Col</button>
-                            <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-pipeline', event)">❌</button>
-                        </div>
-                    </div>
+                    <div class="card-controls"><span>⠿ Drag Phase Status Card</span></div>
                     <div class="light-card-title">⚙️ PROJECT PHASE STATUS</div>
                     <div class="pipeline-container">
                         <div class="pipeline-step completed">
@@ -351,25 +331,13 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- KEY RECOMMENDATION BLOCK -->
-                <div class="light-card col-span-2" id="card-rec" style="background: #0f172a; color: white; padding: 12px 16px;">
-                    <div class="card-controls" style="background: rgba(255,255,255,0.15); color: #e2e8f0; border: none; margin-bottom: 12px;">
-                        <span>⠿ Drag Key Recommendation</span>
-                        <div>
-                            <button class="span-btn" onclick="setSpan('card-rec', 1)" style="color: #cbd5e1; background: rgba(0,0,0,0.3);">1 Col</button>
-                            <button class="span-btn active" onclick="setSpan('card-rec', 2)" style="color: white; background: #2563eb;">2 Col</button>
-                            <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px; background: rgba(0,0,0,0.3);" title="Delete Block" onclick="deleteBlock('card-rec', event)">❌</button>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
-                        <div class="rec-tag">KEY RECOMMENDATION</div>
-                        <div style="font-size: 11px; line-height: 1.4; color: white; flex: 1; min-width: 200px;" id="l-recommendation" contenteditable="true">
-                            It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
-                        </div>
-                    </div>
+            <div class="light-recommendation-bar" id="card-rec">
+                <div class="rec-tag">KEY RECOMMENDATION</div>
+                <div style="font-size: 11px; line-height: 1.4;" id="l-recommendation" contenteditable="true">
+                    It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
                 </div>
-
             </div>
 
             <!-- MANAGER COMMENT SECTION (HIDDEN ON PDF) -->
@@ -378,7 +346,7 @@
                     <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">💬 Manager Comments / Next Steps (Hidden in PDF)</div>
                     <button onclick="emailManagerComment()" style="background: #0ea5e9; color: white; border: none; padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s;">Send</button>
                 </div>
-                <!-- Box defaults completely empty -->
+                <!-- Box defaults completely empty as requested -->
                 <div id="manager-comments" contenteditable="true" style="font-size: 12px; color: #334155; min-height: 50px; background: white; padding: 10px; border-radius: 4px; border: 1px solid #cbd5e1;"></div>
             </div>
 
@@ -393,14 +361,10 @@
         let currentZoom = 1;
         let customEdits = {}; 
         let cardLayouts = {}; 
-        
-        let stateDB = {};
-        let activeKey = "nimule_October_Week 1";
-        let defaultGridHTML = "";
 
         const projectData = {
             nimule: {
-                title: "WEEKLY PROJECT UPDATES NIMULE OSBP",
+                title: "WEEKLY PROJECT UPDATES — Nimule OSBP",
                 subTitle: "Nimule OSBP Construction Project",
                 location: "Nimule, South Sudan",
                 delayBadge: "Current Delay: 5 to 6 months behind baseline schedule",
@@ -420,13 +384,13 @@
                 ]
             },
             japan: {
-                title: "WEEKLY PROJECT UPDATES JAPAN INFRASTRUCTURE",
+                title: "WEEKLY PROJECT UPDATES — Japan Infrastructure",
                 subTitle: "Japan Grant Aid Infrastructure Support",
                 location: "Juba, South Sudan",
                 delayBadge: "ON SCHEDULE / NORMAL",
                 timePct: 42.5, finPct: 54.2,
                 remDays: "420 Days Rem", elapsedDays: "310 of 730 Days Elapsed",
-                budgetTotal: "Total: $6,000,000.00", budgetExp: "Exp: $3,250,000.00",
+                budgetTotal: "Total: $6,000,000.00", budgetExp: "Exp: \$3,250,000.00",
                 designHead: "PHASE STATUS", designStatus: "APPROVED", designDesc: "Design phase fully approved and documented.",
                 pipe: ["Completed", "Approved", "Active", "Pending"],
                 recommendation: "Maintain close coordination with local port authorities to expedite remaining logistics clearance.",
@@ -440,13 +404,13 @@
                 ]
             },
             flood: {
-                title: "WEEKLY PROJECT UPDATES FLOOD MITIGATION",
+                title: "WEEKLY PROJECT UPDATES — Flood Mitigation",
                 subTitle: "Emergency Flood Mitigation & Dike Construction",
                 location: "Bentiu & Malakal, South Sudan",
                 delayBadge: "42.57% PROGRESS GAP",
                 timePct: 70.2, finPct: 25.6,
                 remDays: "End: 31 Mar 2027", elapsedDays: "70.25% Elapsed / 27.68% Physical",
-                budgetTotal: "Total: $9,860,000.00", budgetExp: "Exp: $2,500,000.00",
+                budgetTotal: "Total: \$9,860,000.00", budgetExp: "Exp: \$2,500,000.00",
                 designHead: "INCEPTION & ASSESSMENT", designStatus: "IN PROGRESS", designDesc: "Preparation of Technical documents and design approval for Water Yards remains In Progress (planned for June 1, 2026).",
                 pipe: ["In Progress", "Delayed", "Active", "Delayed (6m)"],
                 recommendation: "In the forecast to delivery percentage, there is an over forecasting trend noticed with a total forecasted value of -7,859,796.48 USD over the past 10 months.",
@@ -456,7 +420,7 @@
                     "Procurement: 1 activity in progress is 4 months behind schedule (June 17, 2026).",
                     "Procurement: 2 activities not started, 4 months behind schedule (July 4, 2026).",
                     "Works & Contract Management: 6-month delay overall. 5 activities not started.",
-                    "Over forecasting trend noticed with a total forecasted value of -$7.85M over the past 10 months."
+                    "Over forecasting trend noticed with a total forecasted value of -\$7.85M over the past 10 months."
                 ]
             }
         };
@@ -490,13 +454,13 @@
             if(name) {
                 const id = 'proj_' + Math.random().toString(36).substr(2, 5);
                 projectData[id] = {
-                    title: "WEEKLY PROJECT UPDATES " + name.toUpperCase(),
+                    title: "WEEKLY PROJECT UPDATES — " + name,
                     subTitle: name + " Construction Project",
                     location: "TBD",
                     delayBadge: "NEW PROJECT",
                     timePct: 0, finPct: 0,
                     remDays: "TBD Days Rem", elapsedDays: "0 Days Elapsed",
-                    budgetTotal: "Total: $0.00", budgetExp: "Exp: $0.00",
+                    budgetTotal: "Total: \$0.00", budgetExp: "Exp: \$0.00",
                     designHead: "PHASE STATUS", designStatus: "PENDING", designDesc: "Not yet started.",
                     pipe: ["Pending", "Pending", "Pending", "Pending"],
                     recommendation: "New project added. Awaiting first status report.",
@@ -511,49 +475,16 @@
             }
         }
 
-        function saveCurrentViewToDB() {
-            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
-                if(!el.id) el.id = 'edit_' + index;
-                customEdits[el.id] = el.innerHTML;
-            });
-            stateDB[activeKey] = {
-                e: JSON.parse(JSON.stringify(customEdits)),
-                html: document.getElementById('main-content-grid').innerHTML,
-                l: JSON.parse(JSON.stringify(cardLayouts)),
-                b: customBlockCount
-            };
-        }
-
         function changeProject(isUserTriggered = false) {
             if(isUserTriggered) {
                 saveStateForUndo();
-                saveCurrentViewToDB();
-                
-                // AUTO-SAVE to localStorage when dropdown changes so data is never lost
-                const tempState = {
-                    p: document.getElementById('select-project').value,
-                    m: document.getElementById('select-month').value,
-                    w: document.getElementById('select-week').value,
-                    f: document.getElementById('select-font').value, 
-                    z: currentZoom, 
-                    db: stateDB
-                };
-                localStorage.setItem('hamco_dashboard_master', JSON.stringify(tempState));
+                customEdits = {}; 
             }
-            
-            const pId = document.getElementById('select-project').value;
+            const p = projectData[document.getElementById('select-project').value];
             const m = document.getElementById('select-month').value;
             const w = document.getElementById('select-week').value;
-            activeKey = pId + "_" + m + "_" + w;
 
-            if(defaultGridHTML) {
-                document.getElementById('main-content-grid').innerHTML = defaultGridHTML;
-            }
-            customEdits = {}; 
-            cardLayouts = {};
-            customBlockCount = 0;
-
-            const p = projectData[pId];
+            // Only October Week 1 has the active data by default. Other weeks show as not updated.
             const hasData = (m === 'October' && w === 'Week 1') || p.delayBadge === "NEW PROJECT";
 
             document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
@@ -589,28 +520,8 @@
             if(!hasData && document.getElementById('rf-1')) {
                 document.getElementById('rf-1').innerHTML = "No red flags or data submitted for this period yet.";
             }
-
-            if (stateDB[activeKey]) {
-                const saved = stateDB[activeKey];
-                customBlockCount = saved.b || 0;
-                cardLayouts = saved.l || {};
-                customEdits = saved.e || {};
-                if (saved.html) {
-                    document.getElementById('main-content-grid').innerHTML = saved.html;
-                }
-                applyCustomEdits();
-            }
-
-            const cBox = document.getElementById('manager-comments');
-            if(cBox) {
-                if(!stateDB[activeKey] || !customEdits['manager-comments']) {
-                    cBox.innerHTML = "";
-                }
-            }
-
-            if(handlesOn) {
-                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
-            }
+            
+            applyCustomEdits(); 
         }
 
         // ==========================================
@@ -635,26 +546,14 @@
 
         document.addEventListener("dragover", function(event) {
             if(handlesOn && draggedCard) {
-                event.preventDefault(); 
-            }
-        });
-
-        document.addEventListener("drop", function(event) {
-            if(handlesOn && draggedCard) {
                 event.preventDefault();
                 const container = document.getElementById('main-content-grid');
                 const targetCard = event.target.closest('.light-card');
                 
                 if (targetCard && targetCard !== draggedCard && targetCard.parentNode === container) {
                     const rect = targetCard.getBoundingClientRect();
-                    const isAfter = (event.clientY - rect.top) > (rect.height / 2);
-                    
-                    if (isAfter) {
-                        container.insertBefore(draggedCard, targetCard.nextSibling);
-                    } else {
-                        container.insertBefore(draggedCard, targetCard);
-                    }
-                    saveStateForUndo();
+                    const next = (event.clientY - rect.top) / (rect.bottom - rect.top) > .5;
+                    container.insertBefore(draggedCard, next ? targetCard.nextSibling : targetCard);
                 }
             }
         });
@@ -680,26 +579,18 @@
             if(isUserTriggered) saveStateForUndo();
             const card = document.getElementById(cardId);
             if(!card) return;
-            
-            card.classList.remove('col-span-1', 'col-span-2');
+            card.className = card.className.replace(/col-span-\d/g, '');
             card.classList.add('col-span-' + cols);
             cardLayouts[cardId] = cols;
 
-            if(cols === 2) {
-                card.style.gridColumn = '1 / -1';
-            } else {
-                card.style.gridColumn = 'span 1';
-            }
-
             const btns = card.querySelectorAll('.span-btn');
             btns.forEach((b, idx) => {
-                if (b.innerText === '❌' || b.innerText === '➕ Bullet') return; 
+                if (b.innerText === '➕ Bullet') return;
                 if (idx + 1 === cols) b.classList.add('active');
                 else b.classList.remove('active');
             });
         }
 
-        // Function to add a new Red Flag bullet row
         function addRedFlag(event) {
             if(event) event.stopPropagation();
             saveStateForUndo();
@@ -713,26 +604,14 @@
             customEdits[newId] = "Click to edit new red flag...";
         }
 
-        // Function to delete a block completely
-        function deleteBlock(id, event) {
-            if(event) event.stopPropagation();
-            saveStateForUndo();
-            const el = document.getElementById(id);
-            if (el) el.remove();
-        }
-
         function addCustomBlock(isUserTriggered = false) {
             if(isUserTriggered) saveStateForUndo();
-            
-            if (!handlesOn) toggleHandles();
-
             customBlockCount++;
             const container = document.getElementById('main-content-grid');
             const id = 'custom-block-' + customBlockCount;
             const newCard = document.createElement('div');
             newCard.className = 'light-card col-span-2';
             newCard.id = id;
-            newCard.style.gridColumn = '1 / -1'; 
             if(handlesOn) newCard.setAttribute('draggable', 'true');
             newCard.innerHTML = `
                 <div class="card-controls">
@@ -740,18 +619,12 @@
                     <div>
                         <button class="span-btn" onclick="setSpan('${id}', 1)">1 Col</button>
                         <button class="span-btn active" onclick="setSpan('${id}', 2)">2 Col</button>
-                        <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('${id}', event)">❌</button>
                     </div>
                 </div>
                 <div class="light-card-title" id="cb-title-${customBlockCount}" contenteditable="true">📌 CUSTOM STATUS BLOCK</div>
                 <div id="cb-text-${customBlockCount}" contenteditable="true" style="font-size: 11px; color: #475569; min-height: 30px;">Click here to edit this custom project note.</div>
             `;
-            const recBar = document.getElementById('card-rec');
-            if(recBar) {
-                container.insertBefore(newCard, recBar);
-            } else {
-                container.appendChild(newCard);
-            }
+            container.appendChild(newCard);
             cardLayouts[id] = 2;
         }
 
@@ -765,9 +638,7 @@
         function applyCustomEdits() {
             for (const id in customEdits) {
                 const el = document.getElementById(id);
-                if (el) {
-                    el.innerHTML = customEdits[id];
-                }
+                if (el) el.innerHTML = customEdits[id];
             }
         }
 
@@ -785,6 +656,7 @@
                 return;
             }
 
+            // Secure hand-off to default mail app natively
             alert("Opening your email app to instantly route this message to biruktawitm@unops.org...");
             
             const subject = encodeURIComponent(`Dashboard Comment: ${projName}`);
@@ -800,15 +672,18 @@
             const ogText = btn.innerHTML;
             btn.innerHTML = '⏳ Generating Short Link...';
 
-            saveCurrentViewToDB(); 
-            
+            saveLayout(false); 
+
             const state = {
                 p: document.getElementById('select-project').value,
                 m: document.getElementById('select-month').value,
                 w: document.getElementById('select-week').value,
                 f: document.getElementById('select-font').value, 
                 z: currentZoom, 
-                db: stateDB
+                b: customBlockCount,
+                l: cardLayouts,
+                e: customEdits,
+                html: document.getElementById('main-content-grid').innerHTML // saves drag/drop positions
             };
 
             let shareUrl = window.location.href;
@@ -855,7 +730,10 @@
         // LOCAL SAVE & LOAD 
         // ==========================================
         function saveLayout(showAlert = true) {
-            saveCurrentViewToDB();
+            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                if(!el.id) el.id = 'edit_' + index;
+                customEdits[el.id] = el.innerHTML;
+            });
 
             const state = {
                 p: document.getElementById('select-project').value,
@@ -863,38 +741,39 @@
                 w: document.getElementById('select-week').value,
                 f: document.getElementById('select-font').value, 
                 z: currentZoom, 
-                db: stateDB
+                b: customBlockCount,
+                l: cardLayouts,
+                e: customEdits,
+                html: document.getElementById('main-content-grid').innerHTML
             };
 
-            // PERMANENT MASTER SAVE KEY - Do not change this line so user never loses data
-            localStorage.setItem('hamco_dashboard_master', JSON.stringify(state));
-            
-            if(showAlert) alert('✅ Dashboard saved successfully for this specific Project and Period!');
+            localStorage.setItem('hamco_dashboard_save', JSON.stringify(state));
+            if(showAlert) alert('✅ Everything saved locally!');
         }
 
         function loadState(state) {
-            if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
-            if(state.z) { currentZoom = state.z; changeZoom(0, false); }
-            
-            if (state.db) {
-                stateDB = state.db;
-            } else {
-                stateDB = {};
-            }
-
             if(state.p) document.getElementById('select-project').value = state.p;
             if(state.m) document.getElementById('select-month').value = state.m;
             if(state.w) document.getElementById('select-week').value = state.w;
+            if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
+            if(state.z) { currentZoom = state.z; changeZoom(0, false); }
             
-            activeKey = document.getElementById('select-project').value + "_" + document.getElementById('select-month').value + "_" + document.getElementById('select-week').value;
+            // If they reorganized the grid, load the raw grid HTML directly to preserve card order
+            if(state.html) {
+                document.getElementById('main-content-grid').innerHTML = state.html;
+            } else if(state.b) {
+                for(let i=0; i<state.b; i++) addCustomBlock(false);
+            }
 
+            if(state.l) {
+                for(const id in state.l) setSpan(id, state.l[id], false);
+            }
+
+            if(state.e) customEdits = state.e;
             changeProject(false); 
         }
 
         window.onload = async () => {
-            defaultGridHTML = document.getElementById('main-content-grid').innerHTML;
-            activeKey = document.getElementById('select-project').value + "_" + document.getElementById('select-month').value + "_" + document.getElementById('select-week').value;
-
             const params = new URLSearchParams(window.location.search);
             const npointId = params.get('id');
             const bytebinId = params.get('bin');
@@ -914,12 +793,7 @@
                     window.history.replaceState({}, document.title, window.location.pathname);
                 } catch(e) { changeProject(false); }
             } else {
-                // Check for master save, gracefully fallback to older versions if they exist
-                const localSave = localStorage.getItem('hamco_dashboard_master') 
-                    || localStorage.getItem('hamco_dashboard_v8') 
-                    || localStorage.getItem('hamco_dashboard_v7') 
-                    || localStorage.getItem('hamco_dashboard_save');
-
+                const localSave = localStorage.getItem('hamco_dashboard_save');
                 if (localSave) {
                     try {
                         loadState(JSON.parse(localSave));
@@ -928,104 +802,25 @@
                     }
                 } else {
                     changeProject(false); 
-                    const cb = document.getElementById('manager-comments');
-                    if(cb) cb.innerHTML = "";
                 }
             }
         }
 
-        // ==========================================
-        // ROBUST UNDO / REDO ENGINE
-        // ==========================================
         function saveStateForUndo() {
-            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
-                if(!el.id) el.id = 'edit_' + index;
-                customEdits[el.id] = el.innerHTML;
-            });
-
-            undoStack.push({
-                dash: document.getElementById('dashboard-container').innerHTML,
-                proj: document.getElementById('select-project').value,
-                month: document.getElementById('select-month').value,
-                week: document.getElementById('select-week').value,
-                font: document.getElementById('select-font').value,
-                zoom: currentZoom,
-                db: JSON.parse(JSON.stringify(stateDB)),
-                ak: activeKey
-            });
-            redoStack = []; 
-            document.getElementById('btn-undo').disabled = false; 
-            document.getElementById('btn-redo').disabled = true;
+            undoStack.push(document.getElementById('dashboard-container').innerHTML);
+            redoStack = []; document.getElementById('btn-undo').disabled = false; document.getElementById('btn-redo').disabled = true;
         }
-
         function undo() {
             if (!undoStack.length) return;
-            
-            redoStack.push({
-                dash: document.getElementById('dashboard-container').innerHTML,
-                proj: document.getElementById('select-project').value,
-                month: document.getElementById('select-month').value,
-                week: document.getElementById('select-week').value,
-                font: document.getElementById('select-font').value,
-                zoom: currentZoom,
-                db: JSON.parse(JSON.stringify(stateDB)),
-                ak: activeKey
-            });
-
-            const s = undoStack.pop();
-            
-            document.getElementById('dashboard-container').innerHTML = s.dash;
-            document.getElementById('select-project').value = s.proj;
-            document.getElementById('select-month').value = s.month;
-            document.getElementById('select-week').value = s.week;
-            document.getElementById('select-font').value = s.font;
-            
-            stateDB = s.db;
-            activeKey = s.ak;
-            currentZoom = s.zoom;
-            document.getElementById('dashboard-container').style.zoom = currentZoom;
-            
-            document.getElementById('btn-undo').disabled = !undoStack.length; 
-            document.getElementById('btn-redo').disabled = false;
-            
-            if(handlesOn) {
-                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
-            }
+            redoStack.push(document.getElementById('dashboard-container').innerHTML);
+            document.getElementById('dashboard-container').innerHTML = undoStack.pop();
+            document.getElementById('btn-undo').disabled = !undoStack.length; document.getElementById('btn-redo').disabled = false;
         }
-
         function redo() {
             if (!redoStack.length) return;
-            
-            undoStack.push({
-                dash: document.getElementById('dashboard-container').innerHTML,
-                proj: document.getElementById('select-project').value,
-                month: document.getElementById('select-month').value,
-                week: document.getElementById('select-week').value,
-                font: document.getElementById('select-font').value,
-                zoom: currentZoom,
-                db: JSON.parse(JSON.stringify(stateDB)),
-                ak: activeKey
-            });
-
-            const s = redoStack.pop();
-            
-            document.getElementById('dashboard-container').innerHTML = s.dash;
-            document.getElementById('select-project').value = s.proj;
-            document.getElementById('select-month').value = s.month;
-            document.getElementById('select-week').value = s.week;
-            document.getElementById('select-font').value = s.font;
-            
-            stateDB = s.db;
-            activeKey = s.ak;
-            currentZoom = s.zoom;
-            document.getElementById('dashboard-container').style.zoom = currentZoom;
-            
-            document.getElementById('btn-undo').disabled = false; 
-            document.getElementById('btn-redo').disabled = !redoStack.length;
-
-            if(handlesOn) {
-                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
-            }
+            undoStack.push(document.getElementById('dashboard-container').innerHTML);
+            document.getElementById('dashboard-container').innerHTML = redoStack.pop();
+            document.getElementById('btn-undo').disabled = false; document.getElementById('btn-redo').disabled = !redoStack.length;
         }
     </script>
 </body>
