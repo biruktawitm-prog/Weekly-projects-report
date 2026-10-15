@@ -589,6 +589,12 @@
 
         function addCustomBlock(isUserTriggered = false) {
             if(isUserTriggered) saveStateForUndo();
+            
+            // Turn handles ON automatically so user immediately sees the resize/drag buttons
+            if (!handlesOn) {
+                toggleHandles();
+            }
+
             customBlockCount++;
             const container = document.getElementById('main-content-grid');
             const id = 'custom-block-' + customBlockCount;
