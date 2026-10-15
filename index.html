@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNOPS HAMCO - Executive Project Dashboard</title>
+    <!-- Professional Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -17,6 +18,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-sans); min-height: 100vh; padding: 12px 18px; transition: font-family 0.3s ease; }
 
+        /* Top Bar Navigation & Controls */
         .top-studio-bar {
             display: flex;
             justify-content: space-between;
@@ -43,6 +45,7 @@
             outline: none;
             cursor: pointer;
         }
+        .dropdown-select:focus { border-color: #3b82f6; box-shadow: 0 0 6px rgba(59, 130, 246, 0.4); }
 
         .btn-studio {
             background: #1f2937;
@@ -69,8 +72,10 @@
         }
         .btn-action-green:hover { background: #047857; }
 
+        /* Dashboard Container */
         .dashboard-container { transition: zoom 0.2s ease; }
 
+        /* Handle Controls */
         .card-controls {
             display: flex; justify-content: space-between; align-items: center;
             background: #e2e8f0; padding: 4px 8px; border-radius: 4px;
@@ -85,11 +90,13 @@
         .col-span-1 { grid-column: span 1 !important; }
         .col-span-2 { grid-column: 1 / -1 !important; }
 
+        /* ================= EXECUTIVE LIGHT STYLES ================= */
         .light-theme { background-color: #f8fafc; color: #0f172a; border-radius: 10px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .light-header-banner { background: linear-gradient(135deg, #0f4c81, #1e3a8a); color: white; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .light-header-title h2 { font-size: 20px; font-weight: 800; text-transform: uppercase; margin: 0; }
         .light-header-title p { font-size: 11px; opacity: 0.85; margin: 4px 0 0 0; }
 
+        /* Radial Rings */
         .radial-flex { display: flex; align-items: center; gap: 12px; }
         .radial-container { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
         .radial-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
@@ -102,7 +109,8 @@
         .light-kpi-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif;}
         .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
 
-        .light-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; }
+        /* EQUAL COLUMNS & DENSE FLOW FOR PERFECT SNAPPING */
+        .light-main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; grid-auto-flow: row dense; }
         
         .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; position: relative; page-break-inside: avoid; break-inside: avoid;}
         .light-card.dragging { opacity: 0.4; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px dashed #3b82f6; }
@@ -119,7 +127,6 @@
         .pipeline-step-name { font-size: 10px; font-weight: 700; color: #0f172a; }
         .pipeline-step-status { font-size: 9px; color: #64748b; margin-top: 2px; }
 
-        .light-recommendation-bar { background: #0f172a; color: white; padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 12px; }
         .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif;}
 
         [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
@@ -225,7 +232,7 @@
 
             <!-- KPI & RADIAL RINGS SECTION -->
             <div class="light-main-grid handles-off" style="grid-template-columns: 1fr 1fr 1.25fr; margin-bottom: 12px;" id="kpi-grid">
-                <div class="light-card col-span-1" id="kpi-card-1">
+                <div class="light-card col-span-1" id="kpi-card-1" style="grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Card 1</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">PROJECT TIMELINE & ELAPSED DAYS</div>
                     <div class="radial-flex">
@@ -243,7 +250,7 @@
                     </div>
                 </div>
 
-                <div class="light-card col-span-1" id="kpi-card-2">
+                <div class="light-card col-span-1" id="kpi-card-2" style="grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Card 2</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">FINANCIAL EXECUTION RATE</div>
                     <div class="radial-flex">
@@ -261,7 +268,7 @@
                     </div>
                 </div>
 
-                <div class="light-card col-span-1" id="kpi-card-3" style="border-left: 3px solid #059669;">
+                <div class="light-card col-span-1" id="kpi-card-3" style="border-left: 3px solid #059669; grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Card 3</span></div>
                     <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase;" id="l-design-head">IPMG DESIGN APPROVAL</div>
                     <div style="font-size: 14px; font-weight: 800; color: #059669;" id="l-design-status" contenteditable="true">APPROVED / 100% DONE</div>
@@ -335,14 +342,24 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- KEY RECOMMENDATION IS OUTSIDE THE DRAGGABLE GRID AS IN ORIGINAL SNAPSHOT -->
-            <div class="light-recommendation-bar" id="card-rec">
-                <div class="rec-tag">KEY RECOMMENDATION</div>
-                <div style="font-size: 11px; line-height: 1.4;" id="l-recommendation" contenteditable="true">
-                    It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
+                <!-- KEY RECOMMENDATION IS INSIDE THE DRAGGABLE GRID -->
+                <div class="light-card col-span-2" id="card-rec" style="grid-column: 1 / -1; background: #0f172a; color: white;">
+                    <div class="card-controls" style="background: rgba(255,255,255,0.1); color: #cbd5e1; border: none; margin-bottom: 8px;">
+                        <span>⠿ Drag Key Recommendation</span>
+                        <div>
+                            <button class="span-btn" onclick="setSpan('card-rec', 1)" style="color: #cbd5e1; background: rgba(0,0,0,0.3);">1 Col</button>
+                            <button class="span-btn active" onclick="setSpan('card-rec', 2)" style="color: white; background: #2563eb;">2 Col</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+                        <div class="rec-tag">KEY RECOMMENDATION</div>
+                        <div style="font-size: 11px; line-height: 1.4; color: white; flex: 1; min-width: 200px;" id="l-recommendation" contenteditable="true">
+                            It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
             <!-- MANAGER COMMENT SECTION (HIDDEN ON PDF) -->
@@ -366,6 +383,11 @@
         let currentZoom = 1;
         let customEdits = {}; 
         let cardLayouts = {}; 
+        
+        // CORE STATE DATABASE (Saves specific setups for specific weeks)
+        let stateDB = {};
+        let activeKey = "nimule_October_Week 1";
+        let defaultGridHTML = "";
 
         const projectData = {
             nimule: {
@@ -480,15 +502,40 @@
             }
         }
 
+        // Saves current DOM into stateDB before switching weeks
+        function saveCurrentViewToDB() {
+            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                if(!el.id) el.id = 'edit_' + index;
+                customEdits[el.id] = el.innerHTML;
+            });
+            stateDB[activeKey] = {
+                e: JSON.parse(JSON.stringify(customEdits)),
+                html: document.getElementById('main-content-grid').innerHTML,
+                l: JSON.parse(JSON.stringify(cardLayouts)),
+                b: customBlockCount
+            };
+        }
+
         function changeProject(isUserTriggered = false) {
             if(isUserTriggered) {
                 saveStateForUndo();
-                customEdits = {}; 
+                saveCurrentViewToDB();
             }
-            const p = projectData[document.getElementById('select-project').value];
+            
+            const pId = document.getElementById('select-project').value;
             const m = document.getElementById('select-month').value;
             const w = document.getElementById('select-week').value;
+            activeKey = pId + "_" + m + "_" + w;
 
+            // Reset layout to default before applying base data to prevent bleeding across weeks
+            if(defaultGridHTML) {
+                document.getElementById('main-content-grid').innerHTML = defaultGridHTML;
+            }
+            customEdits = {}; 
+            cardLayouts = {};
+            customBlockCount = 0;
+
+            const p = projectData[pId];
             const hasData = (m === 'October' && w === 'Week 1') || p.delayBadge === "NEW PROJECT";
 
             document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
@@ -524,19 +571,35 @@
             if(!hasData && document.getElementById('rf-1')) {
                 document.getElementById('rf-1').innerHTML = "No red flags or data submitted for this period yet.";
             }
-            
-            applyCustomEdits(); 
-        }
 
-        function updatePeriodLabel(isUserTriggered = false) {
-            if(isUserTriggered) saveStateForUndo();
-            const m = document.getElementById('select-month').value;
-            const w = document.getElementById('select-week').value;
-            document.getElementById('l-period-tag').innerHTML = `${m} 2026 - ${w}`;
+            // Restore the specifically saved state for THIS week if it exists
+            if (stateDB[activeKey]) {
+                const saved = stateDB[activeKey];
+                customBlockCount = saved.b || 0;
+                cardLayouts = saved.l || {};
+                customEdits = saved.e || {};
+                if (saved.html) {
+                    document.getElementById('main-content-grid').innerHTML = saved.html;
+                }
+                applyCustomEdits();
+            }
+
+            // Always ensure the comment box is completely blank on new views
+            const cBox = document.getElementById('manager-comments');
+            if(cBox) {
+                if(!stateDB[activeKey] || !customEdits['manager-comments']) {
+                    cBox.innerHTML = "";
+                }
+            }
+
+            // Keep handles matching current UI state
+            if(handlesOn) {
+                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
+            }
         }
 
         // ==========================================
-        // PERFECT DRAG AND DROP ENGINE
+        // DRAG AND DROP LAYOUT ENGINE
         // ==========================================
         let draggedCard = null;
 
@@ -557,7 +620,7 @@
 
         document.addEventListener("dragover", function(event) {
             if(handlesOn && draggedCard) {
-                event.preventDefault(); // Necessary to allow dropping
+                event.preventDefault(); 
             }
         });
 
@@ -607,19 +670,33 @@
             card.classList.add('col-span-' + cols);
             cardLayouts[cardId] = cols;
 
+            if(cols === 2) {
+                card.style.gridColumn = '1 / -1';
+            } else {
+                card.style.gridColumn = 'span 1';
+            }
+
             const btns = card.querySelectorAll('.span-btn');
             btns.forEach((b, idx) => {
+                // Keep the delete button un-highlighted
+                if (b.innerText === '❌') return; 
                 if (idx + 1 === cols) b.classList.add('active');
                 else b.classList.remove('active');
             });
         }
 
+        // NEW: Function to delete a custom block
+        function deleteBlock(id, event) {
+            if(event) event.stopPropagation(); // prevent drag
+            saveStateForUndo();
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
         function addCustomBlock(isUserTriggered = false) {
             if(isUserTriggered) saveStateForUndo();
             
-            if (!handlesOn) {
-                toggleHandles();
-            }
+            if (!handlesOn) toggleHandles();
 
             customBlockCount++;
             const container = document.getElementById('main-content-grid');
@@ -627,6 +704,7 @@
             const newCard = document.createElement('div');
             newCard.className = 'light-card col-span-2';
             newCard.id = id;
+            newCard.style.gridColumn = '1 / -1'; 
             if(handlesOn) newCard.setAttribute('draggable', 'true');
             newCard.innerHTML = `
                 <div class="card-controls">
@@ -634,12 +712,18 @@
                     <div>
                         <button class="span-btn" onclick="setSpan('${id}', 1)">1 Col</button>
                         <button class="span-btn active" onclick="setSpan('${id}', 2)">2 Col</button>
+                        <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('${id}', event)">❌</button>
                     </div>
                 </div>
                 <div class="light-card-title" id="cb-title-${customBlockCount}" contenteditable="true">📌 CUSTOM STATUS BLOCK</div>
                 <div id="cb-text-${customBlockCount}" contenteditable="true" style="font-size: 11px; color: #475569; min-height: 30px;">Click here to edit this custom project note.</div>
             `;
-            container.appendChild(newCard);
+            const recBar = document.getElementById('card-rec');
+            if(recBar) {
+                container.insertBefore(newCard, recBar);
+            } else {
+                container.appendChild(newCard);
+            }
             cardLayouts[id] = 2;
         }
 
@@ -656,12 +740,6 @@
                 if (el) {
                     el.innerHTML = customEdits[id];
                 }
-            }
-            
-            // Absolutely wipe old cache from comment box if it reloads
-            const commentBox = document.getElementById('manager-comments');
-            if(commentBox && commentBox.innerHTML.includes("Click here to leave a comment")) {
-                commentBox.innerHTML = "";
             }
         }
 
@@ -694,18 +772,15 @@
             const ogText = btn.innerHTML;
             btn.innerHTML = '⏳ Generating Short Link...';
 
-            saveLayout(false); 
-
+            saveCurrentViewToDB(); 
+            
             const state = {
                 p: document.getElementById('select-project').value,
                 m: document.getElementById('select-month').value,
                 w: document.getElementById('select-week').value,
                 f: document.getElementById('select-font').value, 
                 z: currentZoom, 
-                b: customBlockCount,
-                l: cardLayouts,
-                e: customEdits,
-                html: document.getElementById('main-content-grid').innerHTML 
+                db: stateDB
             };
 
             let shareUrl = window.location.href;
@@ -752,10 +827,7 @@
         // LOCAL SAVE & LOAD 
         // ==========================================
         function saveLayout(showAlert = true) {
-            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
-                if(!el.id) el.id = 'edit_' + index;
-                customEdits[el.id] = el.innerHTML;
-            });
+            saveCurrentViewToDB();
 
             const state = {
                 p: document.getElementById('select-project').value,
@@ -763,10 +835,7 @@
                 w: document.getElementById('select-week').value,
                 f: document.getElementById('select-font').value, 
                 z: currentZoom, 
-                b: customBlockCount,
-                l: cardLayouts,
-                e: customEdits,
-                html: document.getElementById('main-content-grid').innerHTML
+                db: stateDB
             };
 
             localStorage.setItem('hamco_dashboard_save', JSON.stringify(state));
@@ -774,32 +843,37 @@
         }
 
         function loadState(state) {
-            if(state.p) document.getElementById('select-project').value = state.p;
-            if(state.m) document.getElementById('select-month').value = state.m;
-            if(state.w) document.getElementById('select-week').value = state.w;
             if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
             if(state.z) { currentZoom = state.z; changeZoom(0, false); }
             
-            if(state.html) {
-                document.getElementById('main-content-grid').innerHTML = state.html;
-            } else if(state.b) {
-                for(let i=0; i<state.b; i++) addCustomBlock(false);
+            if (state.db) {
+                stateDB = state.db;
+            } else {
+                // Fallback for old saves
+                stateDB = {};
+                const legacyKey = (state.p || 'nimule') + "_" + (state.m || 'October') + "_" + (state.w || 'Week 1');
+                stateDB[legacyKey] = {
+                    e: state.e || {},
+                    html: state.html || "",
+                    l: state.l || {},
+                    b: state.b || 0
+                };
             }
 
-            if(state.l) {
-                for(const id in state.l) setSpan(id, state.l[id], false);
-            }
-
-            if(state.e) customEdits = state.e;
-            changeProject(false); 
+            if(state.p) document.getElementById('select-project').value = state.p;
+            if(state.m) document.getElementById('select-month').value = state.m;
+            if(state.w) document.getElementById('select-week').value = state.w;
             
-            const commentBox = document.getElementById('manager-comments');
-            if(commentBox && commentBox.innerHTML.includes("Click here to leave a comment")) {
-                commentBox.innerHTML = "";
-            }
+            activeKey = document.getElementById('select-project').value + "_" + document.getElementById('select-month').value + "_" + document.getElementById('select-week').value;
+
+            changeProject(false); 
         }
 
         window.onload = async () => {
+            // Capture pure default layout before applying ANY changes
+            defaultGridHTML = document.getElementById('main-content-grid').innerHTML;
+            activeKey = document.getElementById('select-project').value + "_" + document.getElementById('select-month').value + "_" + document.getElementById('select-week').value;
+
             const params = new URLSearchParams(window.location.search);
             const npointId = params.get('id');
             const bytebinId = params.get('bin');
@@ -828,12 +902,10 @@
                     }
                 } else {
                     changeProject(false); 
+                    // Make sure comment box initializes perfectly empty on very first load
+                    const cb = document.getElementById('manager-comments');
+                    if(cb) cb.innerHTML = "";
                 }
-            }
-            
-            const cBox = document.getElementById('manager-comments');
-            if(cBox && cBox.innerText.includes("Click here to leave a comment")) {
-                cBox.innerText = "";
             }
         }
 
@@ -852,7 +924,9 @@
                 month: document.getElementById('select-month').value,
                 week: document.getElementById('select-week').value,
                 font: document.getElementById('select-font').value,
-                zoom: currentZoom
+                zoom: currentZoom,
+                db: JSON.parse(JSON.stringify(stateDB)),
+                ak: activeKey
             });
             redoStack = []; 
             document.getElementById('btn-undo').disabled = false; 
@@ -868,7 +942,9 @@
                 month: document.getElementById('select-month').value,
                 week: document.getElementById('select-week').value,
                 font: document.getElementById('select-font').value,
-                zoom: currentZoom
+                zoom: currentZoom,
+                db: JSON.parse(JSON.stringify(stateDB)),
+                ak: activeKey
             });
 
             const s = undoStack.pop();
@@ -879,6 +955,8 @@
             document.getElementById('select-week').value = s.week;
             document.getElementById('select-font').value = s.font;
             
+            stateDB = s.db;
+            activeKey = s.ak;
             currentZoom = s.zoom;
             document.getElementById('dashboard-container').style.zoom = currentZoom;
             
@@ -899,7 +977,9 @@
                 month: document.getElementById('select-month').value,
                 week: document.getElementById('select-week').value,
                 font: document.getElementById('select-font').value,
-                zoom: currentZoom
+                zoom: currentZoom,
+                db: JSON.parse(JSON.stringify(stateDB)),
+                ak: activeKey
             });
 
             const s = redoStack.pop();
@@ -910,6 +990,8 @@
             document.getElementById('select-week').value = s.week;
             document.getElementById('select-font').value = s.font;
             
+            stateDB = s.db;
+            activeKey = s.ak;
             currentZoom = s.zoom;
             document.getElementById('dashboard-container').style.zoom = currentZoom;
             
