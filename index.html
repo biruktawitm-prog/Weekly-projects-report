@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNOPS HAMCO - Executive Project Dashboard</title>
-    <!-- Professional Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -18,7 +17,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-sans); min-height: 100vh; padding: 12px 18px; transition: font-family 0.3s ease; }
 
-        /* Top Bar Navigation & Controls */
         .top-studio-bar {
             display: flex;
             justify-content: space-between;
@@ -45,7 +43,6 @@
             outline: none;
             cursor: pointer;
         }
-        .dropdown-select:focus { border-color: #3b82f6; box-shadow: 0 0 6px rgba(59, 130, 246, 0.4); }
 
         .btn-studio {
             background: #1f2937;
@@ -72,10 +69,8 @@
         }
         .btn-action-green:hover { background: #047857; }
 
-        /* Dashboard Container */
         .dashboard-container { transition: zoom 0.2s ease; }
 
-        /* Handle Controls */
         .card-controls {
             display: flex; justify-content: space-between; align-items: center;
             background: #e2e8f0; padding: 4px 8px; border-radius: 4px;
@@ -90,13 +85,11 @@
         .col-span-1 { grid-column: span 1 !important; }
         .col-span-2 { grid-column: 1 / -1 !important; }
 
-        /* ================= EXECUTIVE LIGHT STYLES ================= */
         .light-theme { background-color: #f8fafc; color: #0f172a; border-radius: 10px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .light-header-banner { background: linear-gradient(135deg, #0f4c81, #1e3a8a); color: white; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .light-header-title h2 { font-size: 20px; font-weight: 800; text-transform: uppercase; margin: 0; }
         .light-header-title p { font-size: 11px; opacity: 0.85; margin: 4px 0 0 0; }
 
-        /* Radial Rings */
         .radial-flex { display: flex; align-items: center; gap: 12px; }
         .radial-container { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
         .radial-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
@@ -109,8 +102,7 @@
         .light-kpi-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif;}
         .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
 
-        /* EQUAL COLUMNS & DENSE FLOW FOR PERFECT SNAPPING */
-        .light-main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; grid-auto-flow: row dense; }
+        .light-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; }
         
         .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; position: relative; page-break-inside: avoid; break-inside: avoid;}
         .light-card.dragging { opacity: 0.4; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px dashed #3b82f6; }
@@ -127,6 +119,7 @@
         .pipeline-step-name { font-size: 10px; font-weight: 700; color: #0f172a; }
         .pipeline-step-status { font-size: 9px; color: #64748b; margin-top: 2px; }
 
+        .light-recommendation-bar { background: #0f172a; color: white; padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 12px; }
         .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif;}
 
         [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
@@ -141,7 +134,7 @@
                 background: #f8fafc !important; 
                 -webkit-print-color-adjust: exact !important; 
                 print-color-adjust: exact !important; 
-                zoom: 0.65; /* Shrunk aggressively to force 1 page fit */
+                zoom: 0.75; 
             }
             .top-studio-bar { display: none !important; } 
             .no-print { display: none !important; }
@@ -221,8 +214,8 @@
             
             <div class="light-header-banner">
                 <div class="light-header-title">
-                    <h2 id="l-main-title" contenteditable="true">WEEKLY RED FLAG REPORT</h2>
-                    <p id="l-sub-title" contenteditable="true">Nimule OSBP Construction Project • UNOPS HAMCO</p>
+                    <h2 id="l-main-title" contenteditable="true">WEEKLY PROJECT UPDATES NIMULE OSBP</h2>
+                    <p id="l-sub-title" contenteditable="true">Nimule OSBP Construction Project</p>
                 </div>
                 <div style="text-align: right; font-size: 11px;">
                     <div><strong>Reporting Period:</strong> <span id="l-period-tag" contenteditable="true">October 2026 - Week 1</span></div>
@@ -230,7 +223,7 @@
                 </div>
             </div>
 
-            <!-- KPI SECTION -->
+            <!-- KPI & RADIAL RINGS SECTION -->
             <div class="light-main-grid handles-off" style="grid-template-columns: 1fr 1fr 1.25fr; margin-bottom: 12px;" id="kpi-grid">
                 <div class="light-card col-span-1" id="kpi-card-1">
                     <div class="card-controls"><span>⠿ Card 1</span></div>
@@ -276,13 +269,12 @@
                 </div>
             </div>
 
-            <!-- MAIN CONTENT AREA WITH FLATTENED GRID -->
-            <!-- All cards are direct children here. 'grid-auto-flow: dense' will automatically fill gaps -->
+            <!-- MAIN CONTENT AREA WITH EXACT ORIGINAL LAYOUT -->
             <div class="light-main-grid handles-off" id="main-content-grid">
                 
                 <div class="light-card col-span-1" id="card-timeline">
                     <div class="card-controls">
-                        <span>⠿ Drag Timeline</span>
+                        <span>⠿ Drag Timeline Card</span>
                         <div>
                             <button class="span-btn active" onclick="setSpan('card-timeline', 1)">1 Col</button>
                             <button class="span-btn" onclick="setSpan('card-timeline', 2)">2 Col</button>
@@ -297,7 +289,8 @@
                     </div>
                 </div>
 
-                <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444;">
+                <!-- Grid Row Span 2 guarantees the Red Flags stays tall on the right side -->
+                <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444; grid-row: span 2;">
                     <div class="card-controls">
                         <span>⠿ Drag Red Flags</span>
                         <div>
@@ -316,7 +309,7 @@
 
                 <div class="light-card col-span-1" id="card-pipeline">
                     <div class="card-controls">
-                        <span>⠿ Drag Phase Status</span>
+                        <span>⠿ Drag Phase Status Card</span>
                         <div>
                             <button class="span-btn active" onclick="setSpan('card-pipeline', 1)">1 Col</button>
                             <button class="span-btn" onclick="setSpan('card-pipeline', 2)">2 Col</button>
@@ -342,24 +335,14 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Key Recommendation: Resizable and Draggable -->
-                <div class="light-card col-span-2" id="card-rec" style="background: #0f172a; color: white; padding: 12px 16px;">
-                    <div class="card-controls" style="background: rgba(255,255,255,0.15); color: #e2e8f0; border: none; margin-bottom: 12px;">
-                        <span>⠿ Drag Key Recommendation</span>
-                        <div>
-                            <button class="span-btn" onclick="setSpan('card-rec', 1)" style="color: #cbd5e1; background: rgba(0,0,0,0.3);">1 Col</button>
-                            <button class="span-btn active" onclick="setSpan('card-rec', 2)" style="color: white; background: #2563eb;">2 Col</button>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
-                        <div class="rec-tag">KEY RECOMMENDATION</div>
-                        <div style="font-size: 11px; line-height: 1.4; color: white; flex: 1; min-width: 200px;" id="l-recommendation" contenteditable="true">
-                            It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
-                        </div>
-                    </div>
+            <!-- KEY RECOMMENDATION IS OUTSIDE THE DRAGGABLE GRID AS IN ORIGINAL SNAPSHOT -->
+            <div class="light-recommendation-bar" id="card-rec">
+                <div class="rec-tag">KEY RECOMMENDATION</div>
+                <div style="font-size: 11px; line-height: 1.4;" id="l-recommendation" contenteditable="true">
+                    It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
                 </div>
-
             </div>
 
             <!-- MANAGER COMMENT SECTION (HIDDEN ON PDF) -->
@@ -368,7 +351,7 @@
                     <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">💬 Manager Comments / Next Steps (Hidden in PDF)</div>
                     <button onclick="emailManagerComment()" style="background: #0ea5e9; color: white; border: none; padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s;">Send</button>
                 </div>
-                <!-- Box defaults completely empty -->
+                <!-- Box is completely 100% empty -->
                 <div id="manager-comments" contenteditable="true" style="font-size: 12px; color: #334155; min-height: 50px; background: white; padding: 10px; border-radius: 4px; border: 1px solid #cbd5e1;"></div>
             </div>
 
@@ -386,7 +369,7 @@
 
         const projectData = {
             nimule: {
-                title: "WEEKLY PROJECT UPDATES — Nimule OSBP",
+                title: "WEEKLY PROJECT UPDATES NIMULE OSBP",
                 subTitle: "Nimule OSBP Construction Project",
                 location: "Nimule, South Sudan",
                 delayBadge: "Current Delay: 5 to 6 months behind baseline schedule",
@@ -406,7 +389,7 @@
                 ]
             },
             japan: {
-                title: "WEEKLY PROJECT UPDATES — Japan Infrastructure",
+                title: "WEEKLY PROJECT UPDATES JAPAN INFRASTRUCTURE",
                 subTitle: "Japan Grant Aid Infrastructure Support",
                 location: "Juba, South Sudan",
                 delayBadge: "ON SCHEDULE / NORMAL",
@@ -426,7 +409,7 @@
                 ]
             },
             flood: {
-                title: "WEEKLY PROJECT UPDATES — Flood Mitigation",
+                title: "WEEKLY PROJECT UPDATES FLOOD MITIGATION",
                 subTitle: "Emergency Flood Mitigation & Dike Construction",
                 location: "Bentiu & Malakal, South Sudan",
                 delayBadge: "42.57% PROGRESS GAP",
@@ -476,7 +459,7 @@
             if(name) {
                 const id = 'proj_' + Math.random().toString(36).substr(2, 5);
                 projectData[id] = {
-                    title: "WEEKLY PROJECT UPDATES — " + name,
+                    title: "WEEKLY PROJECT UPDATES " + name.toUpperCase(),
                     subTitle: name + " Construction Project",
                     location: "TBD",
                     delayBadge: "NEW PROJECT",
@@ -506,7 +489,6 @@
             const m = document.getElementById('select-month').value;
             const w = document.getElementById('select-week').value;
 
-            // Only October Week 1 has the active data by default.
             const hasData = (m === 'October' && w === 'Week 1') || p.delayBadge === "NEW PROJECT";
 
             document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
@@ -554,7 +536,7 @@
         }
 
         // ==========================================
-        // DRAG AND DROP LAYOUT ENGINE
+        // PERFECT DRAG AND DROP ENGINE
         // ==========================================
         let draggedCard = null;
 
@@ -575,14 +557,26 @@
 
         document.addEventListener("dragover", function(event) {
             if(handlesOn && draggedCard) {
+                event.preventDefault(); // Necessary to allow dropping
+            }
+        });
+
+        document.addEventListener("drop", function(event) {
+            if(handlesOn && draggedCard) {
                 event.preventDefault();
                 const container = document.getElementById('main-content-grid');
                 const targetCard = event.target.closest('.light-card');
                 
                 if (targetCard && targetCard !== draggedCard && targetCard.parentNode === container) {
                     const rect = targetCard.getBoundingClientRect();
-                    const next = (event.clientY - rect.top) / (rect.bottom - rect.top) > .5;
-                    container.insertBefore(draggedCard, next ? targetCard.nextSibling : targetCard);
+                    const isAfter = (event.clientY - rect.top) > (rect.height / 2);
+                    
+                    if (isAfter) {
+                        container.insertBefore(draggedCard, targetCard.nextSibling);
+                    } else {
+                        container.insertBefore(draggedCard, targetCard);
+                    }
+                    saveStateForUndo();
                 }
             }
         });
@@ -608,7 +602,8 @@
             if(isUserTriggered) saveStateForUndo();
             const card = document.getElementById(cardId);
             if(!card) return;
-            card.className = card.className.replace(/col-span-\d/g, '');
+            
+            card.classList.remove('col-span-1', 'col-span-2');
             card.classList.add('col-span-' + cols);
             cardLayouts[cardId] = cols;
 
@@ -644,13 +639,7 @@
                 <div class="light-card-title" id="cb-title-${customBlockCount}" contenteditable="true">📌 CUSTOM STATUS BLOCK</div>
                 <div id="cb-text-${customBlockCount}" contenteditable="true" style="font-size: 11px; color: #475569; min-height: 30px;">Click here to edit this custom project note.</div>
             `;
-            // Add block right before the Key Recommendation bar
-            const recBar = document.getElementById('card-rec');
-            if(recBar) {
-                container.insertBefore(newCard, recBar);
-            } else {
-                container.appendChild(newCard);
-            }
+            container.appendChild(newCard);
             cardLayouts[id] = 2;
         }
 
@@ -667,6 +656,12 @@
                 if (el) {
                     el.innerHTML = customEdits[id];
                 }
+            }
+            
+            // Absolutely wipe old cache from comment box if it reloads
+            const commentBox = document.getElementById('manager-comments');
+            if(commentBox && commentBox.innerHTML.includes("Click here to leave a comment")) {
+                commentBox.innerHTML = "";
             }
         }
 
@@ -797,6 +792,11 @@
 
             if(state.e) customEdits = state.e;
             changeProject(false); 
+            
+            const commentBox = document.getElementById('manager-comments');
+            if(commentBox && commentBox.innerHTML.includes("Click here to leave a comment")) {
+                commentBox.innerHTML = "";
+            }
         }
 
         window.onload = async () => {
@@ -830,8 +830,7 @@
                     changeProject(false); 
                 }
             }
-
-            // Absolute force clearance of the comment box if a rogue text gets saved locally
+            
             const cBox = document.getElementById('manager-comments');
             if(cBox && cBox.innerText.includes("Click here to leave a comment")) {
                 cBox.innerText = "";
