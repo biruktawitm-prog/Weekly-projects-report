@@ -86,8 +86,9 @@
         .handles-off .card-controls { display: none !important; }
         .span-btn { background: #cbd5e1; color: #475569; border: none; padding: 2px 6px; border-radius: 3px; font-size: 9px; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;}
         .span-btn.active { background: #2563eb; color: white; }
-        .col-span-1 { grid-column: span 1; }
-        .col-span-2 { grid-column: span 2; }
+        
+        .col-span-1 { grid-column: span 1 !important; }
+        .col-span-2 { grid-column: 1 / -1 !important; }
 
         /* ================= EXECUTIVE LIGHT STYLES ================= */
         .light-theme { background-color: #f8fafc; color: #0f172a; border-radius: 10px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
@@ -108,10 +109,10 @@
         .light-kpi-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif;}
         .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
 
-        /* Smart dense grid allows blocks to slide into empty spaces naturally */
-        .light-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; grid-auto-flow: dense; }
+        /* Smart dense grid allows blocks to automatically swallow empty gaps */
+        .light-main-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; grid-auto-flow: row dense; }
         
-        .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; position: relative;}
+        .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; position: relative; page-break-inside: avoid; break-inside: avoid;}
         .light-card.dragging { opacity: 0.5; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         
         .light-card-title { font-size: 11px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; margin-bottom: 8px; }
@@ -126,17 +127,22 @@
         .pipeline-step-name { font-size: 10px; font-weight: 700; color: #0f172a; }
         .pipeline-step-status { font-size: 9px; color: #64748b; margin-top: 2px; }
 
-        .light-recommendation-bar { background: #0f172a; color: white; padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 12px; }
         .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif;}
 
         [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
         [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
 
-        /* ================= PERFECT PDF PRINT SETTINGS ================= */
+        /* ================= PERFECT 1-PAGE PDF PRINT SETTINGS ================= */
         @media print { 
-            @page { size: landscape; margin: 10mm; }
-            body { padding: 0; background: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            @page { size: landscape; margin: 5mm; }
+            body { 
+                padding: 0; 
+                background: #f8fafc !important; 
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
+                zoom: 0.8; /* Scales down to perfectly fit 1 page */
+            }
             .top-studio-bar { display: none !important; } 
             .no-print { display: none !important; }
             .light-theme { box-shadow: none !important; padding: 0 !important; }
@@ -277,10 +283,16 @@
             </div>
 
             <!-- MAIN CONTENT AREA WITH FLATTENED DENSE GRID -->
-            <div class="light-main-grid handles-off" id="main-content-grid" style="grid-auto-flow: dense;">
+            <div class="light-main-grid handles-off" id="main-content-grid">
                 
                 <div class="light-card col-span-1" id="card-timeline" style="grid-column: span 1;">
-                    <div class="card-controls"><span>⠿ Drag Timeline Card</span></div>
+                    <div class="card-controls">
+                        <span>⠿ Drag Timeline Card</span>
+                        <div>
+                            <button class="span-btn active" onclick="setSpan('card-timeline', 1)">1 Col</button>
+                            <button class="span-btn" onclick="setSpan('card-timeline', 2)">2 Col</button>
+                        </div>
+                    </div>
                     <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
                     <div style="font-size: 11px; margin-bottom: 6px;" id="l-timeline-window" contenteditable="true">
                         <strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)
@@ -290,7 +302,7 @@
                     </div>
                 </div>
 
-                <!-- grid-row: span 2 ensures the red flags card stretches naturally down the right side -->
+                <!-- grid-row: span 2 ensures the red flags card stretches naturally down the side if needed -->
                 <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444; grid-column: span 1; grid-row: span 2;">
                     <div class="card-controls">
                         <span>⠿ Drag Red Flags</span>
@@ -309,7 +321,13 @@
                 </div>
 
                 <div class="light-card col-span-1" id="card-pipeline" style="grid-column: span 1;">
-                    <div class="card-controls"><span>⠿ Drag Phase Status Card</span></div>
+                    <div class="card-controls">
+                        <span>⠿ Drag Phase Status Card</span>
+                        <div>
+                            <button class="span-btn active" onclick="setSpan('card-pipeline', 1)">1 Col</button>
+                            <button class="span-btn" onclick="setSpan('card-pipeline', 2)">2 Col</button>
+                        </div>
+                    </div>
                     <div class="light-card-title">⚙️ PROJECT PHASE STATUS</div>
                     <div class="pipeline-container">
                         <div class="pipeline-step completed">
@@ -331,13 +349,22 @@
                     </div>
                 </div>
 
-            </div>
-
-            <div class="light-recommendation-bar" id="card-rec">
-                <div class="rec-tag">KEY RECOMMENDATION</div>
-                <div style="font-size: 11px; line-height: 1.4;" id="l-recommendation" contenteditable="true">
-                    It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
+                <div class="light-card col-span-2" id="card-rec" style="grid-column: 1 / -1; background: #0f172a; color: white;">
+                    <div class="card-controls" style="background: rgba(255,255,255,0.1); color: #cbd5e1; border: none; margin-bottom: 8px;">
+                        <span>⠿ Drag Key Recommendation</span>
+                        <div>
+                            <button class="span-btn" onclick="setSpan('card-rec', 1)">1 Col</button>
+                            <button class="span-btn active" onclick="setSpan('card-rec', 2)">2 Col</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+                        <div class="rec-tag">KEY RECOMMENDATION</div>
+                        <div style="font-size: 11px; line-height: 1.4; color: white; flex: 1; min-width: 200px;" id="l-recommendation" contenteditable="true">
+                            It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
             <!-- MANAGER COMMENT SECTION (HIDDEN ON PDF) -->
@@ -590,7 +617,6 @@
             card.classList.add('col-span-' + cols);
             cardLayouts[cardId] = cols;
 
-            // Enforce proper CSS Grid column spreading
             if(cols === 2) {
                 card.style.gridColumn = '1 / -1';
             } else {
@@ -607,7 +633,6 @@
         function addCustomBlock(isUserTriggered = false) {
             if(isUserTriggered) saveStateForUndo();
             
-            // Turn handles ON automatically so user immediately sees resize/drag buttons
             if (!handlesOn) {
                 toggleHandles();
             }
@@ -618,7 +643,7 @@
             const newCard = document.createElement('div');
             newCard.className = 'light-card col-span-2';
             newCard.id = id;
-            newCard.style.gridColumn = '1 / -1'; // Ensure it spans full width by default
+            newCard.style.gridColumn = '1 / -1'; 
             if(handlesOn) newCard.setAttribute('draggable', 'true');
             newCard.innerHTML = `
                 <div class="card-controls">
@@ -645,7 +670,14 @@
         function applyCustomEdits() {
             for (const id in customEdits) {
                 const el = document.getElementById(id);
-                if (el) el.innerHTML = customEdits[id];
+                if (el) {
+                    // Wipe any old cached placeholder text from the local browser save completely
+                    if (customEdits[id].includes("Click here to leave a comment")) {
+                        el.innerHTML = "";
+                    } else {
+                        el.innerHTML = customEdits[id];
+                    }
+                }
             }
         }
 
@@ -690,7 +722,7 @@
                 b: customBlockCount,
                 l: cardLayouts,
                 e: customEdits,
-                html: document.getElementById('main-content-grid').innerHTML // saves drag/drop positions
+                html: document.getElementById('main-content-grid').innerHTML 
             };
 
             let shareUrl = window.location.href;
@@ -731,92 +763,6 @@
                 alert("Link ready: " + shareUrl);
             }
             btn.innerHTML = ogText;
-        }
-
-        // ==========================================
-        // ROBUST UNDO / REDO ENGINE
-        // ==========================================
-        function saveStateForUndo() {
-            // Update edits map before saving state
-            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
-                if(!el.id) el.id = 'edit_' + index;
-                customEdits[el.id] = el.innerHTML;
-            });
-
-            undoStack.push({
-                dash: document.getElementById('dashboard-container').innerHTML,
-                proj: document.getElementById('select-project').value,
-                month: document.getElementById('select-month').value,
-                week: document.getElementById('select-week').value,
-                font: document.getElementById('select-font').value,
-                zoom: currentZoom
-            });
-            redoStack = []; 
-            document.getElementById('btn-undo').disabled = false; 
-            document.getElementById('btn-redo').disabled = true;
-        }
-
-        function undo() {
-            if (!undoStack.length) return;
-            
-            redoStack.push({
-                dash: document.getElementById('dashboard-container').innerHTML,
-                proj: document.getElementById('select-project').value,
-                month: document.getElementById('select-month').value,
-                week: document.getElementById('select-week').value,
-                font: document.getElementById('select-font').value,
-                zoom: currentZoom
-            });
-
-            const s = undoStack.pop();
-            
-            document.getElementById('dashboard-container').innerHTML = s.dash;
-            document.getElementById('select-project').value = s.proj;
-            document.getElementById('select-month').value = s.month;
-            document.getElementById('select-week').value = s.week;
-            document.getElementById('select-font').value = s.font;
-            
-            currentZoom = s.zoom;
-            document.getElementById('dashboard-container').style.zoom = currentZoom;
-            
-            document.getElementById('btn-undo').disabled = !undoStack.length; 
-            document.getElementById('btn-redo').disabled = false;
-            
-            // Re-apply drag listeners if handles were left ON
-            if(handlesOn) {
-                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
-            }
-        }
-
-        function redo() {
-            if (!redoStack.length) return;
-            
-            undoStack.push({
-                dash: document.getElementById('dashboard-container').innerHTML,
-                proj: document.getElementById('select-project').value,
-                month: document.getElementById('select-month').value,
-                week: document.getElementById('select-week').value,
-                font: document.getElementById('select-font').value,
-                zoom: currentZoom
-            });
-
-            const s = redoStack.pop();
-            
-            document.getElementById('dashboard-container').innerHTML = s.dash;
-            document.getElementById('select-project').value = s.proj;
-            document.getElementById('select-month').value = s.month;
-            document.getElementById('select-week').value = s.week;
-            document.getElementById('select-font').value = s.font;
-            
-            currentZoom = s.zoom;
-            document.getElementById('dashboard-container').style.zoom = currentZoom;
-            
-            document.getElementById('btn-undo').disabled = false; 
-            document.getElementById('btn-redo').disabled = !redoStack.length;
-
-            if(handlesOn) {
-                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
-            }
         }
 
         // ==========================================
@@ -861,7 +807,12 @@
                 for(const id in state.l) setSpan(id, state.l[id], false);
             }
 
-            if(state.e) customEdits = state.e;
+            if(state.e) {
+                customEdits = state.e;
+                if(customEdits['manager-comments'] && customEdits['manager-comments'].includes("Click here to leave a comment")) {
+                    customEdits['manager-comments'] = "";
+                }
+            }
             changeProject(false); 
         }
 
@@ -895,6 +846,90 @@
                 } else {
                     changeProject(false); 
                 }
+            }
+        }
+
+        // ==========================================
+        // ROBUST UNDO / REDO ENGINE
+        // ==========================================
+        function saveStateForUndo() {
+            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                if(!el.id) el.id = 'edit_' + index;
+                customEdits[el.id] = el.innerHTML;
+            });
+
+            undoStack.push({
+                dash: document.getElementById('dashboard-container').innerHTML,
+                proj: document.getElementById('select-project').value,
+                month: document.getElementById('select-month').value,
+                week: document.getElementById('select-week').value,
+                font: document.getElementById('select-font').value,
+                zoom: currentZoom
+            });
+            redoStack = []; 
+            document.getElementById('btn-undo').disabled = false; 
+            document.getElementById('btn-redo').disabled = true;
+        }
+
+        function undo() {
+            if (!undoStack.length) return;
+            
+            redoStack.push({
+                dash: document.getElementById('dashboard-container').innerHTML,
+                proj: document.getElementById('select-project').value,
+                month: document.getElementById('select-month').value,
+                week: document.getElementById('select-week').value,
+                font: document.getElementById('select-font').value,
+                zoom: currentZoom
+            });
+
+            const s = undoStack.pop();
+            
+            document.getElementById('dashboard-container').innerHTML = s.dash;
+            document.getElementById('select-project').value = s.proj;
+            document.getElementById('select-month').value = s.month;
+            document.getElementById('select-week').value = s.week;
+            document.getElementById('select-font').value = s.font;
+            
+            currentZoom = s.zoom;
+            document.getElementById('dashboard-container').style.zoom = currentZoom;
+            
+            document.getElementById('btn-undo').disabled = !undoStack.length; 
+            document.getElementById('btn-redo').disabled = false;
+            
+            if(handlesOn) {
+                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
+            }
+        }
+
+        function redo() {
+            if (!redoStack.length) return;
+            
+            undoStack.push({
+                dash: document.getElementById('dashboard-container').innerHTML,
+                proj: document.getElementById('select-project').value,
+                month: document.getElementById('select-month').value,
+                week: document.getElementById('select-week').value,
+                font: document.getElementById('select-font').value,
+                zoom: currentZoom
+            });
+
+            const s = redoStack.pop();
+            
+            document.getElementById('dashboard-container').innerHTML = s.dash;
+            document.getElementById('select-project').value = s.proj;
+            document.getElementById('select-month').value = s.month;
+            document.getElementById('select-week').value = s.week;
+            document.getElementById('select-font').value = s.font;
+            
+            currentZoom = s.zoom;
+            document.getElementById('dashboard-container').style.zoom = currentZoom;
+            
+            document.getElementById('btn-undo').disabled = false; 
+            document.getElementById('btn-redo').disabled = !redoStack.length;
+
+            if(handlesOn) {
+                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
             }
         }
     </script>
