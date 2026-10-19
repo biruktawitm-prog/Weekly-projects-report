@@ -117,8 +117,10 @@
         
         .light-card-title { font-size: 11px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; margin-bottom: 8px; }
 
-        .red-flag-item { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 11px; line-height: 1.35; }
+        .red-flag-item { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 11px; line-height: 1.35; position: relative; }
         .red-flag-bullet { color: #ef4444; font-size: 18px; line-height: 1; margin-top: -3px; font-weight: bold; font-family: Arial, sans-serif;}
+        .delete-bullet-btn { background: none; border: none; color: #ef4444; font-weight: bold; font-size: 12px; cursor: pointer; padding: 0 4px; opacity: 0.6; transition: opacity 0.2s; }
+        .delete-bullet-btn:hover { opacity: 1.0; }
 
         .pipeline-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
         .pipeline-step { background: #f1f5f9; padding: 8px 6px; border-radius: 6px; text-align: center; border: 1px solid #cbd5e1; }
@@ -151,6 +153,7 @@
             .no-print { display: none !important; }
             .light-theme { box-shadow: none !important; padding: 0 !important; }
             .card-controls { display: none !important; }
+            .delete-bullet-btn { display: none !important; }
         }
     </style>
 </head>
@@ -166,6 +169,8 @@
                 <option value="flood">Flood Mitigation Project</option>
             </select>
             <button class="btn-studio" onclick="addNewProject()" title="Add New Project" style="padding: 6px 10px;">➕</button>
+            <button class="btn-studio" onclick="editProjectName()" title="Edit Project Name" style="padding: 6px 10px;">✏️</button>
+            <button class="btn-studio" onclick="deleteCurrentProject()" title="Delete Current Project" style="padding: 6px 10px; color: #ef4444;">🗑️</button>
         </div>
 
         <div class="bar-group">
@@ -497,7 +502,7 @@
                     subTitle: name + " Construction Project",
                     location: "TBD",
                     delayBadge: "NEW PROJECT",
-                    plannedWindow: "", // COMPLETELY EMPTY FOR NEW PROJECTS
+                    plannedWindow: "",
                     timePct: 0, finPct: 0,
                     remDays: "TBD Days Rem", elapsedDays: "0 Days Elapsed",
                     budgetTotal: "Total: $0.00", budgetExp: "Exp: $0.00",
@@ -516,6 +521,66 @@
                 document.getElementById('select-project').appendChild(opt);
                 document.getElementById('select-project').value = id;
                 changeProject(true);
+            }
+        }
+
+        function editProjectName() {
+            const selectEl = document.getElementById('select-project');
+            const currentId = selectEl.value;
+            const currentOption = selectEl.options[selectEl.selectedIndex];
+            
+            const newName = prompt("Edit project name:", currentOption.text);
+            if (newName && newName.trim() !== "") {
+                saveStateForUndo();
+                currentOption.text = newName;
+                if (projectData[currentId]) {
+                    projectData[currentId].title = "WEEKLY PROJECT UPDATES " + newName.toUpperCase();
+                    projectData[currentId].subTitle = newName + " Construction Project";
+                    document.getElementById('l-main-title').innerHTML = projectData[currentId].title;
+                    document.getElementById('l-sub-title').innerHTML = projectData[currentId].subTitle;
+                }
+                if (customProjects[currentId]) {
+                    customProjects[currentId].name = newName;
+                }
+                saveLayout(false);
+            }
+        }
+
+        function deleteCurrentProject() {
+            const selectEl = document.getElementById('select-project');
+            const currentId = selectEl.value;
+            const currentOption = selectEl.options[selectEl.selectedIndex];
+
+            if (selectEl.options.length <= 1) {
+                alert("Cannot delete the only remaining project.");
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete "${currentOption.text}"?`)) {
+                saveStateForUndo();
+                
+                delete projectData[currentId];
+                delete customProjects[currentId];
+
+                // Delete saved entries in stateDB for this project
+                for (const k in stateDB) {
+                    if (k.startsWith(currentId + "_")) {
+                        delete stateDB[k];
+                    }
+                }
+
+                currentOption.remove();
+                changeProject(true);
+                saveLayout(false);
+            }
+        }
+
+        function deleteSingleRedFlag(btnElement) {
+            saveStateForUndo();
+            const item = btnElement.closest('.red-flag-item');
+            if (item) {
+                item.remove();
+                saveCurrentViewToDB();
             }
         }
 
@@ -602,10 +667,10 @@
                 rfContainer.innerHTML = ''; 
                 if (hasData && p.redFlags && p.redFlags.length > 0) {
                     p.redFlags.forEach((rf, idx) => {
-                        rfContainer.innerHTML += `<div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-${idx+1}" contenteditable="true" style="flex: 1; font-size: 11px;">${rf}</div></div>`;
+                        rfContainer.innerHTML += `<div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-${idx+1}" contenteditable="true" style="flex: 1; font-size: 11px;">${rf}</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
                     });
                 } else {
-                    rfContainer.innerHTML = `<div class="red-flag-item"><div class="red-flag-bullet" style="color:transparent;">•</div><div id="rf-1" contenteditable="true" style="flex: 1; font-size: 11px; color: #ef4444; font-weight: bold;">No red flags or data submitted for this period yet.</div></div>`;
+                    rfContainer.innerHTML = `<div class="red-flag-item"><div class="red-flag-bullet" style="color:transparent;">•</div><div id="rf-1" contenteditable="true" style="flex: 1; font-size: 11px; color: #ef4444; font-weight: bold;">No red flags or data submitted for this period yet.</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
                 }
             }
 
@@ -726,7 +791,7 @@
             const newId = 'rf-' + Math.random().toString(36).substr(2, 5);
             const div = document.createElement('div');
             div.className = 'red-flag-item';
-            div.innerHTML = `<div class="red-flag-bullet">•</div><div id="${newId}" contenteditable="true" style="flex: 1; font-size: 11px;">Click to edit new red flag...</div>`;
+            div.innerHTML = `<div class="red-flag-bullet">•</div><div id="${newId}" contenteditable="true" style="flex: 1; font-size: 11px;">Click to edit new red flag...</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button>`;
             container.appendChild(div);
             customEdits[newId] = "Click to edit new red flag...";
             saveCurrentViewToDB();
