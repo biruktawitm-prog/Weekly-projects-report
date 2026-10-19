@@ -208,7 +208,6 @@
         <div class="bar-group">
             <button class="btn-studio" id="btn-handles" onclick="toggleHandles()">🛠️ Handles: ON</button>
             <button class="btn-studio" onclick="addCustomBlock(true)">➕ Block</button>
-            <!-- Bullets format button for general text areas -->
             <button class="btn-studio" onmousedown="event.preventDefault(); document.execCommand('insertUnorderedList')" title="Format as Bullet List">⠇ Bullets</button>
             <button class="btn-studio" id="btn-undo" onclick="undo()" disabled>↩️ Undo</button>
             <button class="btn-studio" id="btn-redo" onclick="redo()" disabled>↪️ Redo</button>
@@ -324,7 +323,6 @@
             <div class="card-controls">
                 <span>⠿ Drag Red Flags</span>
                 <div>
-                    <!-- ADD RED BULLET BUTTON -->
                     <button class="span-btn" onclick="addRedFlag(event)" style="color: #ef4444; font-weight: bold;" title="Add Red Flag Bullet">➕ Bullet</button>
                     <button class="span-btn active" onclick="setSpan('card-red-flags', 1)">1 Col</button>
                     <button class="span-btn" onclick="setSpan('card-red-flags', 2)">2 Col</button>
@@ -395,6 +393,7 @@
         let cardLayouts = {}; 
         
         let stateDB = {};
+        let customProjects = {}; // <--- Holds newly added projects
         let activeKey = "nimule_October_Week 1";
         let defaultGridHTML = "";
 
@@ -485,11 +484,12 @@
             document.getElementById('dashboard-container').style.zoom = currentZoom;
         }
 
+        // UPDATED: Now saves the new project into customProjects so it persists on reload
         function addNewProject() {
             const name = prompt("Enter new project name:");
             if(name) {
                 const id = 'proj_' + Math.random().toString(36).substr(2, 5);
-                projectData[id] = {
+                const newProjData = {
                     title: "WEEKLY PROJECT UPDATES " + name.toUpperCase(),
                     subTitle: name + " Construction Project",
                     location: "TBD",
@@ -502,6 +502,10 @@
                     recommendation: "New project added. Awaiting first status report.",
                     redFlags: ["No data submitted yet."]
                 };
+                
+                projectData[id] = newProjData;
+                customProjects[id] = { name: name, data: newProjData };
+
                 const opt = document.createElement('option');
                 opt.value = id;
                 opt.innerHTML = name;
@@ -535,7 +539,8 @@
                     w: document.getElementById('select-week').value,
                     f: document.getElementById('select-font').value, 
                     z: currentZoom, 
-                    db: stateDB
+                    db: stateDB,
+                    cp: customProjects // <--- SAVES NEW PROJECTS
                 };
                 localStorage.setItem('hamco_dashboard_master', JSON.stringify(tempState));
             }
@@ -545,7 +550,6 @@
             const w = document.getElementById('select-week').value;
             activeKey = pId + "_" + m + "_" + w;
 
-            // Step 1: Wipe the layout back to absolute default pristine state
             if(defaultGridHTML) {
                 document.getElementById('main-content-grid').innerHTML = defaultGridHTML;
             }
@@ -554,7 +558,7 @@
             cardLayouts = {};
             customBlockCount = 0;
 
-            const p = projectData[pId];
+            const p = projectData[pId] || projectData['nimule'];
             const hasData = (m === 'October' && w === 'Week 1') || p.delayBadge === "NEW PROJECT";
 
             document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
@@ -584,7 +588,6 @@
                 if(pipeEl) pipeEl.innerHTML = hasData ? p.pipe[i] : "-";
             }
 
-            // Step 2: Dynamically rebuild the red flags container so empty bullets NEVER show
             const rfContainer = document.getElementById('red-flags-container');
             if (rfContainer) {
                 rfContainer.innerHTML = ''; 
@@ -597,7 +600,6 @@
                 }
             }
 
-            // Step 3: Overlay user's saved data IF it exists for this specific week
             if (stateDB[activeKey]) {
                 const saved = stateDB[activeKey];
                 customBlockCount = saved.b || 0;
@@ -822,7 +824,8 @@
                 w: document.getElementById('select-week').value,
                 f: document.getElementById('select-font').value, 
                 z: currentZoom, 
-                db: stateDB
+                db: stateDB,
+                cp: customProjects // <--- SAVES NEW PROJECTS
             };
 
             let shareUrl = window.location.href;
@@ -877,7 +880,8 @@
                 w: document.getElementById('select-week').value,
                 f: document.getElementById('select-font').value, 
                 z: currentZoom, 
-                db: stateDB
+                db: stateDB,
+                cp: customProjects // <--- SAVES NEW PROJECTS
             };
 
             localStorage.setItem('hamco_dashboard_master', JSON.stringify(state));
@@ -885,6 +889,21 @@
         }
 
         function loadState(state) {
+            // Restore newly created projects into the dropdown BEFORE setting the project
+            if (state.cp) {
+                customProjects = state.cp;
+                for (const id in customProjects) {
+                    projectData[id] = customProjects[id].data;
+                    // Prevent duplicate options if loading multiple times
+                    if (!document.querySelector(`#select-project option[value="${id}"]`)) {
+                        const opt = document.createElement('option');
+                        opt.value = id;
+                        opt.innerHTML = customProjects[id].name;
+                        document.getElementById('select-project').appendChild(opt);
+                    }
+                }
+            }
+
             if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
             if(state.z) { currentZoom = state.z; changeZoom(0, false); }
             
