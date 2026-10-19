@@ -239,14 +239,14 @@
             <div class="light-main-grid handles-off" style="grid-template-columns: 1fr 1fr 1.25fr; margin-bottom: 12px;" id="kpi-grid">
                 <div class="light-card col-span-1" id="kpi-card-1" style="grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Card 1</span></div>
-                    <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">PROJECT TIMELINE & ELAPSED DAYS</div>
+                    <div id="title-kpi-1" contenteditable="true" style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">PROJECT TIMELINE & ELAPSED DAYS</div>
                     <div class="radial-flex">
                         <div class="radial-container">
                             <svg class="radial-svg" viewBox="0 0 64 64">
                                 <circle class="radial-bg" cx="32" cy="32" r="28"></circle>
                                 <circle class="radial-val" id="l-ring-time" cx="32" cy="32" r="28" stroke="#3b82f6" stroke-dasharray="175.93" stroke-dashoffset="110.3"></circle>
                             </svg>
-                            <div class="radial-text" style="color: #3b82f6;" id="l-ring-time-val">37.3%</div>
+                            <div class="radial-text" style="color: #3b82f6;" id="l-ring-time-val" contenteditable="true">37.3%</div>
                         </div>
                         <div>
                             <div style="font-size: 18px; font-weight: 800; color: #0f172a;" id="l-rem-days" contenteditable="true">1,067 Days Rem</div>
@@ -257,14 +257,14 @@
 
                 <div class="light-card col-span-1" id="kpi-card-2" style="grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Card 2</span></div>
-                    <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">FINANCIAL EXECUTION RATE</div>
+                    <div id="title-kpi-2" contenteditable="true" style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">FINANCIAL EXECUTION RATE</div>
                     <div class="radial-flex">
                         <div class="radial-container">
                             <svg class="radial-svg" viewBox="0 0 64 64">
                                 <circle class="radial-bg" cx="32" cy="32" r="28"></circle>
                                 <circle class="radial-val" id="l-ring-fin" cx="32" cy="32" r="28" stroke="#059669" stroke-dasharray="175.93" stroke-dashoffset="143.3"></circle>
                             </svg>
-                            <div class="radial-text" style="color: #059669;" id="l-ring-fin-val">18.5%</div>
+                            <div class="radial-text" style="color: #059669;" id="l-ring-fin-val" contenteditable="true">18.5%</div>
                         </div>
                         <div>
                             <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: $10,845,990</div>
@@ -275,7 +275,7 @@
 
                 <div class="light-card col-span-1" id="kpi-card-3" style="border-left: 3px solid #059669; grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Card 3</span></div>
-                    <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase;" id="l-design-head">IPMG DESIGN APPROVAL</div>
+                    <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase;" id="l-design-head" contenteditable="true">IPMG DESIGN APPROVAL</div>
                     <div style="font-size: 14px; font-weight: 800; color: #059669;" id="l-design-status" contenteditable="true">APPROVED / 100% DONE</div>
                     <div style="font-size: 10px; color: #64748b; margin-top: 4px;" id="l-design-desc" contenteditable="true">Design completed in September. Process took ~4 months (2-month delay).</div>
                 </div>
@@ -289,17 +289,16 @@
             <!-- MANAGER COMMENT SECTION (HIDDEN ON PDF) -->
             <div class="no-print" style="margin-top: 20px; background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 8px; padding: 12px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">💬 Manager Comments / Next Steps (Hidden in PDF)</div>
+                    <div id="title-manager-comments" contenteditable="true" style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">💬 Manager Comments / Next Steps (Hidden in PDF)</div>
                     <button onclick="emailManagerComment()" style="background: #0ea5e9; color: white; border: none; padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s;">Send</button>
                 </div>
-                <!-- Box defaults completely empty -->
                 <div id="manager-comments" contenteditable="true" style="font-size: 12px; color: #334155; min-height: 50px; background: white; padding: 10px; border-radius: 4px; border: 1px solid #cbd5e1;"></div>
             </div>
 
         </div>
     </div>
 
-    <!-- PURE TEMPLATE: Protects the default layout from caching bugs across weeks -->
+    <!-- PURE TEMPLATE -->
     <template id="default-grid-template">
         <div class="light-card col-span-1" id="card-timeline">
             <div class="card-controls">
@@ -310,7 +309,7 @@
                     <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-timeline', event)">❌</button>
                 </div>
             </div>
-            <div class="light-card-title">🚩 PROJECT TIMELINE vs BASELINE</div>
+            <div class="light-card-title" id="title-timeline" contenteditable="true">🚩 PROJECT TIMELINE vs BASELINE</div>
             <div style="font-size: 11px; margin-bottom: 6px;" id="l-timeline-window" contenteditable="true">
                 <strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)
             </div>
@@ -329,7 +328,7 @@
                     <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-red-flags', event)">❌</button>
                 </div>
             </div>
-            <div class="light-card-title" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
+            <div class="light-card-title" id="title-red-flags" contenteditable="true" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
             <div id="red-flags-container">
                 <!-- Generated Dynamically -->
             </div>
@@ -344,7 +343,7 @@
                     <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-pipeline', event)">❌</button>
                 </div>
             </div>
-            <div class="light-card-title">⚙️ PROJECT PHASE STATUS</div>
+            <div class="light-card-title" id="title-phase-status" contenteditable="true">⚙️ PROJECT PHASE STATUS</div>
             <div class="pipeline-container">
                 <div class="pipeline-step completed">
                     <div class="pipeline-step-name">Inception</div>
@@ -375,7 +374,7 @@
                 </div>
             </div>
             <div style="display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
-                <div class="rec-tag">KEY RECOMMENDATION</div>
+                <div class="rec-tag" id="title-recommendation-tag" contenteditable="true">KEY RECOMMENDATION</div>
                 <div style="font-size: 11px; line-height: 1.4; color: white; flex: 1; min-width: 200px;" id="l-recommendation" contenteditable="true">
                     It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
                 </div>
@@ -393,7 +392,7 @@
         let cardLayouts = {}; 
         
         let stateDB = {};
-        let customProjects = {}; // <--- Holds newly added projects
+        let customProjects = {};
         let activeKey = "nimule_October_Week 1";
         let defaultGridHTML = "";
 
@@ -403,6 +402,7 @@
                 subTitle: "Nimule OSBP Construction Project",
                 location: "Nimule, South Sudan",
                 delayBadge: "Current Delay: 5 to 6 months behind baseline schedule",
+                plannedWindow: "<strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)",
                 timePct: 37.3, finPct: 18.5,
                 remDays: "1,067 Days Rem", elapsedDays: "636 of 1,703 Days Elapsed",
                 budgetTotal: "Total: $10,845,990.00", budgetExp: "Exp: $2,009,685.02",
@@ -423,6 +423,7 @@
                 subTitle: "Japan Grant Aid Infrastructure Support",
                 location: "Juba, South Sudan",
                 delayBadge: "ON SCHEDULE / NORMAL",
+                plannedWindow: "<strong>Planned Window:</strong> Jan 1, 2025 – Dec 31, 2027",
                 timePct: 42.5, finPct: 54.2,
                 remDays: "420 Days Rem", elapsedDays: "310 of 730 Days Elapsed",
                 budgetTotal: "Total: $6,000,000.00", budgetExp: "Exp: $3,250,000.00",
@@ -443,6 +444,7 @@
                 subTitle: "Emergency Flood Mitigation & Dike Construction",
                 location: "Bentiu & Malakal, South Sudan",
                 delayBadge: "42.57% PROGRESS GAP",
+                plannedWindow: "<strong>Planned Window:</strong> Activities through 31 Mar 2027",
                 timePct: 70.2, finPct: 25.6,
                 remDays: "End: 31 Mar 2027", elapsedDays: "70.25% Elapsed / 27.68% Physical",
                 budgetTotal: "Total: $9,860,000.00", budgetExp: "Exp: $2,500,000.00",
@@ -460,11 +462,13 @@
             }
         };
 
-        function setRing(id, pct) {
+        function setRing(id, pctStr) {
             const circle = document.getElementById(id);
             if(circle) {
+                let numericPct = parseFloat(String(pctStr).replace('%', ''));
+                if (isNaN(numericPct)) numericPct = 0;
                 const circumference = 175.93; 
-                const offset = circumference - (pct / 100 * circumference);
+                const offset = circumference - (Math.min(Math.max(numericPct, 0), 100) / 100 * circumference);
                 circle.style.strokeDashoffset = offset;
             }
         }
@@ -484,7 +488,6 @@
             document.getElementById('dashboard-container').style.zoom = currentZoom;
         }
 
-        // UPDATED: Now saves the new project into customProjects so it persists on reload
         function addNewProject() {
             const name = prompt("Enter new project name:");
             if(name) {
@@ -494,6 +497,7 @@
                     subTitle: name + " Construction Project",
                     location: "TBD",
                     delayBadge: "NEW PROJECT",
+                    plannedWindow: "", // COMPLETELY EMPTY FOR NEW PROJECTS
                     timePct: 0, finPct: 0,
                     remDays: "TBD Days Rem", elapsedDays: "0 Days Elapsed",
                     budgetTotal: "Total: $0.00", budgetExp: "Exp: $0.00",
@@ -540,7 +544,7 @@
                     f: document.getElementById('select-font').value, 
                     z: currentZoom, 
                     db: stateDB,
-                    cp: customProjects // <--- SAVES NEW PROJECTS
+                    cp: customProjects
                 };
                 localStorage.setItem('hamco_dashboard_master', JSON.stringify(tempState));
             }
@@ -575,6 +579,11 @@
             document.getElementById('l-design-desc').innerHTML = hasData ? p.designDesc : "Awaiting weekly update.";
             document.getElementById('l-delay-tag').innerHTML = hasData ? p.delayBadge : "No data submitted.";
             document.getElementById('l-recommendation').innerHTML = hasData ? p.recommendation : "No recommendation submitted for this period.";
+
+            const timelineWinEl = document.getElementById('l-timeline-window');
+            if(timelineWinEl) {
+                timelineWinEl.innerHTML = hasData ? (p.plannedWindow || "") : "";
+            }
 
             document.getElementById('l-ring-time-val').innerHTML = hasData ? p.timePct + '%' : '0%';
             document.getElementById('l-ring-fin-val').innerHTML = hasData ? p.finPct + '%' : '0%';
@@ -709,9 +718,6 @@
             });
         }
 
-        // ==========================================
-        // NEW RED FLAG BULLET ENGINE
-        // ==========================================
         function addRedFlag(event) {
             if(event) event.stopPropagation();
             saveStateForUndo();
@@ -726,9 +732,6 @@
             saveCurrentViewToDB();
         }
 
-        // ==========================================
-        // BLOCK DELETE ENGINE
-        // ==========================================
         function deleteBlock(id, event) {
             if(event) event.stopPropagation();
             saveStateForUndo();
@@ -771,10 +774,18 @@
             cardLayouts[id] = 2;
         }
 
+        // EDITABLE INPUT HANDLER WITH AUTOMATIC RADIAL RING RE-DRAW
         document.addEventListener('input', function(e) {
             if (e.target && e.target.getAttribute('contenteditable') === 'true') {
                 if (!e.target.id) e.target.id = 'edit_' + Math.random().toString(36).substr(2, 5);
                 customEdits[e.target.id] = e.target.innerHTML;
+
+                if (e.target.id === 'l-ring-time-val') {
+                    setRing('l-ring-time', e.target.innerText);
+                }
+                if (e.target.id === 'l-ring-fin-val') {
+                    setRing('l-ring-fin', e.target.innerText);
+                }
             }
         });
 
@@ -783,13 +794,12 @@
                 const el = document.getElementById(id);
                 if (el) {
                     el.innerHTML = customEdits[id];
+                    if (id === 'l-ring-time-val') setRing('l-ring-time', el.innerText);
+                    if (id === 'l-ring-fin-val') setRing('l-ring-fin', el.innerText);
                 }
             }
         }
 
-        // ==========================================
-        // SEND DIRECT EMAIL LIKE A TEXT
-        // ==========================================
         function emailManagerComment() {
             const commentBox = document.getElementById('manager-comments');
             const commentText = commentBox.innerText.trim();
@@ -808,9 +818,6 @@
             window.location.href = `mailto:biruktawitm@unops.org?subject=${subject}&body=${body}`;
         }
 
-        // ==========================================
-        // PUBLIC DATA BIN SHARING
-        // ==========================================
         async function shareDashboard() {
             const btn = document.getElementById('btn-share');
             const ogText = btn.innerHTML;
@@ -825,7 +832,7 @@
                 f: document.getElementById('select-font').value, 
                 z: currentZoom, 
                 db: stateDB,
-                cp: customProjects // <--- SAVES NEW PROJECTS
+                cp: customProjects
             };
 
             let shareUrl = window.location.href;
@@ -868,9 +875,6 @@
             btn.innerHTML = ogText;
         }
 
-        // ==========================================
-        // LOCAL SAVE & LOAD 
-        // ==========================================
         function saveLayout(showAlert = true) {
             saveCurrentViewToDB();
 
@@ -881,7 +885,7 @@
                 f: document.getElementById('select-font').value, 
                 z: currentZoom, 
                 db: stateDB,
-                cp: customProjects // <--- SAVES NEW PROJECTS
+                cp: customProjects
             };
 
             localStorage.setItem('hamco_dashboard_master', JSON.stringify(state));
@@ -889,12 +893,10 @@
         }
 
         function loadState(state) {
-            // Restore newly created projects into the dropdown BEFORE setting the project
             if (state.cp) {
                 customProjects = state.cp;
                 for (const id in customProjects) {
                     projectData[id] = customProjects[id].data;
-                    // Prevent duplicate options if loading multiple times
                     if (!document.querySelector(`#select-project option[value="${id}"]`)) {
                         const opt = document.createElement('option');
                         opt.value = id;
@@ -964,9 +966,6 @@
             }
         }
 
-        // ==========================================
-        // ROBUST UNDO / REDO ENGINE
-        // ==========================================
         function saveStateForUndo() {
             document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
                 if(!el.id) el.id = 'edit_' + index;
