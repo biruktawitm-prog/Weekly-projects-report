@@ -139,6 +139,21 @@
         [contenteditable="true"] ul, [contenteditable="true"] ol { margin: 4px 0 4px 24px; padding: 0; }
         [contenteditable="true"] li { margin-bottom: 4px; display: list-item; list-style-position: outside; }
 
+        /* ================= VIEWER MODE STYLES ================= */
+        .viewer-mode .card-controls,
+        .viewer-mode .delete-bullet-btn,
+        .viewer-mode .btn-action-green,
+        .viewer-mode button[title="Add New Project"],
+        .viewer-mode button[title="Edit Project Name"],
+        .viewer-mode button[title="Delete Current Project"],
+        .viewer-mode #btn-handles,
+        .viewer-mode button[title="Format as Bullet List"],
+        .viewer-mode #btn-undo,
+        .viewer-mode #btn-redo,
+        .viewer-mode button[onclick="addCustomBlock(true)"] {
+            display: none !important;
+        }
+
         /* ================= PERFECT 1-PAGE PDF PRINT SETTINGS ================= */
         @media print { 
             @page { size: landscape; margin: 5mm; }
@@ -273,7 +288,7 @@
                         </div>
                         <div>
                             <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: $10,845,990</div>
-                            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: $2,009,685.02</div>
+                            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: \$2,009,685.02</div>
                         </div>
                     </div>
                 </div>
@@ -398,6 +413,8 @@
         
         let stateDB = {};
         let customProjects = {};
+        let deletedProjects = []; // Tracks permanently deleted projects
+        let isViewer = false;     // Tracks if dashboard is in read-only mode
         let activeKey = "nimule_October_Week 1";
         let defaultGridHTML = "";
 
@@ -410,7 +427,7 @@
                 plannedWindow: "<strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)",
                 timePct: 37.3, finPct: 18.5,
                 remDays: "1,067 Days Rem", elapsedDays: "636 of 1,703 Days Elapsed",
-                budgetTotal: "Total: $10,845,990.00", budgetExp: "Exp: $2,009,685.02",
+                budgetTotal: "Total: \$10,845,990.00", budgetExp: "Exp: \$2,009,685.02",
                 designHead: "IPMG DESIGN APPROVAL", designStatus: "APPROVED / 100% DONE", designDesc: "Design completed in September. Process took ~4 months (2-month delay).",
                 pipe: ["Completed", "Approved", "Active (5.5m)", "Pending"],
                 recommendation: "It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.",
@@ -431,7 +448,7 @@
                 plannedWindow: "<strong>Planned Window:</strong> Jan 1, 2025 – Dec 31, 2027",
                 timePct: 42.5, finPct: 54.2,
                 remDays: "420 Days Rem", elapsedDays: "310 of 730 Days Elapsed",
-                budgetTotal: "Total: $6,000,000.00", budgetExp: "Exp: $3,250,000.00",
+                budgetTotal: "Total: \$6,000,000.00", budgetExp: "Exp: \$3,250,000.00",
                 designHead: "PHASE STATUS", designStatus: "APPROVED", designDesc: "Design phase fully approved and documented.",
                 pipe: ["Completed", "Approved", "Active", "Pending"],
                 recommendation: "Maintain close coordination with local port authorities to expedite remaining logistics clearance.",
@@ -452,7 +469,7 @@
                 plannedWindow: "<strong>Planned Window:</strong> Activities through 31 Mar 2027",
                 timePct: 70.2, finPct: 25.6,
                 remDays: "End: 31 Mar 2027", elapsedDays: "70.25% Elapsed / 27.68% Physical",
-                budgetTotal: "Total: $9,860,000.00", budgetExp: "Exp: $2,500,000.00",
+                budgetTotal: "Total: \$9,860,000.00", budgetExp: "Exp: \$2,500,000.00",
                 designHead: "INCEPTION & ASSESSMENT", designStatus: "IN PROGRESS", designDesc: "Preparation of Technical documents and design approval for Water Yards remains In Progress (planned for June 1, 2026).",
                 pipe: ["In Progress", "Delayed", "Active", "Delayed (6m)"],
                 recommendation: "In the forecast to delivery percentage, there is an over forecasting trend noticed with a total forecasted value of -7,859,796.48 USD over the past 10 months.",
@@ -462,7 +479,7 @@
                     "Procurement: 1 activity in progress is 4 months behind schedule (June 17, 2026).",
                     "Procurement: 2 activities not started, 4 months behind schedule (July 4, 2026).",
                     "Works & Contract Management: 6-month delay overall. 5 activities not started.",
-                    "Over forecasting trend noticed with a total forecasted value of -$7.85M over the past 10 months."
+                    "Over forecasting trend noticed with a total forecasted value of -\$7.85M over the past 10 months."
                 ]
             }
         };
@@ -505,7 +522,7 @@
                     plannedWindow: "",
                     timePct: 0, finPct: 0,
                     remDays: "TBD Days Rem", elapsedDays: "0 Days Elapsed",
-                    budgetTotal: "Total: $0.00", budgetExp: "Exp: $0.00",
+                    budgetTotal: "Total: \$0.00", budgetExp: "Exp: \$0.00",
                     designHead: "PHASE STATUS", designStatus: "PENDING", designDesc: "Not yet started.",
                     pipe: ["Pending", "Pending", "Pending", "Pending"],
                     recommendation: "New project added. Awaiting first status report.",
@@ -559,10 +576,12 @@
             if (confirm(`Are you sure you want to delete "${currentOption.text}"?`)) {
                 saveStateForUndo();
                 
+                deletedProjects.push(currentId); // Saves deletion permanently
+
                 delete projectData[currentId];
                 delete customProjects[currentId];
 
-                // Delete saved entries in stateDB for this project
+                // Clear memory blocks tied to this project
                 for (const k in stateDB) {
                     if (k.startsWith(currentId + "_")) {
                         delete stateDB[k];
@@ -598,7 +617,8 @@
         }
 
         function changeProject(isUserTriggered = false) {
-            if(isUserTriggered) {
+            // Prevent saving if a user is just viewing
+            if(isUserTriggered && !isViewer) {
                 saveStateForUndo();
                 saveCurrentViewToDB();
                 
@@ -609,7 +629,8 @@
                     f: document.getElementById('select-font').value, 
                     z: currentZoom, 
                     db: stateDB,
-                    cp: customProjects
+                    cp: customProjects,
+                    dp: deletedProjects // Save the permanently deleted list
                 };
                 localStorage.setItem('hamco_dashboard_master', JSON.stringify(tempState));
             }
@@ -628,49 +649,51 @@
             customBlockCount = 0;
 
             const p = projectData[pId] || projectData['nimule'];
-            const hasData = (m === 'October' && w === 'Week 1') || p.delayBadge === "NEW PROJECT";
+            const hasData = (m === 'October' && w === 'Week 1') || (p && p.delayBadge === "NEW PROJECT");
 
-            document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
-            document.getElementById('l-sub-title').innerHTML = p.subTitle;
-            document.getElementById('l-location-tag').innerHTML = p.location;
-            document.getElementById('l-period-tag').innerHTML = `${m} 2026 - ${w}`;
-            
-            document.getElementById('l-rem-days').innerHTML = hasData ? p.remDays : "--";
-            document.getElementById('l-elapsed-days').innerHTML = hasData ? p.elapsedDays : "Not yet updated for this period.";
-            document.getElementById('l-budget-total').innerHTML = hasData ? p.budgetTotal : "Total: --";
-            document.getElementById('l-budget-exp').innerHTML = hasData ? p.budgetExp : "Exp: --";
-            document.getElementById('l-design-head').innerHTML = hasData ? p.designHead : "PHASE STATUS";
-            document.getElementById('l-design-status').innerHTML = hasData ? p.designStatus : "PENDING";
-            document.getElementById('l-design-desc').innerHTML = hasData ? p.designDesc : "Awaiting weekly update.";
-            document.getElementById('l-delay-tag').innerHTML = hasData ? p.delayBadge : "No data submitted.";
-            document.getElementById('l-recommendation').innerHTML = hasData ? p.recommendation : "No recommendation submitted for this period.";
+            if (p) {
+                document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
+                document.getElementById('l-sub-title').innerHTML = p.subTitle;
+                document.getElementById('l-location-tag').innerHTML = p.location;
+                document.getElementById('l-period-tag').innerHTML = `${m} 2026 - ${w}`;
+                
+                document.getElementById('l-rem-days').innerHTML = hasData ? p.remDays : "--";
+                document.getElementById('l-elapsed-days').innerHTML = hasData ? p.elapsedDays : "Not yet updated for this period.";
+                document.getElementById('l-budget-total').innerHTML = hasData ? p.budgetTotal : "Total: --";
+                document.getElementById('l-budget-exp').innerHTML = hasData ? p.budgetExp : "Exp: --";
+                document.getElementById('l-design-head').innerHTML = hasData ? p.designHead : "PHASE STATUS";
+                document.getElementById('l-design-status').innerHTML = hasData ? p.designStatus : "PENDING";
+                document.getElementById('l-design-desc').innerHTML = hasData ? p.designDesc : "Awaiting weekly update.";
+                document.getElementById('l-delay-tag').innerHTML = hasData ? p.delayBadge : "No data submitted.";
+                document.getElementById('l-recommendation').innerHTML = hasData ? p.recommendation : "No recommendation submitted for this period.";
 
-            const timelineWinEl = document.getElementById('l-timeline-window');
-            if(timelineWinEl) {
-                timelineWinEl.innerHTML = hasData ? (p.plannedWindow || "") : "";
-            }
+                const timelineWinEl = document.getElementById('l-timeline-window');
+                if(timelineWinEl) {
+                    timelineWinEl.innerHTML = hasData ? (p.plannedWindow || "") : "";
+                }
 
-            document.getElementById('l-ring-time-val').innerHTML = hasData ? p.timePct + '%' : '0%';
-            document.getElementById('l-ring-fin-val').innerHTML = hasData ? p.finPct + '%' : '0%';
-            setTimeout(() => { 
-                setRing('l-ring-time', hasData ? p.timePct : 0); 
-                setRing('l-ring-fin', hasData ? p.finPct : 0); 
-            }, 50);
-            
-            for(let i=0; i<4; i++) {
-                const pipeEl = document.getElementById(`pipe-${i+1}`);
-                if(pipeEl) pipeEl.innerHTML = hasData ? p.pipe[i] : "-";
-            }
+                document.getElementById('l-ring-time-val').innerHTML = hasData ? p.timePct + '%' : '0%';
+                document.getElementById('l-ring-fin-val').innerHTML = hasData ? p.finPct + '%' : '0%';
+                setTimeout(() => { 
+                    setRing('l-ring-time', hasData ? p.timePct : 0); 
+                    setRing('l-ring-fin', hasData ? p.finPct : 0); 
+                }, 50);
+                
+                for(let i=0; i<4; i++) {
+                    const pipeEl = document.getElementById(`pipe-${i+1}`);
+                    if(pipeEl) pipeEl.innerHTML = hasData ? p.pipe[i] : "-";
+                }
 
-            const rfContainer = document.getElementById('red-flags-container');
-            if (rfContainer) {
-                rfContainer.innerHTML = ''; 
-                if (hasData && p.redFlags && p.redFlags.length > 0) {
-                    p.redFlags.forEach((rf, idx) => {
-                        rfContainer.innerHTML += `<div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-${idx+1}" contenteditable="true" style="flex: 1; font-size: 11px;">${rf}</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
-                    });
-                } else {
-                    rfContainer.innerHTML = `<div class="red-flag-item"><div class="red-flag-bullet" style="color:transparent;">•</div><div id="rf-1" contenteditable="true" style="flex: 1; font-size: 11px; color: #ef4444; font-weight: bold;">No red flags or data submitted for this period yet.</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
+                const rfContainer = document.getElementById('red-flags-container');
+                if (rfContainer) {
+                    rfContainer.innerHTML = ''; 
+                    if (hasData && p.redFlags && p.redFlags.length > 0) {
+                        p.redFlags.forEach((rf, idx) => {
+                            rfContainer.innerHTML += `<div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-${idx+1}" contenteditable="true" style="flex: 1; font-size: 11px;">${rf}</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
+                        });
+                    } else {
+                        rfContainer.innerHTML = `<div class="red-flag-item"><div class="red-flag-bullet" style="color:transparent;">•</div><div id="rf-1" contenteditable="true" style="flex: 1; font-size: 11px; color: #ef4444; font-weight: bold;">No red flags or data submitted for this period yet.</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
+                    }
                 }
             }
 
@@ -692,8 +715,13 @@
                 }
             }
 
-            if(handlesOn) {
+            if(handlesOn && !isViewer) {
                 document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
+            }
+
+            // Lock everything down if viewer mode
+            if(isViewer) {
+                document.querySelectorAll('[contenteditable="true"]').forEach(el => el.setAttribute('contenteditable', 'false'));
             }
         }
 
@@ -703,14 +731,14 @@
         let draggedCard = null;
 
         document.addEventListener("dragstart", function(event) {
-            if(handlesOn && event.target.classList.contains('light-card')) {
+            if(handlesOn && !isViewer && event.target.classList.contains('light-card')) {
                 draggedCard = event.target;
                 setTimeout(() => event.target.classList.add('dragging'), 0);
             }
         });
 
         document.addEventListener("dragend", function(event) {
-            if(handlesOn && event.target.classList.contains('light-card')) {
+            if(handlesOn && !isViewer && event.target.classList.contains('light-card')) {
                 event.target.classList.remove('dragging');
                 draggedCard = null;
                 saveStateForUndo();
@@ -724,7 +752,7 @@
         });
 
         document.addEventListener("drop", function(event) {
-            if(handlesOn && draggedCard) {
+            if(handlesOn && draggedCard && !isViewer) {
                 event.preventDefault();
                 const container = document.getElementById('main-content-grid');
                 const targetCard = event.target.closest('.light-card');
@@ -885,6 +913,10 @@
 
         async function shareDashboard() {
             const btn = document.getElementById('btn-share');
+            
+            // Check what kind of link the user wants
+            const isEditor = confirm("Create an EDITOR link?\n\nClick [OK] to allow editing.\nClick [Cancel] for a READ-ONLY viewer link.");
+
             const ogText = btn.innerHTML;
             btn.innerHTML = '⏳ Generating Short Link...';
 
@@ -897,7 +929,8 @@
                 f: document.getElementById('select-font').value, 
                 z: currentZoom, 
                 db: stateDB,
-                cp: customProjects
+                cp: customProjects,
+                dp: deletedProjects // Ensure deleted projects stay deleted for viewers
             };
 
             let shareUrl = window.location.href;
@@ -931,6 +964,11 @@
                 }
             }
 
+            // Append viewer mode tag if necessary
+            if (!isEditor) {
+                shareUrl += '&mode=view';
+            }
+
             try {
                 await navigator.clipboard.writeText(shareUrl);
                 alert("✅ Short Link Generated & Copied to Clipboard!\n\nLink: " + shareUrl);
@@ -950,7 +988,8 @@
                 f: document.getElementById('select-font').value, 
                 z: currentZoom, 
                 db: stateDB,
-                cp: customProjects
+                cp: customProjects,
+                dp: deletedProjects
             };
 
             localStorage.setItem('hamco_dashboard_master', JSON.stringify(state));
@@ -958,6 +997,16 @@
         }
 
         function loadState(state) {
+            // Re-apply permanent deletions first
+            if (state.dp) {
+                deletedProjects = state.dp;
+                deletedProjects.forEach(id => {
+                    if (projectData[id]) delete projectData[id];
+                    const opt = document.querySelector(`#select-project option[value="${id}"]`);
+                    if (opt) opt.remove();
+                });
+            }
+
             if (state.cp) {
                 customProjects = state.cp;
                 for (const id in customProjects) {
@@ -980,7 +1029,9 @@
                 stateDB = {};
             }
 
-            if(state.p) document.getElementById('select-project').value = state.p;
+            if(state.p && document.querySelector(`#select-project option[value="${state.p}"]`)) {
+                document.getElementById('select-project').value = state.p;
+            }
             if(state.m) document.getElementById('select-month').value = state.m;
             if(state.w) document.getElementById('select-week').value = state.w;
             
@@ -997,19 +1048,24 @@
             const npointId = params.get('id');
             const bytebinId = params.get('bin');
             
+            // Check Viewer Mode
+            if (params.get('mode') === 'view') {
+                isViewer = true;
+                document.body.classList.add('viewer-mode');
+                document.querySelectorAll('[contenteditable="true"]').forEach(el => el.setAttribute('contenteditable', 'false'));
+            }
+
             if (npointId) {
                 try {
                     const res = await fetch('https://api.npoint.io/' + npointId);
                     const state = await res.json();
                     loadState(state);
-                    window.history.replaceState({}, document.title, window.location.pathname);
                 } catch(e) { changeProject(false); }
             } else if (bytebinId) {
                 try {
                     const res = await fetch('https://bytebin.lucko.me/' + bytebinId);
                     const state = await res.json();
                     loadState(state);
-                    window.history.replaceState({}, document.title, window.location.pathname);
                 } catch(e) { changeProject(false); }
             } else {
                 const localSave = localStorage.getItem('hamco_dashboard_master') 
@@ -1045,7 +1101,8 @@
                 font: document.getElementById('select-font').value,
                 zoom: currentZoom,
                 db: JSON.parse(JSON.stringify(stateDB)),
-                ak: activeKey
+                ak: activeKey,
+                dp: JSON.parse(JSON.stringify(deletedProjects))
             });
             redoStack = []; 
             document.getElementById('btn-undo').disabled = false; 
@@ -1063,7 +1120,8 @@
                 font: document.getElementById('select-font').value,
                 zoom: currentZoom,
                 db: JSON.parse(JSON.stringify(stateDB)),
-                ak: activeKey
+                ak: activeKey,
+                dp: JSON.parse(JSON.stringify(deletedProjects))
             });
 
             const s = undoStack.pop();
@@ -1076,13 +1134,14 @@
             
             stateDB = s.db;
             activeKey = s.ak;
+            deletedProjects = s.dp || [];
             currentZoom = s.zoom;
             document.getElementById('dashboard-container').style.zoom = currentZoom;
             
             document.getElementById('btn-undo').disabled = !undoStack.length; 
             document.getElementById('btn-redo').disabled = false;
             
-            if(handlesOn) {
+            if(handlesOn && !isViewer) {
                 document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
             }
         }
@@ -1098,7 +1157,8 @@
                 font: document.getElementById('select-font').value,
                 zoom: currentZoom,
                 db: JSON.parse(JSON.stringify(stateDB)),
-                ak: activeKey
+                ak: activeKey,
+                dp: JSON.parse(JSON.stringify(deletedProjects))
             });
 
             const s = redoStack.pop();
@@ -1111,13 +1171,14 @@
             
             stateDB = s.db;
             activeKey = s.ak;
+            deletedProjects = s.dp || [];
             currentZoom = s.zoom;
             document.getElementById('dashboard-container').style.zoom = currentZoom;
             
             document.getElementById('btn-undo').disabled = false; 
             document.getElementById('btn-redo').disabled = !redoStack.length;
 
-            if(handlesOn) {
+            if(handlesOn && !isViewer) {
                 document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
             }
         }
