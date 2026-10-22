@@ -349,6 +349,7 @@
                 </tr>
             </thead>
             <tbody id="mon-tbody">
+                <!-- Dynamically generated -->
             </tbody>
         </table>
     </div>
@@ -551,12 +552,16 @@
                 if (latestSavedHTML) {
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = latestSavedHTML;
-                    const items = tempDiv.querySelectorAll('.red-flag-item');
-                    totalFlags = items.length;
-                    items.forEach(item => {
-                        const textDiv = item.querySelector('div[contenteditable]');
-                        if(textDiv) redFlagsHTML += `<li>${textDiv.innerText}</li>`;
-                    });
+                    
+                    const redFlagCard = tempDiv.querySelector('#card-red-flags');
+                    if (redFlagCard) {
+                        const items = redFlagCard.querySelectorAll('.red-flag-item');
+                        totalFlags = items.length;
+                        items.forEach(item => {
+                            const textDiv = item.querySelector('div[contenteditable="true"]');
+                            if(textDiv) redFlagsHTML += `<li>${textDiv.innerText}</li>`;
+                        });
+                    }
                 } else {
                     const flags = allProjects[pId].redFlags || [];
                     totalFlags = flags.length;
