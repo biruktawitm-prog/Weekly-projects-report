@@ -105,14 +105,7 @@
         <div class="bar-group">
             <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📁 Project:</span>
             <select class="dropdown-select" id="select-project" onchange="changeProject(true)">
-                <option value="nimule">Nimule One Stop Border Post</option>
-                <option value="flood">Flood Mitigation Project</option>
-                <option value="kassala_iv">Kassala IV</option>
-                <option value="kassala_procase">Kassala Procase</option>
-                <option value="kassala_dialysis">Kassala Dialysis</option>
-                <option value="adwa">Adwa Catholic General Hospital</option>
-                <option value="efsr">EFSR Project</option>
-                <option value="sslrp">SSLRP Livelihood Project</option>
+                <!-- Content will be automatically built by JS -->
             </select>
             <button class="btn-studio" onclick="addNewProject()" title="Add New Project" style="padding: 6px 10px;">➕</button>
             <button class="btn-studio" onclick="editProjectName()" title="Edit Project Name" style="padding: 6px 10px;">✏️</button>
@@ -207,8 +200,8 @@
                             <div class="radial-text" style="color: #059669;" id="l-ring-fin-val" contenteditable="true">0%</div>
                         </div>
                         <div>
-                            <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: \$0</div>
-                            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: \$0</div>
+                            <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: $0</div>
+                            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: $0</div>
                         </div>
                     </div>
                 </div>
@@ -361,7 +354,6 @@
         let defaultGridHTML = "";
 
         // ================= FULL BUILT-IN PROJECT DATA =================
-        // Using backticks to completely prevent Javascript string-breaking syntax errors
         const projectData = {
             nimule: {
                 title: `WEEKLY PROJECT UPDATES NIMULE OSBP`, subTitle: `Nimule One Stop Border Post - 24647-001`, location: `Nimule, South Sudan`,
@@ -538,7 +530,7 @@
         }
 
         // ================= GLOBAL EVENT DELEGATION (CRITICAL FIX) =================
-        // By handling all clicks here, the browser can never strip the functionality.
+        // Handles all clicks dynamically so the browser never strips the functionality
         document.addEventListener('click', function(e) {
             if (isViewer) return; // Prevent clicks in Read-Only Viewer mode
 
@@ -716,6 +708,8 @@
             document.getElementById('dashboard-container').style.zoom = currentZoom;
         }
 
+        // ================= DYNAMIC DROPDOWN FIX =================
+        // This ensures renamed projects replace the default names in the dropdown list
         function buildDropdown() {
             const selectEl = document.getElementById('select-project');
             const currentVal = selectEl.value;
@@ -732,16 +726,19 @@
                 { id: 'sslrp', name: 'SSLRP Livelihood Project' }
             ];
 
+            // Build standard projects (or their custom renamed versions)
             standards.forEach(s => {
                 if (!deletedProjects.includes(s.id)) {
                     let opt = document.createElement('option');
-                    opt.value = s.id; opt.innerHTML = s.name;
+                    opt.value = s.id; 
+                    opt.innerHTML = customProjects[s.id] ? customProjects[s.id].name : s.name;
                     selectEl.appendChild(opt);
                 }
             });
 
+            // Build completely new projects
             for (const cId in customProjects) {
-                if (!deletedProjects.includes(cId)) {
+                if (!deletedProjects.includes(cId) && !standards.some(std => std.id === cId)) {
                     let opt = document.createElement('option');
                     opt.value = cId; opt.innerHTML = customProjects[cId].name;
                     selectEl.appendChild(opt);
@@ -789,11 +786,13 @@
                     document.getElementById('l-main-title').innerHTML = projectData[currentId].title;
                     document.getElementById('l-sub-title').innerHTML = projectData[currentId].subTitle;
                 }
+                
                 if (customProjects[currentId]) {
                     customProjects[currentId].name = newName;
                 } else {
                     customProjects[currentId] = { name: newName, data: projectData[currentId] };
                 }
+                
                 buildDropdown();
                 document.getElementById('select-project').value = currentId;
                 saveLayout(false);
