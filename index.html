@@ -61,13 +61,15 @@
         .light-card-title { font-size: 11px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; margin-bottom: 8px; }
 
         .red-flag-item { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 11px; line-height: 1.35; position: relative; }
-        .rf-checkbox { width: 14px; height: 14px; border: 2px solid #ef4444; border-radius: 3px; display: inline-block; cursor: pointer; margin-top: 1px; flex-shrink: 0; position: relative; background: white; transition: all 0.2s; }
+        
+        .rf-checkbox { width: 14px; height: 14px; border: 2px solid #ef4444; border-radius: 3px; display: inline-block; cursor: pointer; margin-top: 1px; flex-shrink: 0; position: relative; background: white; transition: all 0.2s; z-index: 50; }
         .rf-checkbox:hover { background: #fee2e2; }
         .rf-checkbox.checked { border-color: #10b981; background-color: #10b981; }
         .rf-checkbox.checked::after { content: '✓'; color: white; font-size: 10px; position: absolute; top: -1px; left: 2px; font-weight: bold;}
-        .rf-text { flex: 1; font-size: 11px; transition: color 0.2s; }
+        
+        .rf-text { flex: 1; font-size: 11px; transition: color 0.2s; position: relative; z-index: 1; }
         .rf-text.checked-text { text-decoration: line-through; color: #94a3b8; }
-        .delete-bullet-btn { background: none; border: none; color: #ef4444; font-weight: bold; font-size: 12px; cursor: pointer; padding: 0 4px; opacity: 0.6; transition: opacity 0.2s; }
+        .delete-bullet-btn { background: none; border: none; color: #ef4444; font-weight: bold; font-size: 12px; cursor: pointer; padding: 0 4px; opacity: 0.6; transition: opacity 0.2s; z-index: 50; position: relative;}
         .delete-bullet-btn:hover { opacity: 1.0; }
 
         .pipeline-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
@@ -79,9 +81,11 @@
 
         .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif;}
 
-        [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
+        [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: 0; }
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
         [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
+        [contenteditable="true"] ul, [contenteditable="true"] ol { margin: 4px 0 4px 24px; padding: 0; }
+        [contenteditable="true"] li { margin-bottom: 4px; display: list-item; list-style-position: outside; }
 
         .monitoring-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8fafc; z-index: 9999; padding: 40px; overflow-y: auto; display: none; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; }
         .mon-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
@@ -91,7 +95,7 @@
         .mon-badge-red { background: #fee2e2; color: #ef4444; padding: 4px 8px; border-radius: 4px; font-weight: 800; font-size: 10px;}
         .mon-badge-green { background: #d1fae5; color: #10b981; padding: 4px 8px; border-radius: 4px; font-weight: 800; font-size: 10px;}
 
-        .viewer-mode .card-controls, .viewer-mode .delete-bullet-btn, .viewer-mode .btn-action-green, .viewer-mode button[title="Add New Project"], .viewer-mode button[title="Edit Project Name"], .viewer-mode button[title="Delete Current Project"], .viewer-mode #btn-handles, .viewer-mode button[title="Format as Bullet List"], .viewer-mode #btn-undo, .viewer-mode #btn-redo, .viewer-mode button[onclick="addCustomBlock(true)"] { display: none !important; }
+        .viewer-mode .card-controls, .viewer-mode .delete-bullet-btn, .viewer-mode .btn-action-green, .viewer-mode button[title="Add New Project"], .viewer-mode button[title="Edit Project Name"], .viewer-mode button[title="Delete Current Project"], .viewer-mode #btn-handles, .viewer-mode button[title="Format as Bullet List"], .viewer-mode #btn-undo, .viewer-mode #btn-redo, .viewer-mode .add-rf-btn, .viewer-mode button[onclick="addCustomBlock(true)"] { display: none !important; }
         @media print { @page { size: landscape; margin: 5mm; } body { padding: 0; background: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; zoom: 0.75; } .top-studio-bar, .no-print, .monitoring-overlay { display: none !important; } .light-theme { box-shadow: none !important; padding: 0 !important; } .card-controls, .delete-bullet-btn { display: none !important; } }
     </style>
 </head>
@@ -256,15 +260,15 @@
         </table>
     </div>
 
-    <!-- PURE TEMPLATE -->
+    <!-- PURE TEMPLATE (No Inline onClick events, entirely safe from sanitization) -->
     <template id="default-grid-template">
         <div class="light-card col-span-1" id="card-timeline">
             <div class="card-controls">
                 <span>⠿ Drag Timeline</span>
                 <div>
-                    <button class="span-btn active" onclick="setSpan('card-timeline', 1)">1 Col</button>
-                    <button class="span-btn" onclick="setSpan('card-timeline', 2)">2 Col</button>
-                    <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-timeline', event)">❌</button>
+                    <button class="span-btn active" data-action="span-1">1 Col</button>
+                    <button class="span-btn" data-action="span-2">2 Col</button>
+                    <button class="span-btn delete-card-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block">❌</button>
                 </div>
             </div>
             <div class="light-card-title" id="title-timeline" contenteditable="true">🚩 PROJECT TIMELINE vs BASELINE</div>
@@ -280,10 +284,10 @@
             <div class="card-controls">
                 <span>⠿ Drag Red Flags</span>
                 <div>
-                    <button class="span-btn" onclick="addRedFlag(event)" style="color: #ef4444; font-weight: bold;" title="Add Red Flag Box">➕ Add Box</button>
-                    <button class="span-btn active" onclick="setSpan('card-red-flags', 1)">1 Col</button>
-                    <button class="span-btn" onclick="setSpan('card-red-flags', 2)">2 Col</button>
-                    <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-red-flags', event)">❌</button>
+                    <button class="span-btn add-rf-btn" style="color: #ef4444; font-weight: bold;" title="Add Red Flag Box">➕ Add Box</button>
+                    <button class="span-btn active" data-action="span-1">1 Col</button>
+                    <button class="span-btn" data-action="span-2">2 Col</button>
+                    <button class="span-btn delete-card-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block">❌</button>
                 </div>
             </div>
             <div class="light-card-title" id="title-red-flags" contenteditable="true" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
@@ -295,9 +299,9 @@
             <div class="card-controls">
                 <span>⠿ Drag Phase Status</span>
                 <div>
-                    <button class="span-btn active" onclick="setSpan('card-pipeline', 1)">1 Col</button>
-                    <button class="span-btn" onclick="setSpan('card-pipeline', 2)">2 Col</button>
-                    <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-pipeline', event)">❌</button>
+                    <button class="span-btn active" data-action="span-1">1 Col</button>
+                    <button class="span-btn" data-action="span-2">2 Col</button>
+                    <button class="span-btn delete-card-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block">❌</button>
                 </div>
             </div>
             <div class="light-card-title" id="title-phase-status" contenteditable="true">⚙️ PROJECT PHASE STATUS</div>
@@ -325,9 +329,9 @@
             <div class="card-controls" style="background: rgba(255,255,255,0.15); color: #e2e8f0; border: none; margin-bottom: 12px;">
                 <span>⠿ Drag Key Recommendation</span>
                 <div>
-                    <button class="span-btn" onclick="setSpan('card-rec', 1)" style="color: #cbd5e1; background: rgba(0,0,0,0.3);">1 Col</button>
-                    <button class="span-btn active" onclick="setSpan('card-rec', 2)" style="color: white; background: #2563eb;">2 Col</button>
-                    <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px; background: rgba(0,0,0,0.3);" title="Delete Block" onclick="deleteBlock('card-rec', event)">❌</button>
+                    <button class="span-btn" data-action="span-1" style="color: #cbd5e1; background: rgba(0,0,0,0.3);">1 Col</button>
+                    <button class="span-btn active" data-action="span-2" style="color: white; background: #2563eb;">2 Col</button>
+                    <button class="span-btn delete-card-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px; background: rgba(0,0,0,0.3);" title="Delete Block">❌</button>
                 </div>
             </div>
             <div style="display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
@@ -356,8 +360,8 @@
         let activeKey = "nimule_October_Week 3";
         let defaultGridHTML = "";
 
-        // ================= FULL BUILT-IN PROJECT DATA EXACTLY AS REQUESTED =================
-        // Using backticks for all strings to prevent ANY quotes from breaking the Javascript!
+        // ================= FULL BUILT-IN PROJECT DATA =================
+        // Using backticks to completely prevent Javascript string-breaking syntax errors
         const projectData = {
             nimule: {
                 title: `WEEKLY PROJECT UPDATES NIMULE OSBP`, subTitle: `Nimule One Stop Border Post - 24647-001`, location: `Nimule, South Sudan`,
@@ -533,6 +537,48 @@
             return new Date().toISOString().split('T')[0];
         }
 
+        // ================= GLOBAL EVENT DELEGATION (CRITICAL FIX) =================
+        // By handling all clicks here, the browser can never strip the functionality.
+        document.addEventListener('click', function(e) {
+            if (isViewer) return; // Prevent clicks in Read-Only Viewer mode
+
+            // 1. Red Flag Checkbox click
+            if (e.target.classList.contains('rf-checkbox')) {
+                toggleChecklist(e.target);
+                return;
+            }
+
+            // 2. Delete Individual Bullet
+            if (e.target.classList.contains('delete-bullet-btn')) {
+                deleteSingleRedFlag(e.target);
+                return;
+            }
+
+            // 3. Add New Red Flag Box
+            if (e.target.classList.contains('add-rf-btn')) {
+                addRedFlag(e);
+                return;
+            }
+
+            // 4. Delete Entire Block
+            if (e.target.classList.contains('delete-card-btn')) {
+                const card = e.target.closest('.light-card');
+                if(card) deleteBlock(card.id, e);
+                return;
+            }
+
+            // 5. 1 Col / 2 Col Layout Span
+            if (e.target.classList.contains('span-btn') && e.target.hasAttribute('data-action')) {
+                const action = e.target.getAttribute('data-action');
+                const card = e.target.closest('.light-card');
+                if(card) {
+                    setSpan(card.id, action === 'span-2' ? 2 : 1, true);
+                }
+                return;
+            }
+        });
+
+
         // ================= PMO LOGIN SYSTEM =================
         function loginPMO() {
             if(isPMO) {
@@ -553,7 +599,6 @@
             }
         }
 
-        // ================= INTERACTIVE CHECKBOX LOGIC =================
         function toggleChecklist(boxEl) {
             if(!isPMO) {
                 alert("⛔ Action Restricted: Only authorized PMO personnel (PMOE, PMOS, PMOSS) can mark red flags as resolved. Click 'PMO Login' to authenticate.");
@@ -786,7 +831,7 @@
             const newId = 'rf-' + Math.random().toString(36).substr(2, 5);
             const div = document.createElement('div');
             div.className = 'red-flag-item';
-            div.innerHTML = `<div class="rf-checkbox" data-created-date="${getTodayStr()}" onclick="toggleChecklist(this)"></div><div id="${newId}" class="rf-text" contenteditable="true">Click to edit new red flag...</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button>`;
+            div.innerHTML = `<div class="rf-checkbox" data-created-date="${getTodayStr()}"></div><div id="${newId}" class="rf-text" contenteditable="true">Click to edit new red flag...</div><button class="delete-bullet-btn" title="Delete Bullet">×</button>`;
             container.appendChild(div);
             customEdits[newId] = "Click to edit new red flag...";
             saveCurrentViewToDB();
@@ -877,10 +922,10 @@
                     rfContainer.innerHTML = ''; 
                     if (hasData && p.redFlags && p.redFlags.length > 0) {
                         p.redFlags.forEach((rf, idx) => {
-                            rfContainer.innerHTML += `<div class="red-flag-item"><div class="rf-checkbox" data-created-date="${getTodayStr()}" onclick="toggleChecklist(this)"></div><div id="rf-${idx+1}" class="rf-text" contenteditable="true">${rf}</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
+                            rfContainer.innerHTML += `<div class="red-flag-item"><div class="rf-checkbox" data-created-date="${getTodayStr()}"></div><div id="rf-${idx+1}" class="rf-text" contenteditable="true">${rf}</div><button class="delete-bullet-btn" title="Delete Bullet">×</button></div>`;
                         });
                     } else {
-                        rfContainer.innerHTML = `<div class="red-flag-item"><div class="rf-checkbox" data-created-date="${getTodayStr()}" onclick="toggleChecklist(this)"></div><div id="rf-1" class="rf-text" contenteditable="true" style="color: #ef4444; font-weight: bold;">No red flags or data submitted for this period yet.</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
+                        rfContainer.innerHTML = `<div class="red-flag-item"><div class="rf-checkbox" data-created-date="${getTodayStr()}"></div><div id="rf-1" class="rf-text" contenteditable="true" style="color: #ef4444; font-weight: bold;">No red flags or data submitted for this period yet.</div><button class="delete-bullet-btn" title="Delete Bullet">×</button></div>`;
                     }
                 }
             }
@@ -994,9 +1039,9 @@
                 <div class="card-controls">
                     <span>⠿ Drag Custom Block ${customBlockCount}</span>
                     <div>
-                        <button class="span-btn" onclick="setSpan('${id}', 1)">1 Col</button>
-                        <button class="span-btn active" onclick="setSpan('${id}', 2)">2 Col</button>
-                        <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('${id}', event)">❌</button>
+                        <button class="span-btn" data-action="span-1">1 Col</button>
+                        <button class="span-btn active" data-action="span-2">2 Col</button>
+                        <button class="span-btn delete-card-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block">❌</button>
                     </div>
                 </div>
                 <div class="light-card-title" id="cb-title-${customBlockCount}" contenteditable="true">📌 CUSTOM STATUS BLOCK</div>
