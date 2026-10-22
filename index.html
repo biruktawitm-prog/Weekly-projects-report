@@ -84,8 +84,9 @@
         [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: 0; }
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
         [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
+        [contenteditable="true"] ul, [contenteditable="true"] ol { margin: 4px 0 4px 24px; padding: 0; }
+        [contenteditable="true"] li { margin-bottom: 4px; display: list-item; list-style-position: outside; }
 
-        /* ================= MONITORING OVERLAY ================= */
         .monitoring-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8fafc; z-index: 9999; padding: 40px; overflow-y: auto; display: none; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; }
         .mon-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
         .mon-table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
@@ -97,7 +98,6 @@
         .mon-rf-list li { margin-bottom: 6px; line-height: 1.35; }
         .mon-rf-list li.resolved-bullet { text-decoration: line-through; color: #10b981; }
 
-        /* ================= VIEWER MODE STYLES ================= */
         .viewer-mode .card-controls, .viewer-mode .delete-bullet-btn, .viewer-mode .btn-action-green, .viewer-mode button[title="Add New Project"], .viewer-mode button[title="Edit Project Name"], .viewer-mode button[title="Delete Current Project"], .viewer-mode #btn-handles, .viewer-mode button[title="Format as Bullet List"], .viewer-mode #btn-undo, .viewer-mode #btn-redo, .viewer-mode .add-rf-btn, .viewer-mode button[onclick="addCustomBlock(true)"] { display: none !important; }
         @media print { @page { size: landscape; margin: 5mm; } body { padding: 0; background: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; zoom: 0.75; } .top-studio-bar, .no-print, .monitoring-overlay { display: none !important; } .light-theme { box-shadow: none !important; padding: 0 !important; } .card-controls, .delete-bullet-btn { display: none !important; } }
     </style>
@@ -108,14 +108,7 @@
         <div class="bar-group">
             <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📁 Project:</span>
             <select class="dropdown-select" id="select-project" onchange="changeProject(true)">
-                <option value="nimule">Nimule One Stop Border Post</option>
-                <option value="flood">Flood Mitigation Project</option>
-                <option value="kassala_iv">Kassala IV</option>
-                <option value="kassala_procase">Kassala Procase</option>
-                <option value="kassala_dialysis">Kassala Dialysis</option>
-                <option value="adwa">Adwa Catholic General Hospital</option>
-                <option value="efsr">EFSR Project</option>
-                <option value="sslrp">SSLRP Livelihood Project</option>
+                <!-- Content will be automatically built by JS -->
             </select>
             <button class="btn-studio" onclick="addNewProject()" title="Add New Project" style="padding: 6px 10px;">➕</button>
             <button class="btn-studio" onclick="editProjectName()" title="Edit Project Name" style="padding: 6px 10px;">✏️</button>
@@ -168,14 +161,15 @@
     <!-- MAIN DASHBOARD CONTAINER -->
     <div id="dashboard-container" class="dashboard-container">
         <div class="light-theme">
+            
             <div class="light-header-banner">
                 <div class="light-header-title">
-                    <h2 id="l-main-title" contenteditable="true">WEEKLY PROJECT UPDATES</h2>
-                    <p id="l-sub-title" contenteditable="true">Project Construction</p>
+                    <h2 id="l-main-title" contenteditable="true">WEEKLY PROJECT UPDATES NIMULE OSBP</h2>
+                    <p id="l-sub-title" contenteditable="true">Nimule One Stop Border Post - 24647-001</p>
                 </div>
                 <div style="text-align: right; font-size: 11px;">
                     <div><strong>Reporting Period:</strong> <span id="l-period-tag" contenteditable="true">October 2026 - Week 3</span></div>
-                    <div><strong>Location:</strong> <span id="l-location-tag" contenteditable="true">Location</span></div>
+                    <div><strong>Location:</strong> <span id="l-location-tag" contenteditable="true">Nimule, South Sudan</span></div>
                 </div>
             </div>
 
@@ -189,11 +183,11 @@
                                 <circle class="radial-bg" cx="32" cy="32" r="28"></circle>
                                 <circle class="radial-val" id="l-ring-time" cx="32" cy="32" r="28" stroke="#3b82f6" stroke-dasharray="175.93" stroke-dashoffset="110.3"></circle>
                             </svg>
-                            <div class="radial-text" style="color: #3b82f6;" id="l-ring-time-val" contenteditable="true">0%</div>
+                            <div class="radial-text" style="color: #3b82f6;" id="l-ring-time-val" contenteditable="true">37.3%</div>
                         </div>
                         <div>
-                            <div style="font-size: 18px; font-weight: 800; color: #0f172a;" id="l-rem-days" contenteditable="true">0 Days Rem</div>
-                            <div style="font-size: 10px; color: #64748b;" id="l-elapsed-days" contenteditable="true">0 Days Elapsed</div>
+                            <div style="font-size: 18px; font-weight: 800; color: #0f172a;" id="l-rem-days" contenteditable="true">1,067 Days Rem</div>
+                            <div style="font-size: 10px; color: #64748b;" id="l-elapsed-days" contenteditable="true">636 days elapsed</div>
                         </div>
                     </div>
                 </div>
@@ -207,25 +201,111 @@
                                 <circle class="radial-bg" cx="32" cy="32" r="28"></circle>
                                 <circle class="radial-val" id="l-ring-fin" cx="32" cy="32" r="28" stroke="#059669" stroke-dasharray="175.93" stroke-dashoffset="143.3"></circle>
                             </svg>
-                            <div class="radial-text" style="color: #059669;" id="l-ring-fin-val" contenteditable="true">0%</div>
+                            <div class="radial-text" style="color: #059669;" id="l-ring-fin-val" contenteditable="true">18.5%</div>
                         </div>
                         <div>
-                            <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: $0</div>
-                            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: $0</div>
+                            <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: $10,845,990.00</div>
+                            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: $2,009,685.02</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="light-card col-span-1" id="kpi-card-3" style="border-left: 3px solid #059669; grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Card 3</span></div>
-                    <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase;" id="l-design-head" contenteditable="true">PHASE STATUS</div>
-                    <div style="font-size: 14px; font-weight: 800; color: #059669;" id="l-design-status" contenteditable="true">IN PROGRESS</div>
-                    <div style="font-size: 10px; color: #64748b; margin-top: 4px;" id="l-design-desc" contenteditable="true">Status text.</div>
+                    <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase;" id="l-design-head" contenteditable="true">IPMG DESIGN APPROVAL</div>
+                    <div style="font-size: 14px; font-weight: 800; color: #059669;" id="l-design-status" contenteditable="true">APPROVED / 100% DONE</div>
+                    <div style="font-size: 10px; color: #64748b; margin-top: 4px;" id="l-design-desc" contenteditable="true">Design completed in September. Process took ~4 months (2-month delay).</div>
                 </div>
             </div>
 
+            <!-- MAIN CONTENT AREA -->
             <div class="light-main-grid handles-off" id="main-content-grid">
-                <!-- Javascript will load the pure template here -->
+                <!-- DEFAULT NIMULE TEMPLATE HARDCODED TO PREVENT BLANK SCREEN -->
+                <div class="light-card col-span-1" id="card-timeline">
+                    <div class="card-controls">
+                        <span>⠿ Drag Timeline</span>
+                        <div>
+                            <button class="span-btn active" data-action="span-1">1 Col</button>
+                            <button class="span-btn" data-action="span-2">2 Col</button>
+                            <button class="span-btn delete-card-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block">❌</button>
+                        </div>
+                    </div>
+                    <div class="light-card-title" id="title-timeline" contenteditable="true">🚩 PROJECT TIMELINE vs BASELINE</div>
+                    <div style="font-size: 11px; margin-bottom: 6px;" id="l-timeline-window" contenteditable="true">
+                        <strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 total days)
+                    </div>
+                    <div style="font-size: 11px; color: #dc2626; font-weight: 700;" id="l-delay-tag" contenteditable="true">
+                        Current Delay: 5 to 6 months behind baseline schedule
+                    </div>
+                </div>
+
+                <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444; grid-row: span 2;">
+                    <div class="card-controls">
+                        <span>⠿ Drag Red Flags</span>
+                        <div>
+                            <button class="span-btn add-rf-btn" style="color: #ef4444; font-weight: bold;" title="Add Red Flag Box">➕ Add Box</button>
+                            <button class="span-btn active" data-action="span-1">1 Col</button>
+                            <button class="span-btn" data-action="span-2">2 Col</button>
+                            <button class="span-btn delete-card-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block">❌</button>
+                        </div>
+                    </div>
+                    <div class="light-card-title" id="title-red-flags" contenteditable="true" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
+                    <div id="red-flags-container">
+                        <div class="red-flag-item"><div class="rf-checkbox" data-created-date="2026-10-22"></div><div id="rf-1" class="rf-text" contenteditable="true">The project is approximately 5 to 6 months behind the baseline schedule submitted (April 1 to October 1, 2026).</div><button class="delete-bullet-btn" title="Delete Bullet">×</button></div>
+                        <div class="red-flag-item"><div class="rf-checkbox" data-created-date="2026-10-22"></div><div id="rf-2" class="rf-text" contenteditable="true">According to the initially submitted schedule, the project had to start an implementation phase of roofing works which had to commence in September 2026. However, the construction has not yet commenced because the procurement stage is still active (initially scheduled to be completed in June 2026).</div><button class="delete-bullet-btn" title="Delete Bullet">×</button></div>
+                        <div class="red-flag-item"><div class="rf-checkbox" data-created-date="2026-10-22"></div><div id="rf-3" class="rf-text" contenteditable="true">The Design submission and approval by IPMG was initially planned for two months, from March to May, 2026, However the activity started on 23 of April and was completed in September taking around 4 months to fully complete. Two months of delay was observed.</div><button class="delete-bullet-btn" title="Delete Bullet">×</button></div>
+                        <div class="red-flag-item"><div class="rf-checkbox" data-created-date="2026-10-22"></div><div id="rf-4" class="rf-text" contenteditable="true">The project is now under the works procurement solicitation, bidding, evaluation and award of contract activity. It was planned for April 2026, however it was started in September 2026. Thus, it has a 5.5 month variance.</div><button class="delete-bullet-btn" title="Delete Bullet">×</button></div>
+                        <div class="red-flag-item"><div class="rf-checkbox" data-created-date="2026-10-22"></div><div id="rf-5" class="rf-text" contenteditable="true">All 21 activities in the inception phase, which covers project governance, stakeholder engagements, technical assessments, HR recruitment, and planning are marked as Completed. However the actual start and end dates are blank.</div><button class="delete-bullet-btn" title="Delete Bullet">×</button></div>
+                        <div class="red-flag-item"><div class="rf-checkbox" data-created-date="2026-10-22"></div><div id="rf-6" class="rf-text" contenteditable="true">A discrepancy exists between the time schedule submitted for the dashboard and the schedule in the oneUNOPS project.</div><button class="delete-bullet-btn" title="Delete Bullet">×</button></div>
+                    </div>
+                </div>
+
+                <div class="light-card col-span-1" id="card-pipeline">
+                    <div class="card-controls">
+                        <span>⠿ Drag Phase Status</span>
+                        <div>
+                            <button class="span-btn active" data-action="span-1">1 Col</button>
+                            <button class="span-btn" data-action="span-2">2 Col</button>
+                            <button class="span-btn delete-card-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block">❌</button>
+                        </div>
+                    </div>
+                    <div class="light-card-title" id="title-phase-status" contenteditable="true">⚙️ PROJECT PHASE STATUS</div>
+                    <div class="pipeline-container">
+                        <div class="pipeline-step completed">
+                            <div class="pipeline-step-name">Inception</div>
+                            <div class="pipeline-step-status" id="pipe-1" contenteditable="true">Completed</div>
+                        </div>
+                        <div class="pipeline-step completed">
+                            <div class="pipeline-step-name">Design/IPMG</div>
+                            <div class="pipeline-step-status" id="pipe-2" contenteditable="true">Approved</div>
+                        </div>
+                        <div class="pipeline-step active">
+                            <div class="pipeline-step-name">Procurement</div>
+                            <div class="pipeline-step-status" id="pipe-3" contenteditable="true">Active (5.5m)</div>
+                        </div>
+                        <div class="pipeline-step">
+                            <div class="pipeline-step-name">Construction</div>
+                            <div class="pipeline-step-status" id="pipe-4" contenteditable="true">Pending</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="light-card col-span-2" id="card-rec" style="background: #0f172a; color: white; padding: 12px 16px;">
+                    <div class="card-controls" style="background: rgba(255,255,255,0.15); color: #e2e8f0; border: none; margin-bottom: 12px;">
+                        <span>⠿ Drag Key Recommendation</span>
+                        <div>
+                            <button class="span-btn" data-action="span-1" style="color: #cbd5e1; background: rgba(0,0,0,0.3);">1 Col</button>
+                            <button class="span-btn active" data-action="span-2" style="color: white; background: #2563eb;">2 Col</button>
+                            <button class="span-btn delete-card-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px; background: rgba(0,0,0,0.3);" title="Delete Block">❌</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+                        <div class="rec-tag" id="title-recommendation-tag" contenteditable="true">KEY RECOMMENDATION</div>
+                        <div style="font-size: 11px; line-height: 1.4; color: white; flex: 1; min-width: 200px;" id="l-recommendation" contenteditable="true">
+                            It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="no-print" style="margin-top: 20px; background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 8px; padding: 12px;">
@@ -367,402 +447,161 @@
         // ================= FULL BUILT-IN PROJECT DATA =================
         const projectData = {
             nimule: {
-                title: "WEEKLY PROJECT UPDATES NIMULE OSBP", subTitle: "Nimule One Stop Border Post - 24647-001", location: "Nimule, South Sudan",
-                delayBadge: "Current Delay: 5 to 6 months behind baseline schedule", plannedWindow: "<strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 total days)",
-                timePct: 37.3, finPct: 18.53, remDays: "1,067 Days Rem", elapsedDays: "636 days elapsed", budgetTotal: "Total: $10,845,990.00", budgetExp: "Exp: $2,009,685.02",
-                designHead: "IPMG DESIGN APPROVAL", designStatus: "APPROVED / 100% DONE", designDesc: "Design completed in September. Process took ~4 months (2-month delay).",
-                pipe: ["Completed", "Approved", "Active (5.5m)", "Pending"],
-                recommendation: "It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.",
+                title: `WEEKLY PROJECT UPDATES NIMULE OSBP`, subTitle: `Nimule One Stop Border Post - 24647-001`, location: `Nimule, South Sudan`,
+                delayBadge: `Current Delay: 5 to 6 months behind baseline schedule`, plannedWindow: `<strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 total days)`,
+                timePct: 37.3, finPct: 18.53, remDays: `1,067 Days Rem`, elapsedDays: `636 days elapsed`, budgetTotal: `Total: $10,845,990.00`, budgetExp: `Exp: $2,009,685.02`,
+                designHead: `IPMG DESIGN APPROVAL`, designStatus: `APPROVED / 100% DONE`, designDesc: `Design completed in September. Process took ~4 months (2-month delay).`,
+                pipe: [`Completed`, `Approved`, `Active (5.5m)`, `Pending`],
+                recommendation: `It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.`,
                 responsible: "TBD",
                 redFlags: [
-                    "The project is approximately 5 to 6 months behind the baseline schedule submitted (April 1 to October 1, 2026).",
-                    "According to the initially submitted schedule, the project had to start an implementation phase of roofing works which had to commence in September 2026. However, the construction has not yet commenced because the procurement stage is still active (initially scheduled to be completed in June 2026).",
-                    "The Design submission and approval by IPMG was initially planned for two months, from March to May, 2026, However the activity started on 23 of April and was completed in September taking around 4 months to fully complete. Two months of delay was observed.",
-                    "The project is now under the works procurement solicitation, bidding, evaluation and award of contract activity. It was planned for April 2026, however it was started in September 2026. Thus, it has a 5.5 month variance.",
-                    "All 21 activities in the inception phase, which covers project governance, stakeholder engagements, technical assessments, HR recruitment, and planning are marked as Completed. However the actual start and end dates are blank.",
-                    "A discrepancy exists between the time schedule submitted for the dashboard and the schedule in the oneUNOPS project."
+                    `The project is approximately 5 to 6 months behind the baseline schedule submitted (April 1 to October 1, 2026).`,
+                    `According to the initially submitted schedule, the project had to start an implementation phase of roofing works which had to commence in September 2026. However, the construction has not yet commenced because the procurement stage is still active (initially scheduled to be completed in June 2026).`,
+                    `The Design submission and approval by IPMG was initially planned for two months, from March to May, 2026, However the activity started on 23 of April and was completed in September taking around 4 months to fully complete. Two months of delay was observed.`,
+                    `The project is now under the works procurement solicitation, bidding, evaluation and award of contract activity. It was planned for April 2026, however it was started in September 2026. Thus, it has a 5.5 month variance.`,
+                    `All 21 activities in the inception phase, which covers project governance, stakeholder engagements, technical assessments, HR recruitment, and planning are marked as Completed. However the actual start and end dates are blank.`,
+                    `A discrepancy exists between the time schedule submitted for the dashboard and the schedule in the oneUNOPS project.`
                 ]
             },
             flood: {
-                title: "WEEKLY PROJECT UPDATES FLOOD MITIGATION", subTitle: "Rehabilitation of Flood Mitigation and Flood Control Infrastructure - 25148-001", location: "Bentiu & Malakal, South Sudan",
-                delayBadge: "42.57% PROGRESS GAP", plannedWindow: "<strong>Planned Window:</strong> Amended end date 31 Mar 2027",
-                timePct: 70.25, finPct: 25.61, remDays: "End: 31 Mar 2027", elapsedDays: "70.25% Elapsed / 27.68% Physical", budgetTotal: "Total: $9.86M", budgetExp: "Exp: $2.5M",
-                designHead: "PHASE STATUS", designStatus: "IN PROGRESS", designDesc: "Procurement active, works delayed.",
-                pipe: ["In Progress", "Delayed", "Active", "Delayed (6m)"], recommendation: "Update the workplan linked to the dashboard to reflect the revised schedule uploaded on 09 Oct 2026.",
+                title: `WEEKLY PROJECT UPDATES FLOOD MITIGATION`, subTitle: `Rehabilitation of Flood Mitigation and Flood Control Infrastructure - 25148-001`, location: `Bentiu & Malakal, South Sudan`,
+                delayBadge: `42.57% PROGRESS GAP`, plannedWindow: `<strong>Planned Window:</strong> Amended end date 31 Mar 2027`,
+                timePct: 70.25, finPct: 25.61, remDays: `End: 31 Mar 2027`, elapsedDays: `70.25% Elapsed / 27.68% Physical`, budgetTotal: `Total: $9.86M`, budgetExp: `Exp: $2.5M`,
+                designHead: `PHASE STATUS`, designStatus: `IN PROGRESS`, designDesc: `Procurement active, works delayed.`,
+                pipe: [`In Progress`, `Delayed`, `Active`, `Delayed (6m)`], recommendation: `Update the workplan linked to the dashboard to reflect the revised schedule uploaded on 09 Oct 2026.`,
                 responsible: "TBD",
                 redFlags: [
-                    "According to the Dashboard, the project faces a 42.57 % point gap between the elapsed time which stands at 70.25%  based on the amended project end date (31 Mar 2027) and the overall physical progress of a the project which is at 27.68%.",
-                    "The budget utilization is 25.61% ($2.5M spent out of $9.86M budget).",
-                    "Under the project Inception and Assessment phase,  the Preparation of Technical documents and design approval for Water Yards was planned to finish on June 1, 2026, but remains In Progress.",
-                    "The Procurement section has five activities where two are completed, 1 in progress, (initially to be completed on 17 June 2026 (4 months behind the schedule). 2 activities have not started yet and they were Initially planned to end by the 4th July 2026 (4 months behind schedule).",
-                    "Under the works and contract management section, a total of 8 activities are planned, out of which 2 are completed, 1 is in progress and the remaining 5 have not started yet. Overall there is a six month delay in these activities.",
-                    "In the forecast to delivery percentage, there is an over forecasting trend noticed with a total forecasted value of -7,859,796.48 USD over the past 10 months.",
-                    "In the OneUNOPS project, the schedule was last updated on 01 Dec 2025 where almost all % completion statuses of each activity are at 0%. The revised schedule with exact status of each activity has to be uploaded.",
-                    "A revised schedule has been introduced with the project expected into be completed on 20 Sep 2026 or is extended by 5 months. However, the revised schedule is not yet integrated to the dashboard and updated accordingly. (Workplan linked to the dashboard has to be updated)",
-                    "A revised schedule was uploaded to the PMO dashboard on 09 Oct 2026. Thus, the project is in the procurement stage. The remaining procurement activities are expected to be finalized by the end of October 2026.",
-                    "The last procurement activity, for the procurement of major rehabilitation of drainage culverts in Maban, Upper Nile is expected to be initiated on 31 October and completed on 4 December 2026."
+                    `According to the Dashboard, the project faces a 42.57 % point gap between the elapsed time which stands at 70.25%  based on the amended project end date (31 Mar 2027) and the overall physical progress of a the project which is at 27.68%.`,
+                    `The budget utilization is 25.61% ($2.5M spent out of $9.86M budget).`,
+                    `Under the project Inception and Assessment phase,  the Preparation of Technical documents and design approval for Water Yards was planned to finish on June 1, 2026, but remains In Progress.`,
+                    `The Procurement section has five activities where two are completed, 1 in progress, (initially to be completed on 17 June 2026 (4 months behind the schedule). 2 activities have not started yet and they were Initially planned to end by the 4th July 2026 (4 months behind schedule).`,
+                    `Under the works and contract management section, a total of 8 activities are planned, out of which 2 are completed, 1 is in progress and the remaining 5 have not started yet. Overall there is a six month delay in these activities.`,
+                    `In the forecast to delivery percentage, there is an over forecasting trend noticed with a total forecasted value of -7,859,796.48 USD over the past 10 months.`,
+                    `In the OneUNOPS project, the schedule was last updated on 01 Dec 2025 where almost all % completion statuses of each activity are at 0%. The revised schedule with exact status of each activity has to be uploaded.`,
+                    `A revised schedule has been introduced with the project expected into be completed on 20 Sep 2026 or is extended by 5 months. However, the revised schedule is not yet integrated to the dashboard and updated accordingly. (Workplan linked to the dashboard has to be updated)`,
+                    `A revised schedule was uploaded to the PMO dashboard on 09 Oct 2026. Thus, the project is in the procurement stage. The remaining procurement activities are expected to be finalized by the end of October 2026.`,
+                    `The last procurement activity, for the procurement of major rehabilitation of drainage culverts in Maban, Upper Nile is expected to be initiated on 31 October and completed on 4 December 2026.`
                 ]
             },
             kassala_iv: {
-                title: "WEEKLY PROJECT UPDATES KASSALA IV", subTitle: "PHASE IV Expansion & Improvement of Healthcare Services Kassala Health Citadel - 21622-006", location: "Kassala State, Sudan",
-                delayBadge: "MINIMUM 8 MONTHS DELAY", plannedWindow: "<strong>Planned Window:</strong> Ends October 2026",
-                timePct: 99.39, finPct: 89, remDays: "16 Days Rem", elapsedDays: "99.39% Elapsed", budgetTotal: "Total: $3,836,876.80", budgetExp: "Exp: $3,385,599.41",
-                designHead: "PHASE STATUS", designStatus: "ACTIVE", designDesc: "DNP stage as of November 2026.",
-                pipe: ["Blank Data", "Blank Data", "Delayed", "Active"], recommendation: "The dashboard must display BOQ-related construction activities to effectively track both the financial and physical progress of the works contract.",
+                title: `WEEKLY PROJECT UPDATES KASSALA IV`, subTitle: `PHASE IV Expansion & Improvement of Healthcare Services Kassala Health Citadel - 21622-006`, location: `Kassala State, Sudan`,
+                delayBadge: `MINIMUM 8 MONTHS DELAY`, plannedWindow: `<strong>Planned Window:</strong> Ends October 2026`,
+                timePct: 99.39, finPct: 89, remDays: `16 Days Rem`, elapsedDays: `99.39% Elapsed`, budgetTotal: `Total: $3,836,876.80`, budgetExp: `Exp: $3,385,599.41`,
+                designHead: `PHASE STATUS`, designStatus: `ACTIVE`, designDesc: `DNP stage as of November 2026.`,
+                pipe: [`Blank Data`, `Blank Data`, `Delayed`, `Active`], recommendation: `The dashboard must display BOQ-related construction activities to effectively track both the financial and physical progress of the works contract.`,
                 responsible: "TBD",
                 redFlags: [
-                    "The project schedule (revision 5) in oneUNOPS project was last updated on 23 April 2026. The project will transition to the DNP stage as of November 2026. However, the majority of the procurement and construction works related activities are still at 0%. A revised schedule with exact status of each activity has to be uploaded.",
-                    "According to the dashboard the project ends by the end of October 2026. 99.39% of the time has elapsed with 89% of budget expenditure and only 16 days are remaining to complete the project.",
-                    "The project has utilized $3,385,599.41 of its $3,836,876.80 budget, recording an 89% delivery rate with $451,277.39 unspent as it approaches completion in October 2026.",
-                    "The output section of the dashboard is 0 with the majority of the work expected to be completed by the end of October 2026.",
-                    "The Construction work of the New General Surgical Unit - Part 1 planned to be completed on 5 March 2026, however it is still in progress.",
-                    "The overall closure, final payment facilitation and handover was planned for 29 April 2026., and the status is marked as “not started”.  So, accordingly, the project is a minimum of 8 months behind the schedule.",
-                    "Data for Assessment, procurement, design brief and design certificate are all blank and indicated as Planned. All historical data must be entered retroactively to ensure the dashboard reflects real-time progress.",
-                    "In the forecast to delivery percentage, there is an over forecasting trend noticed with a total forecasted value of -322,185.65 USD over the past 10 months. Forecasting lacks precision.",
-                    "The dashboard must display BOQ-related construction activities to effectively track both the financial and physical progress of the works contract.",
-                    "For example, according to the project team, the General Surgical Unit (Phase 1, Part 1): Reached 80% completion with concrete structural works, brickwork, septic tank, and plastering fully finalized. Remaining items include all the finishing works, on track for October 2026 completion. However, there is no visibility of this information and data in the dashboard."
+                    `The project schedule (revision 5) in oneUNOPS project was last updated on 23 April 2026. The project will transition to the DNP stage as of November 2026. However, the majority of the procurement and construction works related activities are still at 0%. A revised schedule with exact status of each activity has to be uploaded.`,
+                    `According to the dashboard the project ends by the end of October 2026. 99.39% of the time has elapsed with 89% of budget expenditure and only 16 days are remaining to complete the project.`,
+                    `The project has utilized $3,385,599.41 of its $3,836,876.80 budget, recording an 89% delivery rate with $451,277.39 unspent as it approaches completion in October 2026.`,
+                    `The output section of the dashboard is 0 with the majority of the work expected to be completed by the end of October 2026.`,
+                    `The Construction work of the New General Surgical Unit - Part 1 planned to be completed on 5 March 2026, however it is still in progress.`,
+                    `The overall closure, final payment facilitation and handover was planned for 29 April 2026., and the status is marked as “not started”.  So, accordingly, the project is a minimum of 8 months behind the schedule.`,
+                    `Data for Assessment, procurement, design brief and design certificate are all blank and indicated as Planned. All historical data must be entered retroactively to ensure the dashboard reflects real-time progress.`,
+                    `In the forecast to delivery percentage, there is an over forecasting trend noticed with a total forecasted value of -322,185.65 USD over the past 10 months. Forecasting lacks precision.`,
+                    `The dashboard must display BOQ-related construction activities to effectively track both the financial and physical progress of the works contract.`,
+                    `For example, according to the project team, the General Surgical Unit (Phase 1, Part 1): Reached 80% completion with concrete structural works, brickwork, septic tank, and plastering fully finalized. Remaining items include all the finishing works, on track for October 2026 completion. However, there is no visibility of this information and data in the dashboard.`
                 ]
             },
             kassala_procase: {
-                title: "WEEKLY PROJECT UPDATES KASSALA PROCASE", subTitle: "Promoting Quality Health Care Service Provision in Kassala Health Citadel - 23769-001", location: "Kassala State, Sudan",
-                delayBadge: "OVER 27 MONTHS DELAY", plannedWindow: "<strong>Planned Window:</strong> Ends April 2029",
-                timePct: 50, finPct: 59.47, remDays: "Ends April 2029", elapsedDays: "-- Elapsed", budgetTotal: "Total: $4,535,735.11", budgetExp: "Exp: $2,697,413.13",
-                designHead: "PHASE STATUS", designStatus: "ACTIVE", designDesc: "Active implementation but poor data tracking.",
-                pipe: ["Missing Data", "Missing Data", "Delayed", "Active"], recommendation: "Ensure historical data is entered retroactively so the dashboard reflects real-time physical progress vs tender statuses.",
+                title: `WEEKLY PROJECT UPDATES KASSALA PROCASE`, subTitle: `Promoting Quality Health Care Service Provision in Kassala Health Citadel - 23769-001`, location: `Kassala State, Sudan`,
+                delayBadge: `OVER 27 MONTHS DELAY`, plannedWindow: `<strong>Planned Window:</strong> Ends April 2029`,
+                timePct: 50, finPct: 59.47, remDays: `Ends April 2029`, elapsedDays: `-- Elapsed`, budgetTotal: `Total: $4,535,735.11`, budgetExp: `Exp: $2,697,413.13`,
+                designHead: `PHASE STATUS`, designStatus: `ACTIVE`, designDesc: `Active implementation but poor data tracking.`,
+                pipe: [`Missing Data`, `Missing Data`, `Delayed`, `Active`], recommendation: `Ensure historical data is entered retroactively so the dashboard reflects real-time physical progress vs tender statuses.`,
                 responsible: "TBD",
                 redFlags: [
-                    "Expenditure has reached $2,697,413.13 out of a $4,535,735.11 budget, achieving a 59.47% financial delivery rate with $1,838,321.98 remaining through April 2029.",
-                    "The dashboard must display BOQ-related construction activities to effectively track both the financial and physical progress of the works contract.",
-                    "For example, according to the project team; connecting Roads & Paved Areas: Involves constructing two main roads and surrounding paved areas to connect the General Surgical Unit with the Blood Bank, Maternity Hospital, Diagnostic Center, and new Pediatrics Unit. The tender closes 12 October 2026, with implementation scheduled for 4 months post-contract signing, tentatively finalizing within Jan - Feb 2027.",
-                    "Data for Assessment,procurement are indicated as Planned and the design under design preparation. Where the project has completed all these activities and is currently under implementation.  All historical data has to be entered retroactively to ensure the dashboard reflects real time progress.",
-                    "According to the dashboard, the Tender launching for GSU Phase 1, Part 2, evaluation & contract award had a planned start date of 01 July, 2024, but remains indicated as In Progress over 27 months later.",
-                    "The work, Main Roads Tender & Construction was planned to start on October 24 and October 25, 2025 respectively, however both remain Not Started nearly 1 full year past due.",
-                    "The Rehabilitation of External Areas Blood bank & Diagnostics center; the tender was scheduled for 25 March, 2025 and the rehabilitation works for 25 May, 2025, both remaining marked as Not Started and 17–19 months behind schedule.",
-                    "In the forecast to delivery percentage, there is an over forecasting trend noticed with a total forecasted value of -322,185.65 USD over the past 10 months. Forecasting lacks precision.",
-                    "The delivery forecast for both Kassala IV and Procase projects is exactly the same while the project and Project ID, Project Budget is different."
+                    `Expenditure has reached $2,697,413.13 out of a $4,535,735.11 budget, achieving a 59.47% financial delivery rate with $1,838,321.98 remaining through April 2029.`,
+                    `The dashboard must display BOQ-related construction activities to effectively track both the financial and physical progress of the works contract.`,
+                    `For example, according to the project team; connecting Roads & Paved Areas: Involves constructing two main roads and surrounding paved areas to connect the General Surgical Unit with the Blood Bank, Maternity Hospital, Diagnostic Center, and new Pediatrics Unit. The tender closes 12 October 2026, with implementation scheduled for 4 months post-contract signing, tentatively finalizing within Jan - Feb 2027.`,
+                    `Data for Assessment,procurement are indicated as Planned and the design under design preparation. Where the project has completed all these activities and is currently under implementation.  All historical data has to be entered retroactively to ensure the dashboard reflects real time progress.`,
+                    `According to the dashboard, the Tender launching for GSU Phase 1, Part 2, evaluation & contract award had a planned start date of 01 July, 2024, but remains indicated as In Progress over 27 months later.`,
+                    `The work, Main Roads Tender & Construction was planned to start on October 24 and October 25, 2025 respectively, however both remain Not Started nearly 1 full year past due.`,
+                    `The Rehabilitation of External Areas Blood bank & Diagnostics center; the tender was scheduled for 25 March, 2025 and the rehabilitation works for 25 May, 2025, both remaining marked as Not Started and 17–19 months behind schedule.`,
+                    `In the forecast to delivery percentage, there is an over forecasting trend noticed with a total forecasted value of -322,185.65 USD over the past 10 months. Forecasting lacks precision.`,
+                    `The delivery forecast for both Kassala IV and Procase projects is exactly the same while the project and Project ID, Project Budget is different.`
                 ]
             },
             kassala_dialysis: {
-                title: "WEEKLY PROJECT UPDATES KASSALA DIALYSIS", subTitle: "Phase VI Healthcare Services for Dialysis Patients (Sudan) - 23769-002", location: "Sudan",
-                delayBadge: "NO SCHEDULE UPLOADED", plannedWindow: "<strong>Planned Window:</strong> Ends June 2029",
-                timePct: 11, finPct: 3, remDays: "Ends June 2029", elapsedDays: "11% Elapsed", budgetTotal: "Total: $5,297,795.00", budgetExp: "Exp: $174,33.37",
-                designHead: "PHASE STATUS", designStatus: "ACTIVE", designDesc: "Technical assessment completed, concept design commenced.",
-                pipe: ["Completed", "Active", "Pending", "Pending"], recommendation: "Updating data to showcase actual progress is essential and should be prioritized for better project tracking and management.",
+                title: `WEEKLY PROJECT UPDATES KASSALA DIALYSIS`, subTitle: `Phase VI Healthcare Services for Dialysis Patients (Sudan) - 23769-002`, location: `Sudan`,
+                delayBadge: `NO SCHEDULE UPLOADED`, plannedWindow: `<strong>Planned Window:</strong> Ends June 2029`,
+                timePct: 11, finPct: 3, remDays: `Ends June 2029`, elapsedDays: `11% Elapsed`, budgetTotal: `Total: $5,297,795.00`, budgetExp: `Exp: $174,33.37`,
+                designHead: `PHASE STATUS`, designStatus: `ACTIVE`, designDesc: `Technical assessment completed, concept design commenced.`,
+                pipe: [`Completed`, `Active`, `Pending`, `Pending`], recommendation: `Updating data to showcase actual progress is essential and should be prioritized for better project tracking and management.`,
                 responsible: "TBD",
                 redFlags: [
-                    "There is no information for the Phase VI Healthcare Services for Dialysis Patients (Sudan) in the dashboard.  Updating data to showcase actual progress is essential.",
-                    "For example, according to the project team; Construction of the new expansion of the dialysis center, the technical assessment is completed, and work has commenced on the concept design.",
-                    "The procurement of dialysis machines and medical logistics vehicles (for supply transport and emergency response). Vehicle acquisition includes one pick-up requested from HQ and one vehicle is underway with the PO to be initiated and issued within the next month and 2 months are anticipated to be taken for procurement delivery thereafter. The dialysis machines are anticipated after the construction phase.",
-                    "Disbursements stand at $174,33.37 against a $5,297,795.00 budget, representing a 3% expenditure rate with $5,146,276.63 available through June 2029.",
-                    "Data regarding the technical assessment, design certificate related works, procurement, project schedule and other key deliverables have to be included in the dashboard for the specific project.",
-                    "According to the oneUNOPS project the project ends by June 2029. 11% of the time has elapsed.",
-                    "There is no project schedule uploaded and integrated to the oneUNOPS Project and the dashboard as well.",
-                    "The project dashboard currently underperforms and lacks real-time data. Updating data to showcase actual progress is essential and should be prioritized for better project tracking and management."
+                    `There is no information for the Phase VI Healthcare Services for Dialysis Patients (Sudan) in the dashboard.  Updating data to showcase actual progress is essential.`,
+                    `For example, according to the project team; Construction of the new expansion of the dialysis center, the technical assessment is completed, and work has commenced on the concept design.`,
+                    `The procurement of dialysis machines and medical logistics vehicles (for supply transport and emergency response). Vehicle acquisition includes one pick-up requested from HQ and one vehicle is underway with the PO to be initiated and issued within the next month and 2 months are anticipated to be taken for procurement delivery thereafter. The dialysis machines are anticipated after the construction phase.`,
+                    `Disbursements stand at $174,33.37 against a $5,297,795.00 budget, representing a 3% expenditure rate with $5,146,276.63 available through June 2029.`,
+                    `Data regarding the technical assessment, design certificate related works, procurement, project schedule and other key deliverables have to be included in the dashboard for the specific project.`,
+                    `According to the oneUNOPS project the project ends by June 2029. 11% of the time has elapsed.`,
+                    `There is no project schedule uploaded and integrated to the oneUNOPS Project and the dashboard as well.`,
+                    `The project dashboard currently underperforms and lacks real-time data. Updating data to showcase actual progress is essential and should be prioritized for better project tracking and management.`
                 ]
             },
             adwa: {
-                title: "WEEKLY PROJECT UPDATES ADWA", subTitle: "Expansion and Strengthening of Kidane Mihret Catholic General Hospital - 24112-001", location: "Ethiopia",
-                delayBadge: "AVERAGE 3-5 MONTHS PAST DUE", plannedWindow: "<strong>Planned Window:</strong> Activities through 30 November 2027",
-                timePct: 73.53, finPct: 55, remDays: "408 Days Rem", elapsedDays: "73.53% Elapsed", budgetTotal: "Total: $6,586,024.91", budgetExp: "Exp: $3,637,269.54",
-                designHead: "PHASE STATUS", designStatus: "ACTIVE", designDesc: "Major activities marked 0% but dates have passed.",
-                pipe: ["Delayed", "Delayed", "Active", "Active"], recommendation: "Update and revise construction timelines, identifying completion rates for each activity, and systematically record actual start and end dates.",
+                title: `WEEKLY PROJECT UPDATES ADWA`, subTitle: `Expansion and Strengthening of Kidane Mihret Catholic General Hospital - 24112-001`, location: `Ethiopia`,
+                delayBadge: `AVERAGE 3-5 MONTHS PAST DUE`, plannedWindow: `<strong>Planned Window:</strong> Activities through 30 November 2027`,
+                timePct: 73.53, finPct: 55, remDays: `408 Days Rem`, elapsedDays: `73.53% Elapsed`, budgetTotal: `Total: $6,586,024.91`, budgetExp: `Exp: $3,637,269.54`,
+                designHead: `PHASE STATUS`, designStatus: `ACTIVE`, designDesc: `Major activities marked 0% but dates have passed.`,
+                pipe: [`Delayed`, `Delayed`, `Active`, `Active`], recommendation: `Update and revise construction timelines, identifying completion rates for each activity, and systematically record actual start and end dates.`,
                 responsible: "TBD",
                 redFlags: [
-                    "According to the dashboard, the delivery stands at $3,637,269.54 of the $6,586,024.91 allocated budget, reflecting a 55% expenditure rate with a 73.53% of the time elapsed and 408 days remaining for activities through 30 November 2027.",
-                    "WP2 Construction of the general hospital existing building 2nd wing shows overall financial progress of 55.7%, with $982,476.19 executed out of the $1,764,788.07 contracted amount.",
-                    "The project schedule (revision 8) was last updated on 16 Oct 2026, however all the completion % for all activities from the start of the project stands at 0%.",
-                    "The Pictures in the dashboard were last updated in January 2026. Thus, do not reflect the actual progress of the project.",
-                    "Twenty (20) activities are currently marked as \"In Progress\" despite their planned end dates having passed. For example… Item 2.1 (Mobilization - Site Supervisor Office & Transportation): Planned End Date  was on 28 Jul 2025 (447 days overdue), Item 3.1 (Mobilization - Safety Harness & Protection): Planned End Date was on 28 Jul 2025 (447 days overdue), Item 4.1 (Mobilization - Safety and Security of Works): Planned End Date was on 28 Jul 2025 (447 days overdue), Item 5.1 (Mobilization - Shop Drawings): Planned End Date was on 28 Jul 2025 (447 days overdue), Item 1.4 (Sub-Structure - Excavation & Earth Work: Back fill around footing): Planned End Date was on 24 Dec 2025 (298 days overdue)",
-                    "15 activities are still marked as \"Not Started\" (0.0% completion) even though their planned end dates have already passed. For example… Item 3.2 (Sub-Structure - Masonry Work above NGL): Planned End Date was on 13 Dec 2025 (309 days overdue), Item 2.13 (Sub-Structure - Concrete Work: Re-bar Diam 10mm): Planned End Date 30 was on Dec 2025 (292 days overdue), Item 2.9 (Super-Structure - Block Work: Masonry wall around waiting area): Planned End Date was on 14 Jul 2026 (96 days overdue), Item 1.1 (External Work - Masonry Work: Basaltic stone foundation wall): Planned End Date was on 21 Aug 2026 (58 days overdue), Item 2.1 (External Work - Concrete Work: External stair foundation beam): Planned End Date was on 24 Aug 2026 (55 days overdue)",
-                    "Super-Structure Works; accounts for the highest contract value among overdue tasks ($318,238.45 in progress and $51,014.31 not started), and all the activities are expected to be completed by 31 Jan 2027.",
-                    "Schedule delays are also noticed in the Sub-Structure Works with foundational earthwork and concrete/masonry tasks remaining incomplete or unstarted over 290+ days past the deadline when in fact everything was expected to be completed by February 2026.",
-                    "All 49 items categorized under External Work are currently listed as \"Not started\", indicating that external site developments have not yet commenced. However according to the schedule 8 activities sub categorized under concrete works had to commence in August 2026.",
-                    "Generally, based on the Google sheet project schedule linked to the project dashboard, schedule variance is noticeable, particularly for In-Progress and Not Started tasks:",
-                    "For the “In Progress Tasks” (Days Past Planned End Date / Overdue Completion): A total of 20 tasks stated as INPROGRESS are 154.25 days or 5 months on average past their planned completion date.",
-                    "For the “Not Started” Tasks (Days Past Planned Start Date / Delayed Start): A total of 16 tasks stated as NOT STARTED are 88.81 days or 3 months on average past their planned start date without having started. 64 tasks are scheduled for future start dates between December 2026 and January 2027.",
-                    "It is essential to update and revise construction timelines and clearly identify and indicate the completion rates of each activity for the project to maintain realistic scheduling expectations and systematically record actual start and end dates across all activities to strengthen real-time progress verification and quantitative variance analysis."
+                    `According to the dashboard, the delivery stands at $3,637,269.54 of the $6,586,024.91 allocated budget, reflecting a 55% expenditure rate with a 73.53% of the time elapsed and 408 days remaining for activities through 30 November 2027.`,
+                    `WP2 Construction of the general hospital existing building 2nd wing shows overall financial progress of 55.7%, with $982,476.19 executed out of the $1,764,788.07 contracted amount.`,
+                    `The project schedule (revision 8) was last updated on 16 Oct 2026, however all the completion % for all activities from the start of the project stands at 0%.`,
+                    `The Pictures in the dashboard were last updated in January 2026. Thus, do not reflect the actual progress of the project.`,
+                    `Twenty (20) activities are currently marked as "In Progress" despite their planned end dates having passed. For example… Item 2.1 (Mobilization - Site Supervisor Office & Transportation): Planned End Date  was on 28 Jul 2025 (447 days overdue), Item 3.1 (Mobilization - Safety Harness & Protection): Planned End Date was on 28 Jul 2025 (447 days overdue), Item 4.1 (Mobilization - Safety and Security of Works): Planned End Date was on 28 Jul 2025 (447 days overdue), Item 5.1 (Mobilization - Shop Drawings): Planned End Date was on 28 Jul 2025 (447 days overdue), Item 1.4 (Sub-Structure - Excavation & Earth Work: Back fill around footing): Planned End Date was on 24 Dec 2025 (298 days overdue)`,
+                    `15 activities are still marked as "Not Started" (0.0% completion) even though their planned end dates have already passed. For example… Item 3.2 (Sub-Structure - Masonry Work above NGL): Planned End Date was on 13 Dec 2025 (309 days overdue), Item 2.13 (Sub-Structure - Concrete Work: Re-bar Diam 10mm): Planned End Date 30 was on Dec 2025 (292 days overdue), Item 2.9 (Super-Structure - Block Work: Masonry wall around waiting area): Planned End Date was on 14 Jul 2026 (96 days overdue), Item 1.1 (External Work - Masonry Work: Basaltic stone foundation wall): Planned End Date was on 21 Aug 2026 (58 days overdue), Item 2.1 (External Work - Concrete Work: External stair foundation beam): Planned End Date was on 24 Aug 2026 (55 days overdue)`,
+                    `Super-Structure Works; accounts for the highest contract value among overdue tasks ($318,238.45 in progress and $51,014.31 not started), and all the activities are expected to be completed by 31 Jan 2027.`,
+                    `Schedule delays are also noticed in the Sub-Structure Works with foundational earthwork and concrete/masonry tasks remaining incomplete or unstarted over 290+ days past the deadline when in fact everything was expected to be completed by February 2026.`,
+                    `All 49 items categorized under External Work are currently listed as "Not started", indicating that external site developments have not yet commenced. However according to the schedule 8 activities sub categorized under concrete works had to commence in August 2026.`,
+                    `Generally, based on the Google sheet project schedule linked to the project dashboard, schedule variance is noticeable, particularly for In-Progress and Not Started tasks:`,
+                    `For the “In Progress Tasks” (Days Past Planned End Date / Overdue Completion): A total of 20 tasks stated as INPROGRESS are 154.25 days or 5 months on average past their planned completion date.`,
+                    `For the “Not Started” Tasks (Days Past Planned Start Date / Delayed Start): A total of 16 tasks stated as NOT STARTED are 88.81 days or 3 months on average past their planned start date without having started. 64 tasks are scheduled for future start dates between December 2026 and January 2027.`,
+                    `It is essential to update and revise construction timelines and clearly identify and indicate the completion rates of each activity for the project to maintain realistic scheduling expectations and systematically record actual start and end dates across all activities to strengthen real-time progress verification and quantitative variance analysis.`
                 ]
             },
             efsr: {
-                title: "WEEKLY PROJECT UPDATES EFSR", subTitle: "Enhancing Food Security and Resilience of Rural Communities - 24664-001", location: "Kassala State, Sudan",
-                delayBadge: "OVER-FORECASTING TREND NOTICED", plannedWindow: "<strong>Planned Window:</strong> 01 Dec 2024 to 30 Nov 2028",
-                timePct: 47, finPct: 20, remDays: "Ends Nov 2028", elapsedDays: "47% Elapsed", budgetTotal: "Total: $17,907,133.95", budgetExp: "Exp: $3,566,675.00",
-                designHead: "PHASE STATUS", designStatus: "DELAYED", designDesc: "Activities in Assessment/Design delayed by 5+ months.",
-                pipe: ["Delayed", "Delayed", "Active", "Pending"], recommendation: "Fast-tracking the 6 activities in Assessment and Design Review is urgent to avoid procurement and execution bottlenecks.",
+                title: `WEEKLY PROJECT UPDATES EFSR`, subTitle: `Enhancing Food Security and Resilience of Rural Communities - 24664-001`, location: `Kassala State, Sudan`,
+                delayBadge: `OVER-FORECASTING TREND NOTICED`, plannedWindow: `<strong>Planned Window:</strong> 01 Dec 2024 to 30 Nov 2028`,
+                timePct: 47, finPct: 20, remDays: `Ends Nov 2028`, elapsedDays: `47% Elapsed`, budgetTotal: `Total: $17,907,133.95`, budgetExp: `Exp: $3,566,675.00`,
+                designHead: `PHASE STATUS`, designStatus: `DELAYED`, designDesc: `Activities in Assessment/Design delayed by 5+ months.`,
+                pipe: [`Delayed`, `Delayed`, `Active`, `Pending`], recommendation: `Fast-tracking the 6 activities in Assessment and Design Review is urgent to avoid procurement and execution bottlenecks.`,
                 responsible: "TBD",
                 redFlags: [
-                    "The EFSR project operates within a four-year implementation timeframe spanning from 01 December, 2024, to 30 November, 2028 and 47% of time has elapsed with 20% of total expenditure to date.",
-                    "Expenditure is recorded at $3,566,675  against the $17,907,133.95 budget, reflecting an 20% delivery rate with $14,340,459 remaining through November 2028. However ",
-                    "The project schedule was last updated on 27 June 2025 which is almost 1 year and 4 months ago, and all the completion % for all activities from the start of the project stands at 0%.",
-                    "In the forecast to delivery percentage, an over-forecasting trend is noticed, with a total forecasted value of -1,218,415.97 USD over the past 10 months.",
-                    "Infrastructure technical design and approvals and related activities were scheduled from 01 Sep 2025 to 30 April 2026, and a total of 8 months allocated. Of the 8 activities, 3 are in Assessment and 3 are in Design & Design Review.",
-                    "There is a minimum of 5 months and more delay in design and design review for the Animal veterinary constructed and equipped which was expected to be completed on 07 July 2026 and is not yet completed.",
-                    "Two activities, Crops Storage constructed and Crops and vegetable market construction which are now under design stage, however the design were expected to be completed on 31 May 2026. Based on the final delivery time, there is a minimum of 5 months delay to date (19 Oct 2026).",
-                    "Fast-tracking the 6 activities in Assessment and Design Review is urgent to avoid procurement and execution bottlenecks later in the project cycle.",
-                    "Only 1 activity (Small model farm equipped with drip irrigation system) has reached the Procurement Stage, and 1 activity (Water canal rehabilitated) is in the Defect Notification Period (DNP) and was completed in April 2026.",
-                    "For the ‘Water canal rehabilitated” there is a 98.72% of budget expenditure for which $847,208.35  is spent out of $858,208. The dashboard does not clearly show how much of physical progress is achieved. Having discussed with the project team a total of 54 Kilometers of irrigation canals have been rehabilitated in Kassala State. So, aligning physical completion reporting with the dashboard.",
-                    "For category 1 and 2 activities show low-to-moderate completion rates across all work packages. Completion rates range from 7% to 50% against planned targets.",
-                    "Activity 1.2.3 (develop direct contractual arrangements and services between agribusiness SME and farmers to supply SME with products) has achieved only 7% progress with 82 completed against a target of 1,200.",
-                    "Activity 1.2.5 (animal health services) stands at 9.3% progress with 45 completed against a target of 480.",
-                    "Activity 1.1.2 has 2,183 remaining units out of a target of 2,880 (24% completion rate).",
-                    "Activity 1.3.2 reached the highest completion rate among listed activities, with 359 completed against a target of 715 (50% completion rate).",
-                    "These Category 1 and 2 activities need timelines. Itemized Planned Start, Actual Start, Planned End, and Actual End dates across all WPs are essential. Itemized Planned Start, Actual Start, Planned End, and Actual End dates across all WPs is essential.",
-                    "The dashboard reveals data completeness and/or target definition gaps across the outcome and output metrics:",
-                    "For '% farmers reporting improved productivity/market access' and '% farmers adopting new tech/services’, the current achievement is 0% against a target of 90%.",
-                    "Under Output 2 (Employment & Support), actual achievements are recorded (23,708 net jobs created and 467 cash transfer beneficiaries), but no target benchmarks are explicitly provided to evaluate performance.",
-                    "However having discussed with the project team and as per the project update from Alaa Isameldin Ali HUSSIEN, ”The Multipurpose Cash Assistance (MPCA) component is approaching the final stage of implementation in Kassala State. Following completion of beneficiary data verification, final processing is underway to facilitate cash transfers to more than 800 targeted beneficiaries in the coming days.”",
-                    "Timely and regular updates to the dashboard are critical for compliance and project reporting."
+                    `The EFSR project operates within a four-year implementation timeframe spanning from 01 December, 2024, to 30 November, 2028 and 47% of time has elapsed with 20% of total expenditure to date.`,
+                    `Expenditure is recorded at $3,566,675  against the $17,907,133.95 budget, reflecting an 20% delivery rate with $14,340,459 remaining through November 2028. However `,
+                    `The project schedule was last updated on 27 June 2025 which is almost 1 year and 4 months ago, and all the completion % for all activities from the start of the project stands at 0%.`,
+                    `In the forecast to delivery percentage, an over-forecasting trend is noticed, with a total forecasted value of -1,218,415.97 USD over the past 10 months.`,
+                    `Infrastructure technical design and approvals and related activities were scheduled from 01 Sep 2025 to 30 April 2026, and a total of 8 months allocated. Of the 8 activities, 3 are in Assessment and 3 are in Design & Design Review.`,
+                    `There is a minimum of 5 months and more delay in design and design review for the Animal veterinary constructed and equipped which was expected to be completed on 07 July 2026 and is not yet completed.`,
+                    `Two activities, Crops Storage constructed and Crops and vegetable market construction which are now under design stage, however the design were expected to be completed on 31 May 2026. Based on the final delivery time, there is a minimum of 5 months delay to date (19 Oct 2026).`,
+                    `Fast-tracking the 6 activities in Assessment and Design Review is urgent to avoid procurement and execution bottlenecks later in the project cycle.`,
+                    `Only 1 activity (Small model farm equipped with drip irrigation system) has reached the Procurement Stage, and 1 activity (Water canal rehabilitated) is in the Defect Notification Period (DNP) and was completed in April 2026.`,
+                    `For the ‘Water canal rehabilitated” there is a 98.72% of budget expenditure for which $847,208.35  is spent out of $858,208. The dashboard does not clearly show how much of physical progress is achieved. Having discussed with the project team a total of 54 Kilometers of irrigation canals have been rehabilitated in Kassala State. So, aligning physical completion reporting with the dashboard.`,
+                    `For category 1 and 2 activities show low-to-moderate completion rates across all work packages. Completion rates range from 7% to 50% against planned targets.`,
+                    `Activity 1.2.3 (develop direct contractual arrangements and services between agribusiness SME and farmers to supply SME with products) has achieved only 7% progress with 82 completed against a target of 1,200.`,
+                    `Activity 1.2.5 (animal health services) stands at 9.3% progress with 45 completed against a target of 480.`,
+                    `Activity 1.1.2 has 2,183 remaining units out of a target of 2,880 (24% completion rate).`,
+                    `Activity 1.3.2 reached the highest completion rate among listed activities, with 359 completed against a target of 715 (50% completion rate).`,
+                    `These Category 1 and 2 activities need timelines. Itemized Planned Start, Actual Start, Planned End, and Actual End dates across all WPs are essential. Itemized Planned Start, Actual Start, Planned End, and Actual End dates across all WPs is essential.`,
+                    `The dashboard reveals data completeness and/or target definition gaps across the outcome and output metrics:`,
+                    `For '% farmers reporting improved productivity/market access' and '% farmers adopting new tech/services’, the current achievement is 0% against a target of 90%.`,
+                    `Under Output 2 (Employment & Support), actual achievements are recorded (23,708 net jobs created and 467 cash transfer beneficiaries), but no target benchmarks are explicitly provided to evaluate performance.`,
+                    `However having discussed with the project team and as per the project update from Alaa Isameldin Ali HUSSIEN, ”The Multipurpose Cash Assistance (MPCA) component is approaching the final stage of implementation in Kassala State. Following completion of beneficiary data verification, final processing is underway to facilitate cash transfers to more than 800 targeted beneficiaries in the coming days.”`,
+                    `Timely and regular updates to the dashboard are critical for compliance and project reporting.`
                 ]
             },
             sslrp: {
-                title: "WEEKLY PROJECT UPDATES SSLRP", subTitle: "South Sudan Livelihood Resilience Project - 25102-001", location: "South Sudan",
-                delayBadge: "CRITICALLY LOW DELIVERY (4.7%)", plannedWindow: "<strong>Planned Window:</strong> FY 2025-26 & FY 2026-27 focus",
-                timePct: 32.46, finPct: 7.18, remDays: "Ongoing", elapsedDays: "32.46% Elapsed", budgetTotal: "Total: $18,542,033.34", budgetExp: "Exp: $1,331,730.00",
-                designHead: "PHASE STATUS", designStatus: "DELAYED", designDesc: "71.1% of activities delayed in FY 25-26.",
-                pipe: ["Delayed", "Delayed", "Active", "Pending"], recommendation: "Immediate review of project bottlenecks, disbursement lags, and recalibration of remaining targets.",
+                title: `WEEKLY PROJECT UPDATES SSLRP`, subTitle: `South Sudan Livelihood Resilience Project - 25102-001`, location: `South Sudan`,
+                delayBadge: `CRITICALLY LOW DELIVERY (4.7%)`, plannedWindow: `<strong>Planned Window:</strong> FY 2025-26 & FY 2026-27 focus`,
+                timePct: 32.46, finPct: 7.18, remDays: `Ongoing`, elapsedDays: `32.46% Elapsed`, budgetTotal: `Total: $18,542,033.34`, budgetExp: `Exp: $1,331,730.00`,
+                designHead: `PHASE STATUS`, designStatus: `DELAYED`, designDesc: `71.1% of activities delayed in FY 25-26.`,
+                pipe: [`Delayed`, `Delayed`, `Active`, `Pending`], recommendation: `Immediate review of project bottlenecks, disbursement lags, and recalibration of remaining targets.`,
                 responsible: "TBD",
                 redFlags: [
-                    "With time elapsed at 32.46% and overall budget utilization rate  at 7.18%.  Expenditure stands at $1,331,730 against a total budget of $18,542,033.34, reflecting 7% delivery.",
-                    "In the forecast to delivery percentage, an over-forecasting trend is noticed, with a total forecasted value of -1,218,415.97 USD over the past 10 months.",
-                    "Between July and October 2026, the project entered its planned peak delivery phase ($3,470,428.11). However, actual realized delivery remained critically low ($163,741.14). The project exhibits substantial operational and financial underperformance (4.7%).",
-                    "For Fiscal year 2026-2027, the grand total planned target is $253,999.28 compared to an achieved figure of $17,700.72, producing a variance gap of $-236,298.56,  reflecting 6.96% delivery, which indicates underperformance in delivery.",
-                    "There are 11 Open  high-level risks out of 14 total high risks, an average of 166 days has passed since they were last updated.",
-                    "There are 14 Open  medium to high level risks out of 15  medium to high level risks, an average of 156 days has passed since they were last updated.",
-                    "There are 2 Open low-to-medium level risks for which an average of 224 days has passed since they were last updated.",
-                    "Immediate review of project bottlenecks, disbursement lags, and recalibration of remaining targets, along with adjusting the forecasting methodology for the upcoming months will be necessary to manage delivery expectations.",
-                    "During FY 2025–26 (Jul 2025 – Jun 2026), project implementation experienced significant delays across most key operational areas. Out of 45 activities with active targets planned for FY 2025–26, 32 activities (71.1%) were delayed, 11 activities (24.4%) were completed, and 2 activities (4.4%) were in progress. All the delayed activities were carried forward into FY 2026–27.",
-                    "The infrastructure component (Component 2: Agriculture Production and Rural Livelihood Support  —  Subcomponent 2.2: Productive Community Infrastructure Developed.).... From Assessment to Design to procurement and Implementation i s yet to be integrated to the Project dashboard.",
-                    "The project shall provide all the necessary information and data. Currently they are in communication with Rahel Eshetu BIHONEGN.",
-                    "In the OneUNOPS project, the schedule was last updated on 16 April 2026. 6 out of 8 activities of the inception stage have percentage completions varying from 2% to 50%. Almost all % completion statuses of other activities are 0%.",
-                    "1.1: Building Strong and Inclusive CBOs - 5 activities with final end dates of 02 Sep 2026 - 0% completions with 12 months past due.",
-                    "1.2 Development of Community Driven Development Plans - 5 activities with final end dates of 30 Sep 2026 - 0% completions with 12 months past due.",
-                    "2.1 Investments for Increased Agriculture Production and Rural Livelihoods - 3 activities were expected to start on 19 March 2026 with 1 activity planned to be completed on 30 Sep 2026 with 12 months past due and is at 0% completion. The other two activities will be completed on 06 Aug 2027.",
-                    "Several activities currently do not reflect their exact status. Under Sub-activity 2.2 (Productive Community Infrastructure), 4 activities have passed their start dates with 0% progress. For the 44 km Magwi–Paloaka road, 3 activities have missed their start dates, and under Sub-component 3.1 (Project Management and Monitoring), 7 activities have passed their start dates at 0% completion. Across these, 5 activities have already missed their final due dates.",
-                    "The revised schedule with exact status of each activity has to be uploaded.",
-                    "Timely and regular updates to the dashboard are critical for compliance and project reporting."
-                ]
-            }
-        };
-
-        function getTodayStr() {
-            return new Date().toISOString().split('T')[0];
-        }
-
-        // ================= GLOBAL EVENT DELEGATION (CRITICAL FIX) =================
-        document.addEventListener('click', function(e) {
-            if (isViewer) return; 
-
-            if (e.target.classList.contains('rf-checkbox')) {
-                toggleChecklist(e.target);
-                return;
-            }
-
-            if (e.target.classList.contains('delete-bullet-btn')) {
-                deleteSingleRedFlag(e.target);
-                return;
-            }
-
-            if (e.target.classList.contains('add-rf-btn')) {
-                addRedFlag(e);
-                return;
-            }
-
-            if (e.target.classList.contains('delete-card-btn')) {
-                const card = e.target.closest('.light-card');
-                if(card) deleteBlock(card.id, e);
-                return;
-            }
-
-            if (e.target.classList.contains('span-btn') && e.target.hasAttribute('data-action')) {
-                const action = e.target.getAttribute('data-action');
-                const card = e.target.closest('.light-card');
-                if(card) {
-                    setSpan(card.id, action === 'span-2' ? 2 : 1, true);
-                }
-                return;
-            }
-        });
-
-        // ================= PMO LOGIN SYSTEM =================
-        function loginPMO() {
-            if(isPMO) {
-                alert("You are already logged in with PMO Privileges.");
-                return;
-            }
-            const code = prompt("🔒 Enter Secure PMO Code to enable checklist features:\n(For testing, use 'PMO2026')");
-            if(code === "PMO2026") {
-                isPMO = true;
-                const btn = document.getElementById('btn-pmo-login');
-                btn.innerHTML = "🔓 PMO Access Active";
-                btn.style.background = "#10b981";
-                btn.style.borderColor = "#059669";
-                btn.style.color = "white";
-                alert("Access Granted: You can now check/uncheck Red Flag resolution boxes.");
-            } else if (code) {
-                alert("❌ Invalid Access Code. You are restricted to view/edit only.");
-            }
-        }
-
-        function toggleChecklist(boxEl) {
-            if(!isPMO) {
-                alert("⛔ Action Restricted: Only authorized PMO personnel (PMOE, PMOS, PMOSS) can mark red flags as resolved. Click 'PMO Login' to authenticate.");
-                return;
-            }
-            saveStateForUndo();
-            const textEl = boxEl.nextElementSibling;
-            if(boxEl.classList.contains('checked')) {
-                boxEl.classList.remove('checked');
-                boxEl.removeAttribute('data-resolved-date');
-                if(textEl) textEl.classList.remove('checked-text');
-            } else {
-                boxEl.classList.add('checked');
-                boxEl.setAttribute('data-resolved-date', getTodayStr());
-                if(textEl) textEl.classList.add('checked-text');
-            }
-            saveCurrentViewToDB();
-        }
-
-        // ================= MONITORING CENTER LOGIC =================
-        function openMonitoringCenter() {
-            try {
-                document.getElementById('dashboard-container').style.display = 'none';
-                document.getElementById('monitoring-overlay').style.display = 'block';
-                
-                const tbody = document.getElementById('mon-tbody');
-                tbody.innerHTML = "";
-
-                const allProjects = {...projectData};
-                for (const cId in customProjects) {
-                    if(!allProjects[cId]) allProjects[cId] = customProjects[cId].data;
-                }
-
-                for (const pId in allProjects) {
-                    if(deletedProjects.includes(pId)) continue; 
-
-                    let pName = (allProjects[pId].title || "Unknown").replace("WEEKLY PROJECT UPDATES ", "");
-                    let responsible = allProjects[pId].responsible || "TBD";
-                    let lastUpdated = "Default Data";
-                    let redFlagsHTML = "";
-                    let totalFlags = 0;
-                    let resolvedFlags = 0;
-                    let totalDaysTaken = 0;
-                    let resolvedCountForAvg = 0;
-
-                    let latestSavedHTML = null;
-                    for (const key in stateDB) {
-                        if (key.startsWith(pId + "_")) {
-                            latestSavedHTML = stateDB[key].html;
-                            lastUpdated = key.replace(pId + "_", "").replace("_", " "); 
-                        }
-                    }
-
-                    if (latestSavedHTML) {
-                        const tempDiv = document.createElement('div');
-                        tempDiv.innerHTML = latestSavedHTML;
-                        
-                        const redFlagCard = tempDiv.querySelector('#card-red-flags');
-                        if (redFlagCard) {
-                            const items = redFlagCard.querySelectorAll('.red-flag-item');
-                            totalFlags = items.length;
-                            items.forEach(item => {
-                                const textDiv = item.querySelector('.rf-text') || item.querySelector('div[contenteditable="true"]');
-                                const box = item.querySelector('.rf-checkbox');
-                                
-                                let resolvedClass = "";
-                                if(box && box.classList.contains('checked')) {
-                                    resolvedClass = "resolved-bullet";
-                                    resolvedFlags++;
-                                    const created = box.getAttribute('data-created-date');
-                                    const resolved = box.getAttribute('data-resolved-date');
-                                    if(created && resolved) {
-                                        const diffTime = Math.abs(new Date(resolved) - new Date(created));
-                                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                                        totalDaysTaken += diffDays;
-                                        resolvedCountForAvg++;
-                                    }
-                                }
-                                
-                                if(textDiv) redFlagsHTML += `<li class="${resolvedClass}">${textDiv.innerText}</li>`;
-                            });
-                        }
-                    } else {
-                        const flags = allProjects[pId].redFlags || [];
-                        totalFlags = flags.length;
-                        flags.forEach(f => {
-                            redFlagsHTML += `<li>${f}</li>`;
-                        });
-                    }
-
-                    if(totalFlags === 0 || redFlagsHTML === "") {
-                        redFlagsHTML = "<li style='color:#10b981; list-style-type: none; margin-left:-16px;'>No red flags reported.</li>";
-                    }
-
-                    let remaining = totalFlags - resolvedFlags;
-                    let avgDays = resolvedCountForAvg > 0 ? (totalDaysTaken / resolvedCountForAvg).toFixed(1) + " days" : "N/A";
-
-                    tbody.innerHTML += `
-                        <tr>
-                            <td style="font-weight: 800; color: #1e3a8a;">${pName}</td>
-                            <td style="font-weight: 600;">${responsible}</td>
-                            <td style="color: #64748b;">${lastUpdated}</td>
-                            <td style="font-weight: 800; font-size: 14px;">${totalFlags}</td>
-                            <td><span class="mon-badge-red">${remaining} Rem</span><br><span class="mon-badge-green" style="margin-top:6px; display:inline-block;">${resolvedFlags} Rslvd</span></td>
-                            <td style="font-family: var(--font-mono);">${avgDays}</td>
-                            <td><ul class="mon-rf-list">${redFlagsHTML}</ul></td>
-                        </tr>
-                    `;
-                }
-            } catch(e) {
-                console.error("Monitoring Error:", e);
-            }
-        }
-
-        function closeMonitoringCenter() {
-            document.getElementById('monitoring-overlay').style.display = 'none';
-            document.getElementById('dashboard-container').style.display = 'block';
-        }
-
-        function buildDropdown() {
-            const selectEl = document.getElementById('select-project');
-            const currentVal = selectEl.value;
-            selectEl.innerHTML = ""; 
-
-            const standards = [
-                { id: 'nimule', name: 'Nimule One Stop Border Post' },
-                { id: 'flood', name: 'Flood Mitigation Project' },
-                { id: 'kassala_iv', name: 'Kassala IV' },
-                { id: 'kassala_procase', name: 'Kassala Procase' },
-                { id: 'kassala_dialysis', name: 'Kassala Dialysis' },
-                { id: 'adwa', name: 'Adwa Catholic General Hospital' },
-                { id: 'efsr', name: 'EFSR Project' },
-                { id: 'sslrp', name: 'SSLRP Livelihood Project' }
-            ];
-
-            standards.forEach(s => {
-                if (!deletedProjects.includes(s.id)) {
-                    let opt = document.createElement('option');
-                    opt.value = s.id; 
-                    opt.innerHTML = customProjects[s.id] ? customProjects[s.id].name : s.name;
-                    selectEl.appendChild(opt);
-                }
-            });
-
-            for (const cId in customProjects) {
-                if (!deletedProjects.includes(cId) && !standards.some(std => std.id === cId)) {
-                    let opt = document.createElement('option');
-                    opt.value = cId; opt.innerHTML = customProjects[cId].name;
-                    selectEl.appendChild(opt);
-                }
-            }
-
-            if (selectEl.querySelector(`option[value="${currentVal}"]`)) {
-                selectEl.value = currentVal;
-            } else if (selectEl.options.length > 0) {
-                selectEl.value = selectEl.options[0].value;
-            }
-        }
-
-        // ================= END GLOBAL EVENT LISTENER & FIXES =================
-    </script>
-</body>
-</html>
+                    `With time elapsed at 32.46% and overall budget utilization rate  at 7.18%.  Expenditure stands at $1,331,730 against a total budget of $18,542,033.34, reflecting 7% delivery.`,
+                    `In the forecast to delivery percentage, an over-forecasting trend is noticed, with a total forecasted value of -1,218,415.97 USD over the past 10 months.`,
+                    `Between July and October 2026, the project entered its planned peak delivery phase ($3,470,428.11). However, actual realized delivery remained critically low ($163,741.14). The project exhibits substantial operational and
