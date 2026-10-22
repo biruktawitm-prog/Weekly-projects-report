@@ -20,57 +20,30 @@
 
         /* Top Bar Navigation & Controls */
         .top-studio-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #111827;
-            border: 1px solid var(--panel-border);
-            padding: 10px 16px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            gap: 10px;
-            flex-wrap: wrap;
+            display: flex; justify-content: space-between; align-items: center;
+            background: #111827; border: 1px solid var(--panel-border);
+            padding: 10px 16px; border-radius: 8px; margin-bottom: 12px; gap: 10px; flex-wrap: wrap;
         }
 
         .bar-group { display: flex; align-items: center; gap: 8px; }
 
         .dropdown-select {
-            background: #1f2937;
-            color: #f3f4f6;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            outline: none;
-            cursor: pointer;
+            background: #1f2937; color: #f3f4f6; border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; outline: none; cursor: pointer;
         }
         .dropdown-select:focus { border-color: #3b82f6; box-shadow: 0 0 6px rgba(59, 130, 246, 0.4); }
 
         .btn-studio {
-            background: #1f2937;
-            color: #d1d5db;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
+            background: #1f2937; color: #d1d5db; border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;
         }
         .btn-studio:hover { background: #374151; color: #ffffff; }
 
-        .btn-action-green {
-            background: #059669;
-            color: white;
-            border: 1px solid #10b981;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-        }
+        .btn-action-green { background: #059669; color: white; border: 1px solid #10b981; padding: 6px 14px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; }
         .btn-action-green:hover { background: #047857; }
+        
+        .btn-pmo { background: #f59e0b; color: #0f172a; border: 1px solid #d97706; padding: 6px 14px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; }
+        .btn-pmo:hover { background: #d97706; }
 
         /* Dashboard Container */
         .dashboard-container { transition: zoom 0.2s ease; }
@@ -80,8 +53,7 @@
             display: flex; justify-content: space-between; align-items: center;
             background: #e2e8f0; padding: 4px 8px; border-radius: 4px;
             margin-bottom: 8px; font-size: 10px; color: #475569; font-weight: 700;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            cursor: grab;
+            font-family: 'Plus Jakarta Sans', sans-serif; cursor: grab;
         }
         .handles-off .card-controls { display: none !important; }
         .span-btn { background: #cbd5e1; color: #475569; border: none; padding: 2px 6px; border-radius: 3px; font-size: 9px; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;}
@@ -109,16 +81,26 @@
         .light-kpi-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif;}
         .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
 
-        /* EQUAL COLUMNS & DENSE FLOW FOR PERFECT SNAPPING */
         .light-main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; grid-auto-flow: row dense; }
-        
         .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; position: relative; page-break-inside: avoid; break-inside: avoid;}
         .light-card.dragging { opacity: 0.4; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px dashed #3b82f6; }
-        
         .light-card-title { font-size: 11px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; margin-bottom: 8px; }
 
+        /* ================= INTERACTIVE RED FLAG CHECKLIST ================= */
         .red-flag-item { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 11px; line-height: 1.35; position: relative; }
-        .red-flag-bullet { color: #ef4444; font-size: 18px; line-height: 1; margin-top: -3px; font-weight: bold; font-family: Arial, sans-serif;}
+        
+        .rf-checkbox {
+            width: 14px; height: 14px; border: 2px solid #ef4444; border-radius: 3px; 
+            display: inline-block; cursor: pointer; margin-top: 1px; flex-shrink: 0; position: relative;
+            background: white; transition: all 0.2s;
+        }
+        .rf-checkbox:hover { background: #fee2e2; }
+        .rf-checkbox.checked { border-color: #10b981; background-color: #10b981; }
+        .rf-checkbox.checked::after { content: '✓'; color: white; font-size: 10px; position: absolute; top: -1px; left: 2px; font-weight: bold;}
+        
+        .rf-text { flex: 1; font-size: 11px; transition: color 0.2s; }
+        .rf-text.checked-text { text-decoration: line-through; color: #94a3b8; }
+
         .delete-bullet-btn { background: none; border: none; color: #ef4444; font-weight: bold; font-size: 12px; cursor: pointer; padding: 0 4px; opacity: 0.6; transition: opacity 0.2s; }
         .delete-bullet-btn:hover { opacity: 1.0; }
 
@@ -128,16 +110,26 @@
         .pipeline-step.completed { background: #d1fae5; border-color: #10b981; }
         .pipeline-step-name { font-size: 10px; font-weight: 700; color: #0f172a; }
         .pipeline-step-status { font-size: 9px; color: #64748b; margin-top: 2px; }
-
         .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif;}
 
         [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
         [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
-
-        /* ENSURES BULLET LISTS SHOW CORRECTLY INSIDE TEXT BOXES */
         [contenteditable="true"] ul, [contenteditable="true"] ol { margin: 4px 0 4px 24px; padding: 0; }
         [contenteditable="true"] li { margin-bottom: 4px; display: list-item; list-style-position: outside; }
+
+        /* ================= MONITORING CENTER OVERLAY ================= */
+        .monitoring-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #f8fafc; z-index: 9999; padding: 40px; overflow-y: auto;
+            display: none; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .mon-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
+        .mon-table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
+        .mon-table th, .mon-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 12px; }
+        .mon-table th { background: #1e293b; color: white; font-weight: 700; text-transform: uppercase; font-size: 11px; }
+        .mon-badge-red { background: #fee2e2; color: #ef4444; padding: 4px 8px; border-radius: 4px; font-weight: 800; font-size: 10px;}
+        .mon-badge-green { background: #d1fae5; color: #10b981; padding: 4px 8px; border-radius: 4px; font-weight: 800; font-size: 10px;}
 
         /* ================= VIEWER MODE STYLES ================= */
         .viewer-mode .card-controls,
@@ -150,25 +142,14 @@
         .viewer-mode button[title="Format as Bullet List"],
         .viewer-mode #btn-undo,
         .viewer-mode #btn-redo,
-        .viewer-mode button[onclick="addCustomBlock(true)"] {
-            display: none !important;
-        }
+        .viewer-mode button[onclick="addCustomBlock(true)"] { display: none !important; }
 
-        /* ================= PERFECT 1-PAGE PDF PRINT SETTINGS ================= */
         @media print { 
             @page { size: landscape; margin: 5mm; }
-            body { 
-                padding: 0; 
-                background: #f8fafc !important; 
-                -webkit-print-color-adjust: exact !important; 
-                print-color-adjust: exact !important; 
-                zoom: 0.75; 
-            }
-            .top-studio-bar { display: none !important; } 
-            .no-print { display: none !important; }
+            body { padding: 0; background: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; zoom: 0.75; }
+            .top-studio-bar, .no-print, .monitoring-overlay { display: none !important; } 
             .light-theme { box-shadow: none !important; padding: 0 !important; }
-            .card-controls { display: none !important; }
-            .delete-bullet-btn { display: none !important; }
+            .card-controls, .delete-bullet-btn { display: none !important; }
         }
     </style>
 </head>
@@ -213,16 +194,8 @@
         </div>
 
         <div class="bar-group">
-            <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">Aa Font:</span>
-            <select class="dropdown-select" id="select-font" onchange="changeFont(true)">
-                <option value="'Plus Jakarta Sans', sans-serif">Jakarta (Modern)</option>
-                <option value="'Inter', sans-serif">Inter (Clean)</option>
-                <option value="'Roboto', sans-serif">Roboto (Corporate)</option>
-                <option value="'Poppins', sans-serif">Poppins (Round)</option>
-                <option value="'Merriweather', serif">Merriweather (Serif)</option>
-            </select>
-            <button class="btn-studio" onclick="changeZoom(-0.05, true)" title="Minimize Text">A-</button>
-            <button class="btn-studio" onclick="changeZoom(0.05, true)" title="Maximize Text">A+</button>
+            <button class="btn-pmo" id="btn-pmo-login" onclick="loginPMO()">🔐 PMO Login</button>
+            <button class="btn-studio" onclick="openMonitoringCenter()" style="background: #4f46e5; color: white; border:none;">📊 Monitoring</button>
         </div>
 
         <div class="bar-group">
@@ -255,7 +228,6 @@
                 </div>
             </div>
 
-            <!-- KPI & RADIAL RINGS SECTION -->
             <div class="light-main-grid handles-off" style="grid-template-columns: 1fr 1fr 1.25fr; margin-bottom: 12px;" id="kpi-grid">
                 <div class="light-card col-span-1" id="kpi-card-1" style="grid-column: span 1;">
                     <div class="card-controls"><span>⠿ Card 1</span></div>
@@ -301,12 +273,10 @@
                 </div>
             </div>
 
-            <!-- MAIN CONTENT AREA WITH FLATTENED GRID -->
             <div class="light-main-grid handles-off" id="main-content-grid">
                 <!-- Javascript will instantly load the pure template here -->
             </div>
 
-            <!-- MANAGER COMMENT SECTION (HIDDEN ON PDF) -->
             <div class="no-print" style="margin-top: 20px; background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 8px; padding: 12px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <div id="title-manager-comments" contenteditable="true" style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">💬 Manager Comments / Next Steps (Hidden in PDF)</div>
@@ -316,6 +286,32 @@
             </div>
 
         </div>
+    </div>
+
+    <!-- ================= MONITORING OVERLAY ================= -->
+    <div id="monitoring-overlay" class="monitoring-overlay">
+        <div class="mon-header">
+            <div>
+                <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">📊 PMO Dashboard Monitoring Center</h1>
+                <p style="font-size: 13px; color: #64748b;">Global overview of red flag resolution timelines across all tracked projects.</p>
+            </div>
+            <button onclick="closeMonitoringCenter()" class="btn-action-green" style="background: #ef4444; border-color: #dc2626; font-size: 14px;">✖ Close Report</button>
+        </div>
+        <table class="mon-table">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Last Updated</th>
+                    <th>Total Red Flags</th>
+                    <th>Remaining (Red)</th>
+                    <th>Resolved (Green)</th>
+                    <th>Avg Days to Resolve</th>
+                </tr>
+            </thead>
+            <tbody id="mon-tbody">
+                <!-- Dynamically Generated -->
+            </tbody>
+        </table>
     </div>
 
     <!-- PURE TEMPLATE -->
@@ -342,7 +338,7 @@
             <div class="card-controls">
                 <span>⠿ Drag Red Flags</span>
                 <div>
-                    <button class="span-btn" onclick="addRedFlag(event)" style="color: #ef4444; font-weight: bold;" title="Add Red Flag Bullet">➕ Bullet</button>
+                    <button class="span-btn" onclick="addRedFlag(event)" style="color: #ef4444; font-weight: bold;" title="Add Red Flag Box">➕ Add Box</button>
                     <button class="span-btn active" onclick="setSpan('card-red-flags', 1)">1 Col</button>
                     <button class="span-btn" onclick="setSpan('card-red-flags', 2)">2 Col</button>
                     <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-red-flags', event)">❌</button>
@@ -413,76 +409,164 @@
         
         let stateDB = {};
         let customProjects = {};
-        let deletedProjects = []; // Tracks permanently deleted projects
-        let isViewer = false;     // Tracks if dashboard is in read-only mode
+        let deletedProjects = []; 
+        let isViewer = false;     
+        let isPMO = false; // PMO Login Tracking Tracker
         let activeKey = "nimule_October_Week 1";
         let defaultGridHTML = "";
 
         const projectData = {
             nimule: {
-                title: "WEEKLY PROJECT UPDATES NIMULE OSBP",
-                subTitle: "Nimule OSBP Construction Project",
-                location: "Nimule, South Sudan",
-                delayBadge: "Current Delay: 5 to 6 months behind baseline schedule",
-                plannedWindow: "<strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)",
-                timePct: 37.3, finPct: 18.5,
-                remDays: "1,067 Days Rem", elapsedDays: "636 of 1,703 Days Elapsed",
-                budgetTotal: "Total: \$10,845,990.00", budgetExp: "Exp: \$2,009,685.02",
+                title: "WEEKLY PROJECT UPDATES NIMULE OSBP", subTitle: "Nimule OSBP Construction Project", location: "Nimule, South Sudan",
+                delayBadge: "Current Delay: 5 to 6 months behind baseline schedule", plannedWindow: "<strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)",
+                timePct: 37.3, finPct: 18.5, remDays: "1,067 Days Rem", elapsedDays: "636 of 1,703 Days Elapsed", budgetTotal: "Total: \$10,845,990.00", budgetExp: "Exp: \$2,009,685.02",
                 designHead: "IPMG DESIGN APPROVAL", designStatus: "APPROVED / 100% DONE", designDesc: "Design completed in September. Process took ~4 months (2-month delay).",
                 pipe: ["Completed", "Approved", "Active (5.5m)", "Pending"],
-                recommendation: "It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.",
-                redFlags: [
-                    "Project is 5 to 6 months behind baseline schedule.",
-                    "Roofing works not commenced due to active procurement.",
-                    "IPMG Design approval observed 2 months delay.",
-                    "Solicitation phase has a 5.5-month variance.",
-                    "Inception dates remain blank across actual tracking.",
-                    "Schedule discrepancy between dashboard and oneUNOPS."
-                ]
+                recommendation: "It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.",
+                redFlags: ["Project is 5 to 6 months behind baseline schedule.", "Roofing works not commenced due to active procurement.", "IPMG Design approval observed 2 months delay."]
             },
             japan: {
-                title: "WEEKLY PROJECT UPDATES JAPAN INFRASTRUCTURE",
-                subTitle: "Japan Grant Aid Infrastructure Support",
-                location: "Juba, South Sudan",
-                delayBadge: "ON SCHEDULE / NORMAL",
-                plannedWindow: "<strong>Planned Window:</strong> Jan 1, 2025 – Dec 31, 2027",
-                timePct: 42.5, finPct: 54.2,
-                remDays: "420 Days Rem", elapsedDays: "310 of 730 Days Elapsed",
-                budgetTotal: "Total: \$6,000,000.00", budgetExp: "Exp: \$3,250,000.00",
+                title: "WEEKLY PROJECT UPDATES JAPAN INFRASTRUCTURE", subTitle: "Japan Grant Aid Infrastructure Support", location: "Juba, South Sudan",
+                delayBadge: "ON SCHEDULE / NORMAL", plannedWindow: "<strong>Planned Window:</strong> Jan 1, 2025 – Dec 31, 2027",
+                timePct: 42.5, finPct: 54.2, remDays: "420 Days Rem", elapsedDays: "310 of 730 Days Elapsed", budgetTotal: "Total: \$6,000,000.00", budgetExp: "Exp: \$3,250,000.00",
                 designHead: "PHASE STATUS", designStatus: "APPROVED", designDesc: "Design phase fully approved and documented.",
-                pipe: ["Completed", "Approved", "Active", "Pending"],
-                recommendation: "Maintain close coordination with local port authorities to expedite remaining logistics clearance.",
-                redFlags: [
-                    "Port clearance delays experienced at Mombasa terminal.",
-                    "Minor fuel cost variance observed in regional transport.",
-                    "Site civil works progressing within expected timelines.",
-                    "Quality assurance audit scheduled for end of month.",
-                    "Environmental impact assessment updated and approved.",
-                    "Stakeholder committee review completed with positive feedback."
-                ]
+                pipe: ["Completed", "Approved", "Active", "Pending"], recommendation: "Maintain close coordination with local port authorities to expedite remaining logistics clearance.",
+                redFlags: ["Port clearance delays experienced at Mombasa terminal.", "Minor fuel cost variance observed in regional transport."]
             },
             flood: {
-                title: "WEEKLY PROJECT UPDATES FLOOD MITIGATION",
-                subTitle: "Emergency Flood Mitigation & Dike Construction",
-                location: "Bentiu & Malakal, South Sudan",
-                delayBadge: "42.57% PROGRESS GAP",
-                plannedWindow: "<strong>Planned Window:</strong> Activities through 31 Mar 2027",
-                timePct: 70.2, finPct: 25.6,
-                remDays: "End: 31 Mar 2027", elapsedDays: "70.25% Elapsed / 27.68% Physical",
-                budgetTotal: "Total: \$9,860,000.00", budgetExp: "Exp: \$2,500,000.00",
-                designHead: "INCEPTION & ASSESSMENT", designStatus: "IN PROGRESS", designDesc: "Preparation of Technical documents and design approval for Water Yards remains In Progress (planned for June 1, 2026).",
-                pipe: ["In Progress", "Delayed", "Active", "Delayed (6m)"],
-                recommendation: "In the forecast to delivery percentage, there is an over forecasting trend noticed with a total forecasted value of -7,859,796.48 USD over the past 10 months.",
-                redFlags: [
-                    "42.57% point gap between elapsed time (70.25%) based on amended end date and physical progress (27.68%).",
-                    "Preparation of Technical documents and design approval for Water Yards remains In Progress.",
-                    "Procurement: 1 activity in progress is 4 months behind schedule (June 17, 2026).",
-                    "Procurement: 2 activities not started, 4 months behind schedule (July 4, 2026).",
-                    "Works & Contract Management: 6-month delay overall. 5 activities not started.",
-                    "Over forecasting trend noticed with a total forecasted value of -\$7.85M over the past 10 months."
-                ]
+                title: "WEEKLY PROJECT UPDATES FLOOD MITIGATION", subTitle: "Emergency Flood Mitigation & Dike Construction", location: "Bentiu & Malakal, South Sudan",
+                delayBadge: "42.57% PROGRESS GAP", plannedWindow: "<strong>Planned Window:</strong> Activities through 31 Mar 2027",
+                timePct: 70.2, finPct: 25.6, remDays: "End: 31 Mar 2027", elapsedDays: "70.25% Elapsed / 27.68% Physical", budgetTotal: "Total: \$9,860,000.00", budgetExp: "Exp: \$2,500,000.00",
+                designHead: "INCEPTION & ASSESSMENT", designStatus: "IN PROGRESS", designDesc: "Preparation of Technical documents and design approval for Water Yards remains In Progress.",
+                pipe: ["In Progress", "Delayed", "Active", "Delayed (6m)"], recommendation: "In the forecast to delivery percentage, there is an over forecasting trend noticed.",
+                redFlags: ["42.57% point gap between elapsed time and physical progress.", "Preparation of Technical documents remains In Progress.", "Procurement: 1 activity in progress is 4 months behind schedule."]
             }
         };
+
+        // Get Today's Date String for Math
+        function getTodayStr() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        // ================= PMO LOGIN SYSTEM =================
+        function loginPMO() {
+            if(isPMO) {
+                alert("You are already logged in with PMO Privileges.");
+                return;
+            }
+            const code = prompt("🔒 Enter Secure PMO Code to enable checklist features:\n(For testing, use 'PMO2026')");
+            if(code === "PMO2026") {
+                isPMO = true;
+                const btn = document.getElementById('btn-pmo-login');
+                btn.innerHTML = "🔓 PMO Access Active";
+                btn.style.background = "#10b981";
+                btn.style.borderColor = "#059669";
+                btn.style.color = "white";
+                alert("Access Granted: You can now check/uncheck Red Flag resolution boxes.");
+            } else if (code) {
+                alert("❌ Invalid Access Code. You are restricted to view/edit only.");
+            }
+        }
+
+        // ================= INTERACTIVE CHECKBOX LOGIC =================
+        function toggleChecklist(boxEl) {
+            if(!isPMO) {
+                alert("⛔ Action Restricted: Only authorized PMO personnel (PMOE, PMOS, PMOSS) can mark red flags as resolved. Click 'PMO Login' to authenticate.");
+                return;
+            }
+            saveStateForUndo();
+            const textEl = boxEl.nextElementSibling;
+            if(boxEl.classList.contains('checked')) {
+                boxEl.classList.remove('checked');
+                boxEl.removeAttribute('data-resolved-date');
+                if(textEl) textEl.classList.remove('checked-text');
+            } else {
+                boxEl.classList.add('checked');
+                boxEl.setAttribute('data-resolved-date', getTodayStr());
+                if(textEl) textEl.classList.add('checked-text');
+            }
+            saveCurrentViewToDB(); // Save state instantly
+        }
+
+        // ================= MONITORING CENTER LOGIC =================
+        function openMonitoringCenter() {
+            document.getElementById('dashboard-container').style.display = 'none';
+            document.getElementById('monitoring-overlay').style.display = 'block';
+            
+            const tbody = document.getElementById('mon-tbody');
+            tbody.innerHTML = "";
+
+            const allProjects = {...projectData}; // default projects
+            // Include dynamically created custom projects
+            for (const cId in customProjects) {
+                if(!allProjects[cId]) allProjects[cId] = customProjects[cId].data;
+            }
+
+            // Iterate through every project to calculate stats
+            for (const pId in allProjects) {
+                if(deletedProjects.includes(pId)) continue; // Skip deleted
+
+                let pName = allProjects[pId].title.replace("WEEKLY PROJECT UPDATES ", "");
+                let totalFlags = 0;
+                let resolvedFlags = 0;
+                let totalDaysTaken = 0;
+                let resolvedCountForAvg = 0;
+                let lastUpdated = "Default Data";
+
+                // We must find the latest saved state for this project ID across ALL weeks/months
+                let latestSavedHTML = null;
+                for (const key in stateDB) {
+                    if (key.startsWith(pId + "_")) {
+                        latestSavedHTML = stateDB[key].html;
+                        lastUpdated = key.replace(pId + "_", "").replace("_", " "); // e.g., "October Week 1"
+                    }
+                }
+
+                if (latestSavedHTML) {
+                    // Create a dummy DOM parser to read the saved HTML and count the checkboxes
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = latestSavedHTML;
+                    const boxes = tempDiv.querySelectorAll('.rf-checkbox');
+                    
+                    totalFlags = boxes.length;
+                    boxes.forEach(box => {
+                        if (box.classList.contains('checked')) {
+                            resolvedFlags++;
+                            const created = box.getAttribute('data-created-date');
+                            const resolved = box.getAttribute('data-resolved-date');
+                            if(created && resolved) {
+                                const diffTime = Math.abs(new Date(resolved) - new Date(created));
+                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                                totalDaysTaken += diffDays;
+                                resolvedCountForAvg++;
+                            }
+                        }
+                    });
+                } else {
+                    // Fallback to default unsaved data array length
+                    totalFlags = allProjects[pId].redFlags ? allProjects[pId].redFlags.length : 0;
+                }
+
+                let remaining = totalFlags - resolvedFlags;
+                let avgDays = resolvedCountForAvg > 0 ? (totalDaysTaken / resolvedCountForAvg).toFixed(1) + " days" : "N/A";
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight: 700;">${pName}</td>
+                        <td style="color: #64748b;">${lastUpdated}</td>
+                        <td style="font-weight: 700;">${totalFlags}</td>
+                        <td><span class="mon-badge-red">${remaining} Remaining</span></td>
+                        <td><span class="mon-badge-green">${resolvedFlags} Resolved</span></td>
+                        <td style="font-family: var(--font-mono);">${avgDays}</td>
+                    </tr>
+                `;
+            }
+        }
+
+        function closeMonitoringCenter() {
+            document.getElementById('monitoring-overlay').style.display = 'none';
+            document.getElementById('dashboard-container').style.display = 'block';
+        }
 
         function setRing(id, pctStr) {
             const circle = document.getElementById(id);
@@ -517,12 +601,9 @@
                 const newProjData = {
                     title: "WEEKLY PROJECT UPDATES " + name.toUpperCase(),
                     subTitle: name + " Construction Project",
-                    location: "TBD",
-                    delayBadge: "NEW PROJECT",
-                    plannedWindow: "",
-                    timePct: 0, finPct: 0,
-                    remDays: "TBD Days Rem", elapsedDays: "0 Days Elapsed",
-                    budgetTotal: "Total: \$0.00", budgetExp: "Exp: \$0.00",
+                    location: "TBD", delayBadge: "NEW PROJECT", plannedWindow: "",
+                    timePct: 0, finPct: 0, remDays: "TBD Days Rem", elapsedDays: "0 Days Elapsed",
+                    budgetTotal: "Total: $0.00", budgetExp: "Exp: $0.00",
                     designHead: "PHASE STATUS", designStatus: "PENDING", designDesc: "Not yet started.",
                     pipe: ["Pending", "Pending", "Pending", "Pending"],
                     recommendation: "New project added. Awaiting first status report.",
@@ -533,8 +614,7 @@
                 customProjects[id] = { name: name, data: newProjData };
 
                 const opt = document.createElement('option');
-                opt.value = id;
-                opt.innerHTML = name;
+                opt.value = id; opt.innerHTML = name;
                 document.getElementById('select-project').appendChild(opt);
                 document.getElementById('select-project').value = id;
                 changeProject(true);
@@ -556,9 +636,7 @@
                     document.getElementById('l-main-title').innerHTML = projectData[currentId].title;
                     document.getElementById('l-sub-title').innerHTML = projectData[currentId].subTitle;
                 }
-                if (customProjects[currentId]) {
-                    customProjects[currentId].name = newName;
-                }
+                if (customProjects[currentId]) customProjects[currentId].name = newName;
                 saveLayout(false);
             }
         }
@@ -569,29 +647,38 @@
             const currentOption = selectEl.options[selectEl.selectedIndex];
 
             if (selectEl.options.length <= 1) {
-                alert("Cannot delete the only remaining project.");
-                return;
+                alert("Cannot delete the only remaining project."); return;
             }
 
             if (confirm(`Are you sure you want to delete "${currentOption.text}"?`)) {
                 saveStateForUndo();
-                
-                deletedProjects.push(currentId); // Saves deletion permanently
+                deletedProjects.push(currentId); 
 
                 delete projectData[currentId];
                 delete customProjects[currentId];
 
-                // Clear memory blocks tied to this project
                 for (const k in stateDB) {
-                    if (k.startsWith(currentId + "_")) {
-                        delete stateDB[k];
-                    }
+                    if (k.startsWith(currentId + "_")) delete stateDB[k];
                 }
 
                 currentOption.remove();
                 changeProject(true);
                 saveLayout(false);
             }
+        }
+
+        function addRedFlag(event) {
+            if(event) event.stopPropagation();
+            saveStateForUndo();
+            const container = document.getElementById('red-flags-container');
+            if(!container) return;
+            const newId = 'rf-' + Math.random().toString(36).substr(2, 5);
+            const div = document.createElement('div');
+            div.className = 'red-flag-item';
+            div.innerHTML = `<div class="rf-checkbox" data-created-date="${getTodayStr()}" onclick="toggleChecklist(this)"></div><div id="${newId}" class="rf-text" contenteditable="true">Click to edit new red flag...</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button>`;
+            container.appendChild(div);
+            customEdits[newId] = "Click to edit new red flag...";
+            saveCurrentViewToDB();
         }
 
         function deleteSingleRedFlag(btnElement) {
@@ -617,7 +704,6 @@
         }
 
         function changeProject(isUserTriggered = false) {
-            // Prevent saving if a user is just viewing
             if(isUserTriggered && !isViewer) {
                 saveStateForUndo();
                 saveCurrentViewToDB();
@@ -627,10 +713,7 @@
                     m: document.getElementById('select-month').value,
                     w: document.getElementById('select-week').value,
                     f: document.getElementById('select-font').value, 
-                    z: currentZoom, 
-                    db: stateDB,
-                    cp: customProjects,
-                    dp: deletedProjects // Save the permanently deleted list
+                    z: currentZoom, db: stateDB, cp: customProjects, dp: deletedProjects 
                 };
                 localStorage.setItem('hamco_dashboard_master', JSON.stringify(tempState));
             }
@@ -644,9 +727,7 @@
                 document.getElementById('main-content-grid').innerHTML = defaultGridHTML;
             }
             
-            customEdits = {}; 
-            cardLayouts = {};
-            customBlockCount = 0;
+            customEdits = {}; cardLayouts = {}; customBlockCount = 0;
 
             const p = projectData[pId] || projectData['nimule'];
             const hasData = (m === 'October' && w === 'Week 1') || (p && p.delayBadge === "NEW PROJECT");
@@ -668,9 +749,7 @@
                 document.getElementById('l-recommendation').innerHTML = hasData ? p.recommendation : "No recommendation submitted for this period.";
 
                 const timelineWinEl = document.getElementById('l-timeline-window');
-                if(timelineWinEl) {
-                    timelineWinEl.innerHTML = hasData ? (p.plannedWindow || "") : "";
-                }
+                if(timelineWinEl) timelineWinEl.innerHTML = hasData ? (p.plannedWindow || "") : "";
 
                 document.getElementById('l-ring-time-val').innerHTML = hasData ? p.timePct + '%' : '0%';
                 document.getElementById('l-ring-fin-val').innerHTML = hasData ? p.finPct + '%' : '0%';
@@ -689,10 +768,10 @@
                     rfContainer.innerHTML = ''; 
                     if (hasData && p.redFlags && p.redFlags.length > 0) {
                         p.redFlags.forEach((rf, idx) => {
-                            rfContainer.innerHTML += `<div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-${idx+1}" contenteditable="true" style="flex: 1; font-size: 11px;">${rf}</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
+                            rfContainer.innerHTML += `<div class="red-flag-item"><div class="rf-checkbox" data-created-date="${getTodayStr()}" onclick="toggleChecklist(this)"></div><div id="rf-${idx+1}" class="rf-text" contenteditable="true">${rf}</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
                         });
                     } else {
-                        rfContainer.innerHTML = `<div class="red-flag-item"><div class="red-flag-bullet" style="color:transparent;">•</div><div id="rf-1" contenteditable="true" style="flex: 1; font-size: 11px; color: #ef4444; font-weight: bold;">No red flags or data submitted for this period yet.</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
+                        rfContainer.innerHTML = `<div class="red-flag-item"><div class="rf-checkbox" data-created-date="${getTodayStr()}" onclick="toggleChecklist(this)"></div><div id="rf-1" class="rf-text" contenteditable="true" style="color: #ef4444; font-weight: bold;">No red flags or data submitted for this period yet.</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
                     }
                 }
             }
@@ -702,24 +781,19 @@
                 customBlockCount = saved.b || 0;
                 cardLayouts = saved.l || {};
                 customEdits = saved.e || {};
-                if (saved.html) {
-                    document.getElementById('main-content-grid').innerHTML = saved.html;
-                }
+                if (saved.html) document.getElementById('main-content-grid').innerHTML = saved.html;
                 applyCustomEdits();
             }
 
             const cBox = document.getElementById('manager-comments');
-            if(cBox) {
-                if(!stateDB[activeKey] || !customEdits['manager-comments']) {
-                    cBox.innerHTML = "";
-                }
+            if(cBox && (!stateDB[activeKey] || !customEdits['manager-comments'])) {
+                cBox.innerHTML = "";
             }
 
             if(handlesOn && !isViewer) {
                 document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
             }
 
-            // Lock everything down if viewer mode
             if(isViewer) {
                 document.querySelectorAll('[contenteditable="true"]').forEach(el => el.setAttribute('contenteditable', 'false'));
             }
@@ -740,15 +814,12 @@
         document.addEventListener("dragend", function(event) {
             if(handlesOn && !isViewer && event.target.classList.contains('light-card')) {
                 event.target.classList.remove('dragging');
-                draggedCard = null;
-                saveStateForUndo();
+                draggedCard = null; saveStateForUndo();
             }
         });
 
         document.addEventListener("dragover", function(event) {
-            if(handlesOn && draggedCard) {
-                event.preventDefault(); 
-            }
+            if(handlesOn && draggedCard) event.preventDefault(); 
         });
 
         document.addEventListener("drop", function(event) {
@@ -756,16 +827,11 @@
                 event.preventDefault();
                 const container = document.getElementById('main-content-grid');
                 const targetCard = event.target.closest('.light-card');
-                
                 if (targetCard && targetCard !== draggedCard && targetCard.parentNode === container) {
                     const rect = targetCard.getBoundingClientRect();
                     const isAfter = (event.clientY - rect.top) > (rect.height / 2);
-                    
-                    if (isAfter) {
-                        container.insertBefore(draggedCard, targetCard.nextSibling);
-                    } else {
-                        container.insertBefore(draggedCard, targetCard);
-                    }
+                    if (isAfter) container.insertBefore(draggedCard, targetCard.nextSibling);
+                    else container.insertBefore(draggedCard, targetCard);
                     saveStateForUndo();
                 }
             }
@@ -776,14 +842,11 @@
             const btn = document.getElementById('btn-handles');
             const grids = document.querySelectorAll('.light-main-grid');
             const cards = document.querySelectorAll('#main-content-grid .light-card');
-            
             if (handlesOn) { 
-                btn.innerHTML = '🛠️ Handles: ON'; 
-                grids.forEach(g => g.classList.remove('handles-off'));
+                btn.innerHTML = '🛠️ Handles: ON'; grids.forEach(g => g.classList.remove('handles-off'));
                 cards.forEach(c => c.setAttribute('draggable', 'true'));
             } else { 
-                btn.innerHTML = '🛠️ Handles: OFF'; 
-                grids.forEach(g => g.classList.add('handles-off'));
+                btn.innerHTML = '🛠️ Handles: OFF'; grids.forEach(g => g.classList.add('handles-off'));
                 cards.forEach(c => c.removeAttribute('draggable'));
             }
         }
@@ -792,50 +855,27 @@
             if(isUserTriggered) saveStateForUndo();
             const card = document.getElementById(cardId);
             if(!card) return;
-            
             card.classList.remove('col-span-1', 'col-span-2');
             card.classList.add('col-span-' + cols);
             cardLayouts[cardId] = cols;
-
-            if(cols === 2) {
-                card.style.gridColumn = '1 / -1';
-            } else {
-                card.style.gridColumn = 'span 1';
-            }
+            if(cols === 2) card.style.gridColumn = '1 / -1';
+            else card.style.gridColumn = 'span 1';
 
             const btns = card.querySelectorAll('.span-btn');
             btns.forEach((b, idx) => {
-                if (b.innerText === '❌' || b.innerText === '➕ Bullet') return; 
-                if (idx + 1 === cols) b.classList.add('active');
-                else b.classList.remove('active');
+                if (b.innerText === '❌' || b.innerText === '➕ Add Box') return; 
+                if (idx + 1 === cols) b.classList.add('active'); else b.classList.remove('active');
             });
         }
 
-        function addRedFlag(event) {
-            if(event) event.stopPropagation();
-            saveStateForUndo();
-            const container = document.getElementById('red-flags-container');
-            if(!container) return;
-            const newId = 'rf-' + Math.random().toString(36).substr(2, 5);
-            const div = document.createElement('div');
-            div.className = 'red-flag-item';
-            div.innerHTML = `<div class="red-flag-bullet">•</div><div id="${newId}" contenteditable="true" style="flex: 1; font-size: 11px;">Click to edit new red flag...</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button>`;
-            container.appendChild(div);
-            customEdits[newId] = "Click to edit new red flag...";
-            saveCurrentViewToDB();
-        }
-
         function deleteBlock(id, event) {
-            if(event) event.stopPropagation();
-            saveStateForUndo();
-            const el = document.getElementById(id);
-            if (el) el.remove();
+            if(event) event.stopPropagation(); saveStateForUndo();
+            const el = document.getElementById(id); if (el) el.remove();
             saveCurrentViewToDB();
         }
 
         function addCustomBlock(isUserTriggered = false) {
             if(isUserTriggered) saveStateForUndo();
-            
             if (!handlesOn) toggleHandles();
 
             customBlockCount++;
@@ -843,8 +883,7 @@
             const id = 'custom-block-' + customBlockCount;
             const newCard = document.createElement('div');
             newCard.className = 'light-card col-span-2';
-            newCard.id = id;
-            newCard.style.gridColumn = '1 / -1'; 
+            newCard.id = id; newCard.style.gridColumn = '1 / -1'; 
             if(handlesOn) newCard.setAttribute('draggable', 'true');
             newCard.innerHTML = `
                 <div class="card-controls">
@@ -859,26 +898,16 @@
                 <div id="cb-text-${customBlockCount}" contenteditable="true" style="font-size: 11px; color: #475569; min-height: 30px;">Click here to edit this custom project note.</div>
             `;
             const recBar = document.getElementById('card-rec');
-            if(recBar) {
-                container.insertBefore(newCard, recBar);
-            } else {
-                container.appendChild(newCard);
-            }
+            if(recBar) container.insertBefore(newCard, recBar); else container.appendChild(newCard);
             cardLayouts[id] = 2;
         }
 
-        // EDITABLE INPUT HANDLER WITH AUTOMATIC RADIAL RING RE-DRAW
         document.addEventListener('input', function(e) {
             if (e.target && e.target.getAttribute('contenteditable') === 'true') {
                 if (!e.target.id) e.target.id = 'edit_' + Math.random().toString(36).substr(2, 5);
                 customEdits[e.target.id] = e.target.innerHTML;
-
-                if (e.target.id === 'l-ring-time-val') {
-                    setRing('l-ring-time', e.target.innerText);
-                }
-                if (e.target.id === 'l-ring-fin-val') {
-                    setRing('l-ring-fin', e.target.innerText);
-                }
+                if (e.target.id === 'l-ring-time-val') setRing('l-ring-time', e.target.innerText);
+                if (e.target.id === 'l-ring-fin-val') setRing('l-ring-fin', e.target.innerText);
             }
         });
 
@@ -898,106 +927,56 @@
             const commentText = commentBox.innerText.trim();
             const projSelect = document.getElementById('select-project');
             const projName = projSelect.options[projSelect.selectedIndex].text;
-
-            if(!commentText) {
-                alert("Please write a comment in the box before clicking Send.");
-                return;
-            }
-
+            if(!commentText) { alert("Please write a comment in the box before clicking Send."); return; }
             alert("Opening your email app to instantly route this message to biruktawitm@unops.org...");
-            
-            const subject = encodeURIComponent(`Dashboard Comment: ${projName}`);
-            const body = encodeURIComponent(commentText);
-            window.location.href = `mailto:biruktawitm@unops.org?subject=${subject}&body=${body}`;
+            window.location.href = `mailto:biruktawitm@unops.org?subject=${encodeURIComponent(`Dashboard Comment: ${projName}`)}&body=${encodeURIComponent(commentText)}`;
         }
 
         async function shareDashboard() {
             const btn = document.getElementById('btn-share');
-            
-            // Check what kind of link the user wants
             const isEditor = confirm("Create an EDITOR link?\n\nClick [OK] to allow editing.\nClick [Cancel] for a READ-ONLY viewer link.");
-
-            const ogText = btn.innerHTML;
-            btn.innerHTML = '⏳ Generating Short Link...';
-
+            const ogText = btn.innerHTML; btn.innerHTML = '⏳ Generating Short Link...';
             saveCurrentViewToDB(); 
             
             const state = {
-                p: document.getElementById('select-project').value,
-                m: document.getElementById('select-month').value,
-                w: document.getElementById('select-week').value,
-                f: document.getElementById('select-font').value, 
-                z: currentZoom, 
-                db: stateDB,
-                cp: customProjects,
-                dp: deletedProjects // Ensure deleted projects stay deleted for viewers
+                p: document.getElementById('select-project').value, m: document.getElementById('select-month').value,
+                w: document.getElementById('select-week').value, f: document.getElementById('select-font').value, 
+                z: currentZoom, db: stateDB, cp: customProjects, dp: deletedProjects
             };
 
             let shareUrl = window.location.href;
-
             try {
-                const res = await fetch('https://api.npoint.io', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(state)
-                });
-                
-                if (res.ok) {
-                    const data = await res.json();
-                    shareUrl = window.location.origin + window.location.pathname + '?id=' + data.id;
-                } else {
-                    throw new Error("npoint failed");
-                }
+                const res = await fetch('https://api.npoint.io', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(state) });
+                if (res.ok) { const data = await res.json(); shareUrl = window.location.origin + window.location.pathname + '?id=' + data.id; }
+                else throw new Error("npoint failed");
             } catch (err) {
                 try {
-                    const res2 = await fetch('https://bytebin.lucko.me/post', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify(state)
-                    });
-                    const data2 = await res2.json();
-                    shareUrl = window.location.origin + window.location.pathname + '?bin=' + data2.key;
+                    const res2 = await fetch('https://bytebin.lucko.me/post', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(state) });
+                    const data2 = await res2.json(); shareUrl = window.location.origin + window.location.pathname + '?bin=' + data2.key;
                 } catch (err2) {
                     alert("⚠️ Network error preventing short link creation. Please use 'Save' to save to your local machine instead.");
-                    btn.innerHTML = ogText;
-                    return;
+                    btn.innerHTML = ogText; return;
                 }
             }
 
-            // Append viewer mode tag if necessary
-            if (!isEditor) {
-                shareUrl += '&mode=view';
-            }
-
-            try {
-                await navigator.clipboard.writeText(shareUrl);
-                alert("✅ Short Link Generated & Copied to Clipboard!\n\nLink: " + shareUrl);
-            } catch (err) {
-                alert("Link ready: " + shareUrl);
-            }
+            if (!isEditor) shareUrl += '&mode=view';
+            try { await navigator.clipboard.writeText(shareUrl); alert("✅ Short Link Generated & Copied to Clipboard!\n\nLink: " + shareUrl); } 
+            catch (err) { alert("Link ready: " + shareUrl); }
             btn.innerHTML = ogText;
         }
 
         function saveLayout(showAlert = true) {
             saveCurrentViewToDB();
-
             const state = {
-                p: document.getElementById('select-project').value,
-                m: document.getElementById('select-month').value,
-                w: document.getElementById('select-week').value,
-                f: document.getElementById('select-font').value, 
-                z: currentZoom, 
-                db: stateDB,
-                cp: customProjects,
-                dp: deletedProjects
+                p: document.getElementById('select-project').value, m: document.getElementById('select-month').value,
+                w: document.getElementById('select-week').value, f: document.getElementById('select-font').value, 
+                z: currentZoom, db: stateDB, cp: customProjects, dp: deletedProjects
             };
-
             localStorage.setItem('hamco_dashboard_master', JSON.stringify(state));
             if(showAlert) alert('✅ Dashboard saved successfully for this specific Project and Period!');
         }
 
         function loadState(state) {
-            // Re-apply permanent deletions first
             if (state.dp) {
                 deletedProjects = state.dp;
                 deletedProjects.forEach(id => {
@@ -1006,15 +985,13 @@
                     if (opt) opt.remove();
                 });
             }
-
             if (state.cp) {
                 customProjects = state.cp;
                 for (const id in customProjects) {
                     projectData[id] = customProjects[id].data;
                     if (!document.querySelector(`#select-project option[value="${id}"]`)) {
                         const opt = document.createElement('option');
-                        opt.value = id;
-                        opt.innerHTML = customProjects[id].name;
+                        opt.value = id; opt.innerHTML = customProjects[id].name;
                         document.getElementById('select-project').appendChild(opt);
                     }
                 }
@@ -1022,21 +999,13 @@
 
             if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
             if(state.z) { currentZoom = state.z; changeZoom(0, false); }
-            
-            if (state.db) {
-                stateDB = state.db;
-            } else {
-                stateDB = {};
-            }
+            if (state.db) stateDB = state.db; else stateDB = {};
 
-            if(state.p && document.querySelector(`#select-project option[value="${state.p}"]`)) {
-                document.getElementById('select-project').value = state.p;
-            }
+            if(state.p && document.querySelector(`#select-project option[value="${state.p}"]`)) document.getElementById('select-project').value = state.p;
             if(state.m) document.getElementById('select-month').value = state.m;
             if(state.w) document.getElementById('select-week').value = state.w;
             
             activeKey = document.getElementById('select-project').value + "_" + document.getElementById('select-month').value + "_" + document.getElementById('select-week').value;
-
             changeProject(false); 
         }
 
@@ -1045,142 +1014,48 @@
             activeKey = document.getElementById('select-project').value + "_" + document.getElementById('select-month').value + "_" + document.getElementById('select-week').value;
 
             const params = new URLSearchParams(window.location.search);
-            const npointId = params.get('id');
-            const bytebinId = params.get('bin');
+            const npointId = params.get('id'); const bytebinId = params.get('bin');
             
-            // Check Viewer Mode
             if (params.get('mode') === 'view') {
-                isViewer = true;
-                document.body.classList.add('viewer-mode');
+                isViewer = true; document.body.classList.add('viewer-mode');
                 document.querySelectorAll('[contenteditable="true"]').forEach(el => el.setAttribute('contenteditable', 'false'));
             }
 
             if (npointId) {
-                try {
-                    const res = await fetch('https://api.npoint.io/' + npointId);
-                    const state = await res.json();
-                    loadState(state);
-                } catch(e) { changeProject(false); }
+                try { const res = await fetch('https://api.npoint.io/' + npointId); const state = await res.json(); loadState(state); } catch(e) { changeProject(false); }
             } else if (bytebinId) {
-                try {
-                    const res = await fetch('https://bytebin.lucko.me/' + bytebinId);
-                    const state = await res.json();
-                    loadState(state);
-                } catch(e) { changeProject(false); }
+                try { const res = await fetch('https://bytebin.lucko.me/' + bytebinId); const state = await res.json(); loadState(state); } catch(e) { changeProject(false); }
             } else {
-                const localSave = localStorage.getItem('hamco_dashboard_master') 
-                    || localStorage.getItem('hamco_dashboard_v8') 
-                    || localStorage.getItem('hamco_dashboard_v7') 
-                    || localStorage.getItem('hamco_dashboard_save');
-
-                if (localSave) {
-                    try {
-                        loadState(JSON.parse(localSave));
-                    } catch(e) {
-                        changeProject(false);
-                    }
-                } else {
-                    changeProject(false); 
-                    const cb = document.getElementById('manager-comments');
-                    if(cb) cb.innerHTML = "";
-                }
+                const localSave = localStorage.getItem('hamco_dashboard_master') || localStorage.getItem('hamco_dashboard_v8') || localStorage.getItem('hamco_dashboard_save');
+                if (localSave) { try { loadState(JSON.parse(localSave)); } catch(e) { changeProject(false); } } 
+                else { changeProject(false); const cb = document.getElementById('manager-comments'); if(cb) cb.innerHTML = ""; }
             }
         }
 
         function saveStateForUndo() {
-            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
-                if(!el.id) el.id = 'edit_' + index;
-                customEdits[el.id] = el.innerHTML;
-            });
-
-            undoStack.push({
-                dash: document.getElementById('dashboard-container').innerHTML,
-                proj: document.getElementById('select-project').value,
-                month: document.getElementById('select-month').value,
-                week: document.getElementById('select-week').value,
-                font: document.getElementById('select-font').value,
-                zoom: currentZoom,
-                db: JSON.parse(JSON.stringify(stateDB)),
-                ak: activeKey,
-                dp: JSON.parse(JSON.stringify(deletedProjects))
-            });
-            redoStack = []; 
-            document.getElementById('btn-undo').disabled = false; 
-            document.getElementById('btn-redo').disabled = true;
+            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => { if(!el.id) el.id = 'edit_' + index; customEdits[el.id] = el.innerHTML; });
+            undoStack.push({ dash: document.getElementById('dashboard-container').innerHTML, proj: document.getElementById('select-project').value, month: document.getElementById('select-month').value, week: document.getElementById('select-week').value, font: document.getElementById('select-font').value, zoom: currentZoom, db: JSON.parse(JSON.stringify(stateDB)), ak: activeKey, dp: JSON.parse(JSON.stringify(deletedProjects)) });
+            redoStack = []; document.getElementById('btn-undo').disabled = false; document.getElementById('btn-redo').disabled = true;
         }
 
         function undo() {
             if (!undoStack.length) return;
-            
-            redoStack.push({
-                dash: document.getElementById('dashboard-container').innerHTML,
-                proj: document.getElementById('select-project').value,
-                month: document.getElementById('select-month').value,
-                week: document.getElementById('select-week').value,
-                font: document.getElementById('select-font').value,
-                zoom: currentZoom,
-                db: JSON.parse(JSON.stringify(stateDB)),
-                ak: activeKey,
-                dp: JSON.parse(JSON.stringify(deletedProjects))
-            });
-
+            redoStack.push({ dash: document.getElementById('dashboard-container').innerHTML, proj: document.getElementById('select-project').value, month: document.getElementById('select-month').value, week: document.getElementById('select-week').value, font: document.getElementById('select-font').value, zoom: currentZoom, db: JSON.parse(JSON.stringify(stateDB)), ak: activeKey, dp: JSON.parse(JSON.stringify(deletedProjects)) });
             const s = undoStack.pop();
-            
-            document.getElementById('dashboard-container').innerHTML = s.dash;
-            document.getElementById('select-project').value = s.proj;
-            document.getElementById('select-month').value = s.month;
-            document.getElementById('select-week').value = s.week;
-            document.getElementById('select-font').value = s.font;
-            
-            stateDB = s.db;
-            activeKey = s.ak;
-            deletedProjects = s.dp || [];
-            currentZoom = s.zoom;
-            document.getElementById('dashboard-container').style.zoom = currentZoom;
-            
-            document.getElementById('btn-undo').disabled = !undoStack.length; 
-            document.getElementById('btn-redo').disabled = false;
-            
-            if(handlesOn && !isViewer) {
-                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
-            }
+            document.getElementById('dashboard-container').innerHTML = s.dash; document.getElementById('select-project').value = s.proj; document.getElementById('select-month').value = s.month; document.getElementById('select-week').value = s.week; document.getElementById('select-font').value = s.font;
+            stateDB = s.db; activeKey = s.ak; deletedProjects = s.dp || []; currentZoom = s.zoom; document.getElementById('dashboard-container').style.zoom = currentZoom;
+            document.getElementById('btn-undo').disabled = !undoStack.length; document.getElementById('btn-redo').disabled = false;
+            if(handlesOn && !isViewer) document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
         }
 
         function redo() {
             if (!redoStack.length) return;
-            
-            undoStack.push({
-                dash: document.getElementById('dashboard-container').innerHTML,
-                proj: document.getElementById('select-project').value,
-                month: document.getElementById('select-month').value,
-                week: document.getElementById('select-week').value,
-                font: document.getElementById('select-font').value,
-                zoom: currentZoom,
-                db: JSON.parse(JSON.stringify(stateDB)),
-                ak: activeKey,
-                dp: JSON.parse(JSON.stringify(deletedProjects))
-            });
-
+            undoStack.push({ dash: document.getElementById('dashboard-container').innerHTML, proj: document.getElementById('select-project').value, month: document.getElementById('select-month').value, week: document.getElementById('select-week').value, font: document.getElementById('select-font').value, zoom: currentZoom, db: JSON.parse(JSON.stringify(stateDB)), ak: activeKey, dp: JSON.parse(JSON.stringify(deletedProjects)) });
             const s = redoStack.pop();
-            
-            document.getElementById('dashboard-container').innerHTML = s.dash;
-            document.getElementById('select-project').value = s.proj;
-            document.getElementById('select-month').value = s.month;
-            document.getElementById('select-week').value = s.week;
-            document.getElementById('select-font').value = s.font;
-            
-            stateDB = s.db;
-            activeKey = s.ak;
-            deletedProjects = s.dp || [];
-            currentZoom = s.zoom;
-            document.getElementById('dashboard-container').style.zoom = currentZoom;
-            
-            document.getElementById('btn-undo').disabled = false; 
-            document.getElementById('btn-redo').disabled = !redoStack.length;
-
-            if(handlesOn && !isViewer) {
-                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
-            }
+            document.getElementById('dashboard-container').innerHTML = s.dash; document.getElementById('select-project').value = s.proj; document.getElementById('select-month').value = s.month; document.getElementById('select-week').value = s.week; document.getElementById('select-font').value = s.font;
+            stateDB = s.db; activeKey = s.ak; deletedProjects = s.dp || []; currentZoom = s.zoom; document.getElementById('dashboard-container').style.zoom = currentZoom;
+            document.getElementById('btn-undo').disabled = false; document.getElementById('btn-redo').disabled = !redoStack.length;
+            if(handlesOn && !isViewer) document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
         }
     </script>
 </body>
