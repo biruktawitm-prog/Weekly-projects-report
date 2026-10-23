@@ -1,71 +1,2492 @@
-// ================= MONITORING CENTER LOGIC =================
-        function openMonitoringCenter() {
-            document.getElementById('dashboard-container').style.display = 'none';
-            document.getElementById('monitoring-overlay').style.display = 'block';
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>UNOPS HAMCO - Executive Project Dashboard</title>
+
+    <!-- Professional Fonts -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+
+            --bg-dark: #090d16;
+
+            --panel-border: rgba(255, 255, 255, 0.08);
+
+            --text-main: #f3f4f6;
+
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+
+            --font-mono: 'JetBrains Mono', monospace;
+
+        }
+
+
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-sans); min-height: 100vh; padding: 12px 18px; transition: font-family 0.3s ease; }
+
+
+
+        /* Top Bar Navigation & Controls */
+
+        .top-studio-bar {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            background: #111827;
+
+            border: 1px solid var(--panel-border);
+
+            padding: 10px 16px;
+
+            border-radius: 8px;
+
+            margin-bottom: 12px;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+
+        .bar-group { display: flex; align-items: center; gap: 8px; }
+
+
+
+        .dropdown-select {
+
+            background: #1f2937;
+
+            color: #f3f4f6;
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+
+            padding: 6px 10px;
+
+            border-radius: 6px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            outline: none;
+
+            cursor: pointer;
+
+        }
+
+        .dropdown-select:focus { border-color: #3b82f6; box-shadow: 0 0 6px rgba(59, 130, 246, 0.4); }
+
+
+
+        .btn-studio {
+
+            background: #1f2937;
+
+            color: #d1d5db;
+
+            border: 1px solid rgba(255, 255, 255, 0.12);
+
+            padding: 6px 12px;
+
+            border-radius: 6px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: all 0.2s;
+
+        }
+
+        .btn-studio:hover { background: #374151; color: #ffffff; }
+
+
+
+        .btn-action-green {
+
+            background: #059669;
+
+            color: white;
+
+            border: 1px solid #10b981;
+
+            padding: 6px 14px;
+
+            border-radius: 6px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+        }
+
+        .btn-action-green:hover { background: #047857; }
+
+
+
+        /* Dashboard Container */
+
+        .dashboard-container { transition: zoom 0.2s ease; }
+
+
+
+        /* Handle Controls */
+
+        .card-controls {
+
+            display: flex; justify-content: space-between; align-items: center;
+
+            background: #e2e8f0; padding: 4px 8px; border-radius: 4px;
+
+            margin-bottom: 8px; font-size: 10px; color: #475569; font-weight: 700;
+
+            font-family: 'Plus Jakarta Sans', sans-serif;
+
+            cursor: grab;
+
+        }
+
+        .handles-off .card-controls { display: none !important; }
+
+        .span-btn { background: #cbd5e1; color: #475569; border: none; padding: 2px 6px; border-radius: 3px; font-size: 9px; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;}
+
+        .span-btn.active { background: #2563eb; color: white; }
+
+        
+
+        .col-span-1 { grid-column: span 1 !important; }
+
+        .col-span-2 { grid-column: 1 / -1 !important; }
+
+
+
+        /* ================= EXECUTIVE LIGHT STYLES ================= */
+
+        .light-theme { background-color: #f8fafc; color: #0f172a; border-radius: 10px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+
+        .light-header-banner { background: linear-gradient(135deg, #0f4c81, #1e3a8a); color: white; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+
+        .light-header-title h2 { font-size: 20px; font-weight: 800; text-transform: uppercase; margin: 0; }
+
+        .light-header-title p { font-size: 11px; opacity: 0.85; margin: 4px 0 0 0; }
+
+
+
+        /* Radial Rings */
+
+        .radial-flex { display: flex; align-items: center; gap: 12px; }
+
+        .radial-container { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
+
+        .radial-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+
+        .radial-bg { fill: none; stroke: #e2e8f0; stroke-width: 5; }
+
+        .radial-val { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease; }
+
+        .radial-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; font-weight: 800; font-family: var(--font-mono); }
+
+
+
+        .light-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+
+        .light-kpi-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; }
+
+        .light-kpi-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif;}
+
+        .light-kpi-value { font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); }
+
+
+
+        /* EQUAL COLUMNS & DENSE FLOW FOR PERFECT SNAPPING */
+
+        .light-main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: start; grid-auto-flow: row dense; }
+
+        
+
+        .light-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; position: relative; page-break-inside: avoid; break-inside: avoid;}
+
+        .light-card.dragging { opacity: 0.4; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px dashed #3b82f6; }
+
+        
+
+        .light-card-title { font-size: 11px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; margin-bottom: 8px; }
+
+
+
+        .red-flag-item { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 11px; line-height: 1.35; position: relative; }
+
+        .red-flag-bullet { color: #ef4444; font-size: 18px; line-height: 1; margin-top: -3px; font-weight: bold; font-family: Arial, sans-serif;}
+
+        .delete-bullet-btn { background: none; border: none; color: #ef4444; font-weight: bold; font-size: 12px; cursor: pointer; padding: 0 4px; opacity: 0.6; transition: opacity 0.2s; }
+
+        .delete-bullet-btn:hover { opacity: 1.0; }
+
+
+
+        .pipeline-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
+
+        .pipeline-step { background: #f1f5f9; padding: 8px 6px; border-radius: 6px; text-align: center; border: 1px solid #cbd5e1; }
+
+        .pipeline-step.active { background: #dbeafe; border-color: #3b82f6; }
+
+        .pipeline-step.completed { background: #d1fae5; border-color: #10b981; }
+
+        .pipeline-step-name { font-size: 10px; font-weight: 700; color: #0f172a; }
+
+        .pipeline-step-status { font-size: 9px; color: #64748b; margin-top: 2px; }
+
+
+
+        .rec-tag { background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif;}
+
+
+
+        [contenteditable="true"] { outline: none; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
+
+        [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.08); outline: 1px dashed #3b82f6; }
+
+        [contenteditable="true"]:focus { background: rgba(59, 130, 246, 0.15); outline: 2px solid #3b82f6; }
+
+
+
+        /* ENSURES BULLET LISTS SHOW CORRECTLY INSIDE TEXT BOXES */
+
+        [contenteditable="true"] ul, [contenteditable="true"] ol { margin: 4px 0 4px 24px; padding: 0; }
+
+        [contenteditable="true"] li { margin-bottom: 4px; display: list-item; list-style-position: outside; }
+
+
+
+        /* ================= MONITORING OVERLAY ================= */
+
+        .monitoring-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8fafc; z-index: 9999; padding: 40px; overflow-y: auto; display: none; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        .mon-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
+
+        .mon-table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
+
+        .mon-table th, .mon-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 12px; vertical-align: top; }
+
+        .mon-table th { background: #1e293b; color: white; font-weight: 700; text-transform: uppercase; font-size: 11px; }
+
+        .mon-rf-list { margin: 0; padding-left: 16px; color: #ef4444; list-style-type: disc; }
+
+        .mon-rf-list li { margin-bottom: 6px; line-height: 1.35; }
+
+
+
+        /* ================= VIEWER MODE STYLES ================= */
+
+        .viewer-mode .card-controls,
+
+        .viewer-mode .delete-bullet-btn,
+
+        .viewer-mode .btn-action-green,
+
+        .viewer-mode button[title="Add New Project"],
+
+        .viewer-mode button[title="Edit Project Name"],
+
+        .viewer-mode button[title="Delete Current Project"],
+
+        .viewer-mode #btn-handles,
+
+        .viewer-mode button[title="Format as Bullet List"],
+
+        .viewer-mode #btn-undo,
+
+        .viewer-mode #btn-redo,
+
+        .viewer-mode button[onclick="addCustomBlock(true)"] {
+
+            display: none !important;
+
+        }
+
+
+
+        /* ================= PERFECT 1-PAGE PDF PRINT SETTINGS ================= */
+
+        @media print { 
+
+            @page { size: landscape; margin: 5mm; }
+
+            body { 
+
+                padding: 0; 
+
+                background: #f8fafc !important; 
+
+                -webkit-print-color-adjust: exact !important; 
+
+                print-color-adjust: exact !important; 
+
+                zoom: 0.75; 
+
+            }
+
+            .top-studio-bar { display: none !important; } 
+
+            .no-print { display: none !important; }
+
+            .monitoring-overlay { display: none !important; }
+
+            .light-theme { box-shadow: none !important; padding: 0 !important; }
+
+            .card-controls { display: none !important; }
+
+            .delete-bullet-btn { display: none !important; }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <!-- TOP CONTROL TOOLBAR -->
+
+    <div class="top-studio-bar">
+
+        <div class="bar-group">
+
+            <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📁 Project:</span>
+
+            <select class="dropdown-select" id="select-project" onchange="changeProject(true)">
+
+                <option value="nimule">Nimule One Stop Border Post</option>
+
+                <option value="japan">Japan Infrastructure Project</option>
+
+                <option value="flood">Flood Mitigation Project</option>
+
+            </select>
+
+            <button class="btn-studio" onclick="addNewProject()" title="Add New Project" style="padding: 6px 10px;">➕</button>
+
+            <button class="btn-studio" onclick="editProjectName()" title="Edit Project Name" style="padding: 6px 10px;">✏️</button>
+
+            <button class="btn-studio" onclick="deleteCurrentProject()" title="Delete Current Project" style="padding: 6px 10px; color: #ef4444;">🗑️</button>
+
+        </div>
+
+
+
+        <div class="bar-group">
+
+            <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">📅 Period:</span>
+
+            <select class="dropdown-select" id="select-month" onchange="changeProject(true)">
+
+                <option value="January">January</option>
+
+                <option value="February">February</option>
+
+                <option value="March">March</option>
+
+                <option value="April">April</option>
+
+                <option value="May">May</option>
+
+                <option value="June">June</option>
+
+                <option value="July">July</option>
+
+                <option value="August">August</option>
+
+                <option value="September">September</option>
+
+                <option value="October" selected>October</option>
+
+                <option value="November">November</option>
+
+                <option value="December">December</option>
+
+            </select>
+
+            <select class="dropdown-select" id="select-week" onchange="changeProject(true)">
+
+                <option value="Week 1" selected>Week 1</option>
+
+                <option value="Week 2">Week 2</option>
+
+                <option value="Week 3">Week 3</option>
+
+                <option value="Week 4">Week 4</option>
+
+            </select>
+
+        </div>
+
+
+
+        <div class="bar-group">
+
+            <span style="font-size: 11px; font-weight: 700; color: #9ca3af;">Aa Font:</span>
+
+            <select class="dropdown-select" id="select-font" onchange="changeFont(true)">
+
+                <option value="'Plus Jakarta Sans', sans-serif">Jakarta (Modern)</option>
+
+                <option value="'Inter', sans-serif">Inter (Clean)</option>
+
+                <option value="'Roboto', sans-serif">Roboto (Corporate)</option>
+
+                <option value="'Poppins', sans-serif">Poppins (Round)</option>
+
+                <option value="'Merriweather', serif">Merriweather (Serif)</option>
+
+            </select>
+
+            <button class="btn-studio" onclick="changeZoom(-0.05, true)" title="Minimize Text">A-</button>
+
+            <button class="btn-studio" onclick="changeZoom(0.05, true)" title="Maximize Text">A+</button>
+
+        </div>
+
+
+
+        <div class="bar-group">
+
+            <button class="btn-studio" id="btn-handles" onclick="toggleHandles()">🛠️ Handles: ON</button>
+
+            <button class="btn-studio" onclick="addCustomBlock(true)">➕ Block</button>
+
+            <button class="btn-studio" onmousedown="event.preventDefault(); document.execCommand('insertUnorderedList')" title="Format as Bullet List">⠇ Bullets</button>
+
+            <button class="btn-studio" id="btn-undo" onclick="undo()" disabled>↩️ Undo</button>
+
+            <button class="btn-studio" id="btn-redo" onclick="redo()" disabled>↪️ Redo</button>
+
+        </div>
+
+
+
+        <div class="bar-group">
+
+            <button class="btn-studio" onclick="openMonitoringCenter()" style="background: #4f46e5; color: white; border:none; padding: 6px 14px; font-size: 11px;">📊 Monitoring</button>
+
+            <button class="btn-action-green" onclick="saveLayout()">💾 Save</button>
+
+            <button class="btn-studio" onclick="window.print()">🖨️ PDF</button>
+
+            <button class="btn-studio" id="btn-share" onclick="shareDashboard()" style="background: #2563eb; color: white; border-color: #3b82f6;">📤 Share Collab Link</button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= DASHBOARD CONTAINER ================= -->
+
+    <div id="dashboard-container" class="dashboard-container">
+
+        <div class="light-theme">
+
             
+
+            <div class="light-header-banner">
+
+                <div class="light-header-title">
+
+                    <h2 id="l-main-title" contenteditable="true">WEEKLY PROJECT UPDATES NIMULE OSBP</h2>
+
+                    <p id="l-sub-title" contenteditable="true">Nimule OSBP Construction Project</p>
+
+                </div>
+
+                <div style="text-align: right; font-size: 11px;">
+
+                    <div><strong>Reporting Period:</strong> <span id="l-period-tag" contenteditable="true">October 2026 - Week 1</span></div>
+
+                    <div><strong>Location:</strong> <span id="l-location-tag" contenteditable="true">Nimule, South Sudan</span></div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- KPI & RADIAL RINGS SECTION -->
+
+            <div class="light-main-grid handles-off" style="grid-template-columns: 1fr 1fr 1.25fr; margin-bottom: 12px;" id="kpi-grid">
+
+                <div class="light-card col-span-1" id="kpi-card-1" style="grid-column: span 1;">
+
+                    <div class="card-controls"><span>⠿ Card 1</span></div>
+
+                    <div id="title-kpi-1" contenteditable="true" style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">PROJECT TIMELINE & ELAPSED DAYS</div>
+
+                    <div class="radial-flex">
+
+                        <div class="radial-container">
+
+                            <svg class="radial-svg" viewBox="0 0 64 64">
+
+                                <circle class="radial-bg" cx="32" cy="32" r="28"></circle>
+
+                                <circle class="radial-val" id="l-ring-time" cx="32" cy="32" r="28" stroke="#3b82f6" stroke-dasharray="175.93" stroke-dashoffset="110.3"></circle>
+
+                            </svg>
+
+                            <div class="radial-text" style="color: #3b82f6;" id="l-ring-time-val" contenteditable="true">37.3%</div>
+
+                        </div>
+
+                        <div>
+
+                            <div style="font-size: 18px; font-weight: 800; color: #0f172a;" id="l-rem-days" contenteditable="true">1,067 Days Rem</div>
+
+                            <div style="font-size: 10px; color: #64748b;" id="l-elapsed-days" contenteditable="true">636 of 1,703 Days Elapsed</div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="light-card col-span-1" id="kpi-card-2" style="grid-column: span 1;">
+
+                    <div class="card-controls"><span>⠿ Card 2</span></div>
+
+                    <div id="title-kpi-2" contenteditable="true" style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">FINANCIAL EXECUTION RATE</div>
+
+                    <div class="radial-flex">
+
+                        <div class="radial-container">
+
+                            <svg class="radial-svg" viewBox="0 0 64 64">
+
+                                <circle class="radial-bg" cx="32" cy="32" r="28"></circle>
+
+                                <circle class="radial-val" id="l-ring-fin" cx="32" cy="32" r="28" stroke="#059669" stroke-dasharray="175.93" stroke-dashoffset="143.3"></circle>
+
+                            </svg>
+
+                            <div class="radial-text" style="color: #059669;" id="l-ring-fin-val" contenteditable="true">18.5%</div>
+
+                        </div>
+
+                        <div>
+
+                            <div style="font-size: 13px; font-weight: 800; color: #0f172a;" id="l-budget-total" contenteditable="true">Total: $10,845,990</div>
+
+                            <div style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 2px;" id="l-budget-exp" contenteditable="true">Exp: $2,009,685.02</div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="light-card col-span-1" id="kpi-card-3" style="border-left: 3px solid #059669; grid-column: span 1;">
+
+                    <div class="card-controls"><span>⠿ Card 3</span></div>
+
+                    <div style="font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase;" id="l-design-head" contenteditable="true">IPMG DESIGN APPROVAL</div>
+
+                    <div style="font-size: 14px; font-weight: 800; color: #059669;" id="l-design-status" contenteditable="true">APPROVED / 100% DONE</div>
+
+                    <div style="font-size: 10px; color: #64748b; margin-top: 4px;" id="l-design-desc" contenteditable="true">Design completed in September. Process took ~4 months (2-month delay).</div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- MAIN CONTENT AREA WITH FLATTENED GRID -->
+
+            <div class="light-main-grid handles-off" id="main-content-grid">
+
+                <!-- Javascript will instantly load the pure template here -->
+
+            </div>
+
+
+
+            <!-- MANAGER COMMENT SECTION (HIDDEN ON PDF) -->
+
+            <div class="no-print" style="margin-top: 20px; background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 8px; padding: 12px;">
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+
+                    <div id="title-manager-comments" contenteditable="true" style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">💬 Manager Comments / Next Steps (Hidden in PDF)</div>
+
+                    <button onclick="emailManagerComment()" style="background: #0ea5e9; color: white; border: none; padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s;">Send</button>
+
+                </div>
+
+                <div id="manager-comments" contenteditable="true" style="font-size: 12px; color: #334155; min-height: 50px; background: white; padding: 10px; border-radius: 4px; border: 1px solid #cbd5e1;"></div>
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= MONITORING OVERLAY ================= -->
+
+    <div id="monitoring-overlay" class="monitoring-overlay">
+
+        <div class="mon-header">
+
+            <div>
+
+                <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">📊 PMO Dashboard Monitoring Center</h1>
+
+                <p style="font-size: 13px; color: #64748b;">Global overview of red flags across all tracked projects.</p>
+
+            </div>
+
+            <button onclick="closeMonitoringCenter()" class="btn-action-green" style="background: #ef4444; border-color: #dc2626; font-size: 14px;">✖ Close Report</button>
+
+        </div>
+
+        <table class="mon-table">
+
+            <thead>
+
+                <tr>
+
+                    <th style="width: 15%;">Project Name</th>
+
+                    <th style="width: 10%;">Responsible</th>
+
+                    <th style="width: 15%;">Last Updated</th>
+
+                    <th style="width: 5%;">Total</th>
+
+                    <th style="width: 55%;">Key Gaps & Red Flags</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="mon-tbody">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+
+    <!-- PURE TEMPLATE -->
+
+    <template id="default-grid-template">
+
+        <div class="light-card col-span-1" id="card-timeline">
+
+            <div class="card-controls">
+
+                <span>⠿ Drag Timeline</span>
+
+                <div>
+
+                    <button class="span-btn active" onclick="setSpan('card-timeline', 1)">1 Col</button>
+
+                    <button class="span-btn" onclick="setSpan('card-timeline', 2)">2 Col</button>
+
+                    <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-timeline', event)">❌</button>
+
+                </div>
+
+            </div>
+
+            <div class="light-card-title" id="title-timeline" contenteditable="true">🚩 PROJECT TIMELINE vs BASELINE</div>
+
+            <div style="font-size: 11px; margin-bottom: 6px;" id="l-timeline-window" contenteditable="true">
+
+                <strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)
+
+            </div>
+
+            <div style="font-size: 11px; color: #dc2626; font-weight: 700;" id="l-delay-tag" contenteditable="true">
+
+                Current Delay: 5 to 6 months behind baseline schedule
+
+            </div>
+
+        </div>
+
+
+
+        <div class="light-card col-span-1" id="card-red-flags" style="border-left: 4px solid #ef4444; grid-row: span 2;">
+
+            <div class="card-controls">
+
+                <span>⠿ Drag Red Flags</span>
+
+                <div>
+
+                    <button class="span-btn" onclick="addRedFlag(event)" style="color: #ef4444; font-weight: bold;" title="Add Red Flag Bullet">➕ Bullet</button>
+
+                    <button class="span-btn active" onclick="setSpan('card-red-flags', 1)">1 Col</button>
+
+                    <button class="span-btn" onclick="setSpan('card-red-flags', 2)">2 Col</button>
+
+                    <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-red-flags', event)">❌</button>
+
+                </div>
+
+            </div>
+
+            <div class="light-card-title" id="title-red-flags" contenteditable="true" style="color: #dc2626;">❗️ KEY GAPS & RED FLAGS</div>
+
+            <div id="red-flags-container">
+
+                <!-- Generated Dynamically -->
+
+            </div>
+
+        </div>
+
+
+
+        <div class="light-card col-span-1" id="card-pipeline">
+
+            <div class="card-controls">
+
+                <span>⠿ Drag Phase Status</span>
+
+                <div>
+
+                    <button class="span-btn active" onclick="setSpan('card-pipeline', 1)">1 Col</button>
+
+                    <button class="span-btn" onclick="setSpan('card-pipeline', 2)">2 Col</button>
+
+                    <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('card-pipeline', event)">❌</button>
+
+                </div>
+
+            </div>
+
+            <div class="light-card-title" id="title-phase-status" contenteditable="true">⚙️ PROJECT PHASE STATUS</div>
+
+            <div class="pipeline-container">
+
+                <div class="pipeline-step completed">
+
+                    <div class="pipeline-step-name">Inception</div>
+
+                    <div class="pipeline-step-status" id="pipe-1" contenteditable="true">Completed</div>
+
+                </div>
+
+                <div class="pipeline-step completed">
+
+                    <div class="pipeline-step-name">Design/IPMG</div>
+
+                    <div class="pipeline-step-status" id="pipe-2" contenteditable="true">Approved</div>
+
+                </div>
+
+                <div class="pipeline-step active">
+
+                    <div class="pipeline-step-name">Procurement</div>
+
+                    <div class="pipeline-step-status" id="pipe-3" contenteditable="true">Active</div>
+
+                </div>
+
+                <div class="pipeline-step">
+
+                    <div class="pipeline-step-name">Construction</div>
+
+                    <div class="pipeline-step-status" id="pipe-4" contenteditable="true">Pending</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="light-card col-span-2" id="card-rec" style="background: #0f172a; color: white; padding: 12px 16px;">
+
+            <div class="card-controls" style="background: rgba(255,255,255,0.15); color: #e2e8f0; border: none; margin-bottom: 12px;">
+
+                <span>⠿ Drag Key Recommendation</span>
+
+                <div>
+
+                    <button class="span-btn" onclick="setSpan('card-rec', 1)" style="color: #cbd5e1; background: rgba(0,0,0,0.3);">1 Col</button>
+
+                    <button class="span-btn active" onclick="setSpan('card-rec', 2)" style="color: white; background: #2563eb;">2 Col</button>
+
+                    <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px; background: rgba(0,0,0,0.3);" title="Delete Block" onclick="deleteBlock('card-rec', event)">❌</button>
+
+                </div>
+
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+
+                <div class="rec-tag" id="title-recommendation-tag" contenteditable="true">KEY RECOMMENDATION</div>
+
+                <div style="font-size: 11px; line-height: 1.4; color: white; flex: 1; min-width: 200px;" id="l-recommendation" contenteditable="true">
+
+                    It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </template>
+
+
+
+    <script>
+
+        let handlesOn = false; 
+
+        let undoStack = []; 
+
+        let redoStack = []; 
+
+        let customBlockCount = 0;
+
+        let currentZoom = 1;
+
+        let customEdits = {}; 
+
+        let cardLayouts = {}; 
+
+        
+
+        let stateDB = {};
+
+        let customProjects = {};
+
+        let activeKey = "nimule_October_Week 1";
+
+        let defaultGridHTML = "";
+
+
+
+        const projectData = {
+
+            nimule: {
+
+                title: "WEEKLY PROJECT UPDATES NIMULE OSBP",
+
+                subTitle: "Nimule OSBP Construction Project",
+
+                location: "Nimule, South Sudan",
+
+                delayBadge: "Current Delay: 5 to 6 months behind baseline schedule",
+
+                plannedWindow: "<strong>Planned Window:</strong> Jan 1, 2025 – Aug 31, 2029 (1,703 days)",
+
+                timePct: 37.3, finPct: 18.5,
+
+                remDays: "1,067 Days Rem", elapsedDays: "636 of 1,703 Days Elapsed",
+
+                budgetTotal: "Total: $10,845,990.00", budgetExp: "Exp: $2,009,685.02",
+
+                designHead: "IPMG DESIGN APPROVAL", designStatus: "APPROVED / 100% DONE", designDesc: "Design completed in September. Process took ~4 months (2-month delay).",
+
+                pipe: ["Completed", "Approved", "Active (5.5m)", "Pending"],
+
+                recommendation: "It is essential to update and revise construction timelines for the OSBP Admin Building and Market Building to maintain realistic scheduling expectations and systematically record actual start and end dates across all site work plans and stages to strengthen real-time progress verification and quantitative variance analysis.",
+
+                responsible: "TBD",
+
+                redFlags: [
+
+                    "Project is 5 to 6 months behind baseline schedule.",
+
+                    "Roofing works not commenced due to active procurement.",
+
+                    "IPMG Design approval observed 2 months delay.",
+
+                    "Solicitation phase has a 5.5-month variance.",
+
+                    "Inception dates remain blank across actual tracking.",
+
+                    "Schedule discrepancy between dashboard and oneUNOPS."
+
+                ]
+
+            },
+
+            japan: {
+
+                title: "WEEKLY PROJECT UPDATES JAPAN INFRASTRUCTURE",
+
+                subTitle: "Japan Grant Aid Infrastructure Support",
+
+                location: "Juba, South Sudan",
+
+                delayBadge: "ON SCHEDULE / NORMAL",
+
+                plannedWindow: "<strong>Planned Window:</strong> Jan 1, 2025 – Dec 31, 2027",
+
+                timePct: 42.5, finPct: 54.2,
+
+                remDays: "420 Days Rem", elapsedDays: "310 of 730 Days Elapsed",
+
+                budgetTotal: "Total: $6,000,000.00", budgetExp: "Exp: $3,250,000.00",
+
+                designHead: "PHASE STATUS", designStatus: "APPROVED", designDesc: "Design phase fully approved and documented.",
+
+                pipe: ["Completed", "Approved", "Active", "Pending"],
+
+                recommendation: "Maintain close coordination with local port authorities to expedite remaining logistics clearance.",
+
+                responsible: "TBD",
+
+                redFlags: [
+
+                    "Port clearance delays experienced at Mombasa terminal.",
+
+                    "Minor fuel cost variance observed in regional transport.",
+
+                    "Site civil works progressing within expected timelines.",
+
+                    "Quality assurance audit scheduled for end of month.",
+
+                    "Environmental impact assessment updated and approved.",
+
+                    "Stakeholder committee review completed with positive feedback."
+
+                ]
+
+            },
+
+            flood: {
+
+                title: "WEEKLY PROJECT UPDATES FLOOD MITIGATION",
+
+                subTitle: "Emergency Flood Mitigation & Dike Construction",
+
+                location: "Bentiu & Malakal, South Sudan",
+
+                delayBadge: "42.57% PROGRESS GAP",
+
+                plannedWindow: "<strong>Planned Window:</strong> Activities through 31 Mar 2027",
+
+                timePct: 70.2, finPct: 25.6,
+
+                remDays: "End: 31 Mar 2027", elapsedDays: "70.25% Elapsed / 27.68% Physical",
+
+                budgetTotal: "Total: $9,860,000.00", budgetExp: "Exp: $2,500,000.00",
+
+                designHead: "INCEPTION & ASSESSMENT", designStatus: "IN PROGRESS", designDesc: "Preparation of Technical documents and design approval for Water Yards remains In Progress (planned for June 1, 2026).",
+
+                pipe: ["In Progress", "Delayed", "Active", "Delayed (6m)"],
+
+                recommendation: "In the forecast to delivery percentage, there is an over forecasting trend noticed with a total forecasted value of -7,859,796.48 USD over the past 10 months.",
+
+                responsible: "TBD",
+
+                redFlags: [
+
+                    "42.57% point gap between elapsed time (70.25%) based on amended end date and physical progress (27.68%).",
+
+                    "Preparation of Technical documents and design approval for Water Yards remains In Progress.",
+
+                    "Procurement: 1 activity in progress is 4 months behind schedule (June 17, 2026).",
+
+                    "Procurement: 2 activities not started, 4 months behind schedule (July 4, 2026).",
+
+                    "Works & Contract Management: 6-month delay overall. 5 activities not started.",
+
+                    "Over forecasting trend noticed with a total forecasted value of -$7.85M over the past 10 months."
+
+                ]
+
+            }
+
+        };
+
+
+
+        // ================= MONITORING CENTER LOGIC =================
+
+        function openMonitoringCenter() {
+
+            document.getElementById('dashboard-container').style.display = 'none';
+
+            document.getElementById('monitoring-overlay').style.display = 'block';
+
+            
+
             const tbody = document.getElementById('mon-tbody');
+
             tbody.innerHTML = "";
 
+
+
             const allProjects = {...projectData};
+
             for (const cId in customProjects) {
+
                 if(!allProjects[cId]) allProjects[cId] = customProjects[cId].data;
+
             }
+
+
 
             for (const pId in allProjects) {
-                if(deletedProjects.includes(pId)) continue; 
 
                 let pName = allProjects[pId].title.replace("WEEKLY PROJECT UPDATES ", "");
+
                 let responsible = allProjects[pId].responsible || "TBD";
+
                 let lastUpdated = "Default Data";
+
                 let redFlagsHTML = "";
+
                 let totalFlags = 0;
 
-                // Scan all saved weeks/months for this project in stateDB to find the active red flags card
-                let foundCardHTML = null;
+
+
+                let latestSavedHTML = null;
+
                 for (const key in stateDB) {
+
                     if (key.startsWith(pId + "_")) {
-                        foundCardHTML = stateDB[key].html;
+
+                        latestSavedHTML = stateDB[key].html;
+
                         lastUpdated = key.replace(pId + "_", "").replace("_", " "); 
+
                     }
+
                 }
 
-                if (foundCardHTML) {
+
+
+                if (latestSavedHTML) {
+
                     const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = foundCardHTML;
-                    // Extract directly from the KEY GAPS & RED FLAGS card container
-                    const rfCard = tempDiv.querySelector('#card-red-flags') || tempDiv.querySelector('.light-card');
-                    if (rfCard) {
-                        const items = rfCard.querySelectorAll('.red-flag-item div[contenteditable="true"]');
-                        totalFlags = items.length;
-                        items.forEach(item => {
-                            if(item.innerText.trim() !== "") {
-                                redFlagsHTML += `<li>${item.innerText}</li>`;
-                            }
-                        });
-                    }
-                } 
-                
-                // Fallback to initial data array if no saved state exists yet
-                if (totalFlags === 0 && allProjects[pId].redFlags) {
-                    const flags = allProjects[pId].redFlags;
-                    totalFlags = flags.length;
-                    flags.forEach(f => {
-                        redFlagsHTML += `<li>${f}</li>`;
+
+                    tempDiv.innerHTML = latestSavedHTML;
+
+                    const items = tempDiv.querySelectorAll('.red-flag-item');
+
+                    totalFlags = items.length;
+
+                    items.forEach(item => {
+
+                        const textDiv = item.querySelector('div[contenteditable]');
+
+                        if(textDiv) redFlagsHTML += `<li>${textDiv.innerText}</li>`;
+
                     });
+
+                } else {
+
+                    const flags = allProjects[pId].redFlags || [];
+
+                    totalFlags = flags.length;
+
+                    flags.forEach(f => {
+
+                        redFlagsHTML += `<li>${f}</li>`;
+
+                    });
+
                 }
+
+
 
                 if(totalFlags === 0 || redFlagsHTML === "") {
+
                     redFlagsHTML = "<li style='color:#10b981; list-style-type: none; margin-left:-16px;'>No red flags reported.</li>";
+
                 }
 
+
+
                 tbody.innerHTML += `
+
                     <tr>
+
                         <td style="font-weight: 800; color: #1e3a8a;">${pName}</td>
+
                         <td style="font-weight: 600;">${responsible}</td>
+
                         <td style="color: #64748b;">${lastUpdated}</td>
+
                         <td style="font-weight: 800; font-size: 14px;">${totalFlags}</td>
+
                         <td><ul class="mon-rf-list">${redFlagsHTML}</ul></td>
+
                     </tr>
+
                 `;
+
             }
+
         }
+
+
+
+        function closeMonitoringCenter() {
+
+            document.getElementById('monitoring-overlay').style.display = 'none';
+
+            document.getElementById('dashboard-container').style.display = 'block';
+
+        }
+
+
+
+        function setRing(id, pctStr) {
+
+            const circle = document.getElementById(id);
+
+            if(circle) {
+
+                let numericPct = parseFloat(String(pctStr).replace('%', ''));
+
+                if (isNaN(numericPct)) numericPct = 0;
+
+                const circumference = 175.93; 
+
+                const offset = circumference - (Math.min(Math.max(numericPct, 0), 100) / 100 * circumference);
+
+                circle.style.strokeDashoffset = offset;
+
+            }
+
+        }
+
+
+
+        function changeFont(isUserTriggered = false) {
+
+            if(isUserTriggered) saveStateForUndo();
+
+            const font = document.getElementById('select-font').value;
+
+            document.body.style.fontFamily = font;
+
+            document.documentElement.style.setProperty('--font-sans', font);
+
+        }
+
+
+
+        function changeZoom(delta, isUserTriggered = false) {
+
+            if(isUserTriggered) saveStateForUndo();
+
+            currentZoom += delta;
+
+            if(currentZoom < 0.5) currentZoom = 0.5;
+
+            if(currentZoom > 2.0) currentZoom = 2.0;
+
+            document.getElementById('dashboard-container').style.zoom = currentZoom;
+
+        }
+
+
+
+        function addNewProject() {
+
+            const name = prompt("Enter new project name:");
+
+            if(name) {
+
+                const id = 'proj_' + Math.random().toString(36).substr(2, 5);
+
+                const newProjData = {
+
+                    title: "WEEKLY PROJECT UPDATES " + name.toUpperCase(),
+
+                    subTitle: name + " Construction Project",
+
+                    location: "TBD",
+
+                    delayBadge: "NEW PROJECT",
+
+                    plannedWindow: "",
+
+                    timePct: 0, finPct: 0,
+
+                    remDays: "TBD Days Rem", elapsedDays: "0 Days Elapsed",
+
+                    budgetTotal: "Total: $0.00", budgetExp: "Exp: $0.00",
+
+                    designHead: "PHASE STATUS", designStatus: "PENDING", designDesc: "Not yet started.",
+
+                    pipe: ["Pending", "Pending", "Pending", "Pending"],
+
+                    recommendation: "New project added. Awaiting first status report.",
+
+                    responsible: "TBD",
+
+                    redFlags: ["No data submitted yet."]
+
+                };
+
+                
+
+                projectData[id] = newProjData;
+
+                customProjects[id] = { name: name, data: newProjData };
+
+
+
+                const opt = document.createElement('option');
+
+                opt.value = id;
+
+                opt.innerHTML = name;
+
+                document.getElementById('select-project').appendChild(opt);
+
+                document.getElementById('select-project').value = id;
+
+                changeProject(true);
+
+            }
+
+        }
+
+
+
+        function editProjectName() {
+
+            const selectEl = document.getElementById('select-project');
+
+            const currentId = selectEl.value;
+
+            const currentOption = selectEl.options[selectEl.selectedIndex];
+
+            
+
+            const newName = prompt("Edit project name:", currentOption.text);
+
+            if (newName && newName.trim() !== "") {
+
+                saveStateForUndo();
+
+                currentOption.text = newName;
+
+                if (projectData[currentId]) {
+
+                    projectData[currentId].title = "WEEKLY PROJECT UPDATES " + newName.toUpperCase();
+
+                    projectData[currentId].subTitle = newName + " Construction Project";
+
+                    document.getElementById('l-main-title').innerHTML = projectData[currentId].title;
+
+                    document.getElementById('l-sub-title').innerHTML = projectData[currentId].subTitle;
+
+                }
+
+                if (customProjects[currentId]) {
+
+                    customProjects[currentId].name = newName;
+
+                }
+
+                saveLayout(false);
+
+            }
+
+        }
+
+
+
+        function deleteCurrentProject() {
+
+            const selectEl = document.getElementById('select-project');
+
+            const currentId = selectEl.value;
+
+            const currentOption = selectEl.options[selectEl.selectedIndex];
+
+
+
+            if (selectEl.options.length <= 1) {
+
+                alert("Cannot delete the only remaining project.");
+
+                return;
+
+            }
+
+
+
+            if (confirm(`Are you sure you want to delete "${currentOption.text}"?`)) {
+
+                saveStateForUndo();
+
+                
+
+                delete projectData[currentId];
+
+                delete customProjects[currentId];
+
+
+
+                // Delete saved entries in stateDB for this project
+
+                for (const k in stateDB) {
+
+                    if (k.startsWith(currentId + "_")) {
+
+                        delete stateDB[k];
+
+                    }
+
+                }
+
+
+
+                currentOption.remove();
+
+                changeProject(true);
+
+                saveLayout(false);
+
+            }
+
+        }
+
+
+
+        function deleteSingleRedFlag(btnElement) {
+
+            saveStateForUndo();
+
+            const item = btnElement.closest('.red-flag-item');
+
+            if (item) {
+
+                item.remove();
+
+                saveCurrentViewToDB();
+
+            }
+
+        }
+
+
+
+        function saveCurrentViewToDB() {
+
+            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+
+                if(!el.id) el.id = 'edit_' + index;
+
+                customEdits[el.id] = el.innerHTML;
+
+            });
+
+            stateDB[activeKey] = {
+
+                e: JSON.parse(JSON.stringify(customEdits)),
+
+                html: document.getElementById('main-content-grid').innerHTML,
+
+                l: JSON.parse(JSON.stringify(cardLayouts)),
+
+                b: customBlockCount
+
+            };
+
+        }
+
+
+
+        function changeProject(isUserTriggered = false) {
+
+            if(isUserTriggered) {
+
+                saveStateForUndo();
+
+                saveCurrentViewToDB();
+
+                
+
+                const tempState = {
+
+                    p: document.getElementById('select-project').value,
+
+                    m: document.getElementById('select-month').value,
+
+                    w: document.getElementById('select-week').value,
+
+                    f: document.getElementById('select-font').value, 
+
+                    z: currentZoom, 
+
+                    db: stateDB,
+
+                    cp: customProjects
+
+                };
+
+                localStorage.setItem('hamco_dashboard_master', JSON.stringify(tempState));
+
+            }
+
+            
+
+            const pId = document.getElementById('select-project').value;
+
+            const m = document.getElementById('select-month').value;
+
+            const w = document.getElementById('select-week').value;
+
+            activeKey = pId + "_" + m + "_" + w;
+
+
+
+            if(defaultGridHTML) {
+
+                document.getElementById('main-content-grid').innerHTML = defaultGridHTML;
+
+            }
+
+            
+
+            customEdits = {}; 
+
+            cardLayouts = {};
+
+            customBlockCount = 0;
+
+
+
+            const p = projectData[pId] || projectData['nimule'];
+
+            const hasData = (m === 'October' && w === 'Week 1') || p.delayBadge === "NEW PROJECT";
+
+
+
+            document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
+
+            document.getElementById('l-sub-title').innerHTML = p.subTitle;
+
+            document.getElementById('l-location-tag').innerHTML = p.location;
+
+            document.getElementById('l-period-tag').innerHTML = `${m} 2026 - ${w}`;
+
+            
+
+            document.getElementById('l-rem-days').innerHTML = hasData ? p.remDays : "--";
+
+            document.getElementById('l-elapsed-days').innerHTML = hasData ? p.elapsedDays : "Not yet updated for this period.";
+
+            document.getElementById('l-budget-total').innerHTML = hasData ? p.budgetTotal : "Total: --";
+
+            document.getElementById('l-budget-exp').innerHTML = hasData ? p.budgetExp : "Exp: --";
+
+            document.getElementById('l-design-head').innerHTML = hasData ? p.designHead : "PHASE STATUS";
+
+            document.getElementById('l-design-status').innerHTML = hasData ? p.designStatus : "PENDING";
+
+            document.getElementById('l-design-desc').innerHTML = hasData ? p.designDesc : "Awaiting weekly update.";
+
+            document.getElementById('l-delay-tag').innerHTML = hasData ? p.delayBadge : "No data submitted.";
+
+            document.getElementById('l-recommendation').innerHTML = hasData ? p.recommendation : "No recommendation submitted for this period.";
+
+
+
+            const timelineWinEl = document.getElementById('l-timeline-window');
+
+            if(timelineWinEl) {
+
+                timelineWinEl.innerHTML = hasData ? (p.plannedWindow || "") : "";
+
+            }
+
+
+
+            document.getElementById('l-ring-time-val').innerHTML = hasData ? p.timePct + '%' : '0%';
+
+            document.getElementById('l-ring-fin-val').innerHTML = hasData ? p.finPct + '%' : '0%';
+
+            setTimeout(() => { 
+
+                setRing('l-ring-time', hasData ? p.timePct : 0); 
+
+                setRing('l-ring-fin', hasData ? p.finPct : 0); 
+
+            }, 50);
+
+            
+
+            for(let i=0; i<4; i++) {
+
+                const pipeEl = document.getElementById(`pipe-${i+1}`);
+
+                if(pipeEl) pipeEl.innerHTML = hasData ? p.pipe[i] : "-";
+
+            }
+
+
+
+            const rfContainer = document.getElementById('red-flags-container');
+
+            if (rfContainer) {
+
+                rfContainer.innerHTML = ''; 
+
+                if (hasData && p.redFlags && p.redFlags.length > 0) {
+
+                    p.redFlags.forEach((rf, idx) => {
+
+                        rfContainer.innerHTML += `<div class="red-flag-item"><div class="red-flag-bullet">•</div><div id="rf-${idx+1}" contenteditable="true" style="flex: 1; font-size: 11px;">${rf}</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
+
+                    });
+
+                } else {
+
+                    rfContainer.innerHTML = `<div class="red-flag-item"><div class="red-flag-bullet" style="color:transparent;">•</div><div id="rf-1" contenteditable="true" style="flex: 1; font-size: 11px; color: #ef4444; font-weight: bold;">No red flags or data submitted for this period yet.</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button></div>`;
+
+                }
+
+            }
+
+
+
+            if (stateDB[activeKey]) {
+
+                const saved = stateDB[activeKey];
+
+                customBlockCount = saved.b || 0;
+
+                cardLayouts = saved.l || {};
+
+                customEdits = saved.e || {};
+
+                if (saved.html) {
+
+                    document.getElementById('main-content-grid').innerHTML = saved.html;
+
+                }
+
+                applyCustomEdits();
+
+            }
+
+
+
+            const cBox = document.getElementById('manager-comments');
+
+            if(cBox) {
+
+                if(!stateDB[activeKey] || !customEdits['manager-comments']) {
+
+                    cBox.innerHTML = "";
+
+                }
+
+            }
+
+
+
+            if(handlesOn) {
+
+                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
+
+            }
+
+        }
+
+
+
+        // ==========================================
+
+        // DRAG AND DROP LAYOUT ENGINE
+
+        // ==========================================
+
+        let draggedCard = null;
+
+
+
+        document.addEventListener("dragstart", function(event) {
+
+            if(handlesOn && event.target.classList.contains('light-card')) {
+
+                draggedCard = event.target;
+
+                setTimeout(() => event.target.classList.add('dragging'), 0);
+
+            }
+
+        });
+
+
+
+        document.addEventListener("dragend", function(event) {
+
+            if(handlesOn && event.target.classList.contains('light-card')) {
+
+                event.target.classList.remove('dragging');
+
+                draggedCard = null;
+
+                saveStateForUndo();
+
+            }
+
+        });
+
+
+
+        document.addEventListener("dragover", function(event) {
+
+            if(handlesOn && draggedCard) {
+
+                event.preventDefault(); 
+
+            }
+
+        });
+
+
+
+        document.addEventListener("drop", function(event) {
+
+            if(handlesOn && draggedCard) {
+
+                event.preventDefault();
+
+                const container = document.getElementById('main-content-grid');
+
+                const targetCard = event.target.closest('.light-card');
+
+                
+
+                if (targetCard && targetCard !== draggedCard && targetCard.parentNode === container) {
+
+                    const rect = targetCard.getBoundingClientRect();
+
+                    const isAfter = (event.clientY - rect.top) > (rect.height / 2);
+
+                    
+
+                    if (isAfter) {
+
+                        container.insertBefore(draggedCard, targetCard.nextSibling);
+
+                    } else {
+
+                        container.insertBefore(draggedCard, targetCard);
+
+                    }
+
+                    saveStateForUndo();
+
+                }
+
+            }
+
+        });
+
+
+
+        function toggleHandles() {
+
+            handlesOn = !handlesOn;
+
+            const btn = document.getElementById('btn-handles');
+
+            const grids = document.querySelectorAll('.light-main-grid');
+
+            const cards = document.querySelectorAll('#main-content-grid .light-card');
+
+            
+
+            if (handlesOn) { 
+
+                btn.innerHTML = '🛠️ Handles: ON'; 
+
+                grids.forEach(g => g.classList.remove('handles-off'));
+
+                cards.forEach(c => c.setAttribute('draggable', 'true'));
+
+            } else { 
+
+                btn.innerHTML = '🛠️ Handles: OFF'; 
+
+                grids.forEach(g => g.classList.add('handles-off'));
+
+                cards.forEach(c => c.removeAttribute('draggable'));
+
+            }
+
+        }
+
+
+
+        function setSpan(cardId, cols, isUserTriggered = true) {
+
+            if(isUserTriggered) saveStateForUndo();
+
+            const card = document.getElementById(cardId);
+
+            if(!card) return;
+
+            
+
+            card.classList.remove('col-span-1', 'col-span-2');
+
+            card.classList.add('col-span-' + cols);
+
+            cardLayouts[cardId] = cols;
+
+
+
+            if(cols === 2) {
+
+                card.style.gridColumn = '1 / -1';
+
+            } else {
+
+                card.style.gridColumn = 'span 1';
+
+            }
+
+
+
+            const btns = card.querySelectorAll('.span-btn');
+
+            btns.forEach((b, idx) => {
+
+                if (b.innerText === '❌' || b.innerText === '➕ Bullet') return; 
+
+                if (idx + 1 === cols) b.classList.add('active');
+
+                else b.classList.remove('active');
+
+            });
+
+        }
+
+
+
+        function addRedFlag(event) {
+
+            if(event) event.stopPropagation();
+
+            saveStateForUndo();
+
+            const container = document.getElementById('red-flags-container');
+
+            if(!container) return;
+
+            const newId = 'rf-' + Math.random().toString(36).substr(2, 5);
+
+            const div = document.createElement('div');
+
+            div.className = 'red-flag-item';
+
+            div.innerHTML = `<div class="red-flag-bullet">•</div><div id="${newId}" contenteditable="true" style="flex: 1; font-size: 11px;">Click to edit new red flag...</div><button class="delete-bullet-btn" onclick="deleteSingleRedFlag(this)" title="Delete Bullet">×</button>`;
+
+            container.appendChild(div);
+
+            customEdits[newId] = "Click to edit new red flag...";
+
+            saveCurrentViewToDB();
+
+        }
+
+
+
+        function deleteBlock(id, event) {
+
+            if(event) event.stopPropagation();
+
+            saveStateForUndo();
+
+            const el = document.getElementById(id);
+
+            if (el) el.remove();
+
+            saveCurrentViewToDB();
+
+        }
+
+
+
+        function addCustomBlock(isUserTriggered = false) {
+
+            if(isUserTriggered) saveStateForUndo();
+
+            
+
+            if (!handlesOn) toggleHandles();
+
+
+
+            customBlockCount++;
+
+            const container = document.getElementById('main-content-grid');
+
+            const id = 'custom-block-' + customBlockCount;
+
+            const newCard = document.createElement('div');
+
+            newCard.className = 'light-card col-span-2';
+
+            newCard.id = id;
+
+            newCard.style.gridColumn = '1 / -1'; 
+
+            if(handlesOn) newCard.setAttribute('draggable', 'true');
+
+            newCard.innerHTML = `
+
+                <div class="card-controls">
+
+                    <span>⠿ Drag Custom Block ${customBlockCount}</span>
+
+                    <div>
+
+                        <button class="span-btn" onclick="setSpan('${id}', 1)">1 Col</button>
+
+                        <button class="span-btn active" onclick="setSpan('${id}', 2)">2 Col</button>
+
+                        <button class="span-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block" onclick="deleteBlock('${id}', event)">❌</button>
+
+                    </div>
+
+                </div>
+
+                <div class="light-card-title" id="cb-title-${customBlockCount}" contenteditable="true">📌 CUSTOM STATUS BLOCK</div>
+
+                <div id="cb-text-${customBlockCount}" contenteditable="true" style="font-size: 11px; color: #475569; min-height: 30px;">Click here to edit this custom project note.</div>
+
+            `;
+
+            const recBar = document.getElementById('card-rec');
+
+            if(recBar) {
+
+                container.insertBefore(newCard, recBar);
+
+            } else {
+
+                container.appendChild(newCard);
+
+            }
+
+            cardLayouts[id] = 2;
+
+        }
+
+
+
+        // EDITABLE INPUT HANDLER WITH AUTOMATIC RADIAL RING RE-DRAW
+
+        document.addEventListener('input', function(e) {
+
+            if (e.target && e.target.getAttribute('contenteditable') === 'true') {
+
+                if (!e.target.id) e.target.id = 'edit_' + Math.random().toString(36).substr(2, 5);
+
+                customEdits[e.target.id] = e.target.innerHTML;
+
+
+
+                if (e.target.id === 'l-ring-time-val') {
+
+                    setRing('l-ring-time', e.target.innerText);
+
+                }
+
+                if (e.target.id === 'l-ring-fin-val') {
+
+                    setRing('l-ring-fin', e.target.innerText);
+
+                }
+
+            }
+
+        });
+
+
+
+        function applyCustomEdits() {
+
+            for (const id in customEdits) {
+
+                const el = document.getElementById(id);
+
+                if (el) {
+
+                    el.innerHTML = customEdits[id];
+
+                    if (id === 'l-ring-time-val') setRing('l-ring-time', el.innerText);
+
+                    if (id === 'l-ring-fin-val') setRing('l-ring-fin', el.innerText);
+
+                }
+
+            }
+
+        }
+
+
+
+        function emailManagerComment() {
+
+            const commentBox = document.getElementById('manager-comments');
+
+            const commentText = commentBox.innerText.trim();
+
+            const projSelect = document.getElementById('select-project');
+
+            const projName = projSelect.options[projSelect.selectedIndex].text;
+
+
+
+            if(!commentText) {
+
+                alert("Please write a comment in the box before clicking Send.");
+
+                return;
+
+            }
+
+
+
+            alert("Opening your email app to instantly route this message to biruktawitm@unops.org...");
+
+            
+
+            const subject = encodeURIComponent(`Dashboard Comment: ${projName}`);
+
+            const body = encodeURIComponent(commentText);
+
+            window.location.href = `mailto:biruktawitm@unops.org?subject=${subject}&body=${body}`;
+
+        }
+
+
+
+        async function shareDashboard() {
+
+            const btn = document.getElementById('btn-share');
+
+            const ogText = btn.innerHTML;
+
+            btn.innerHTML = '⏳ Generating Short Link...';
+
+
+
+            saveCurrentViewToDB(); 
+
+            
+
+            const state = {
+
+                p: document.getElementById('select-project').value,
+
+                m: document.getElementById('select-month').value,
+
+                w: document.getElementById('select-week').value,
+
+                f: document.getElementById('select-font').value, 
+
+                z: currentZoom, 
+
+                db: stateDB,
+
+                cp: customProjects
+
+            };
+
+
+
+            let shareUrl = window.location.href;
+
+
+
+            try {
+
+                const res = await fetch('https://api.npoint.io', {
+
+                    method: 'POST',
+
+                    headers: { 'Content-Type': 'application/json' },
+
+                    body: JSON.stringify(state)
+
+                });
+
+                
+
+                if (res.ok) {
+
+                    const data = await res.json();
+
+                    shareUrl = window.location.origin + window.location.pathname + '?id=' + data.id;
+
+                } else {
+
+                    throw new Error("npoint failed");
+
+                }
+
+            } catch (err) {
+
+                try {
+
+                    const res2 = await fetch('https://bytebin.lucko.me/post', {
+
+                        method: 'POST',
+
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+
+                        body: JSON.stringify(state)
+
+                    });
+
+                    const data2 = await res2.json();
+
+                    shareUrl = window.location.origin + window.location.pathname + '?bin=' + data2.key;
+
+                } catch (err2) {
+
+                    alert("⚠️ Network error preventing short link creation. Please use 'Save' to save to your local machine instead.");
+
+                    btn.innerHTML = ogText;
+
+                    return;
+
+                }
+
+            }
+
+
+
+            try {
+
+                await navigator.clipboard.writeText(shareUrl);
+
+                alert("✅ Short Link Generated & Copied to Clipboard!\n\nLink: " + shareUrl);
+
+            } catch (err) {
+
+                alert("Link ready: " + shareUrl);
+
+            }
+
+            btn.innerHTML = ogText;
+
+        }
+
+
+
+        function saveLayout(showAlert = true) {
+
+            saveCurrentViewToDB();
+
+
+
+            const state = {
+
+                p: document.getElementById('select-project').value,
+
+                m: document.getElementById('select-month').value,
+
+                w: document.getElementById('select-week').value,
+
+                f: document.getElementById('select-font').value, 
+
+                z: currentZoom, 
+
+                db: stateDB,
+
+                cp: customProjects
+
+            };
+
+
+
+            localStorage.setItem('hamco_dashboard_master', JSON.stringify(state));
+
+            if(showAlert) alert('✅ Dashboard saved successfully for this specific Project and Period!');
+
+        }
+
+
+
+        function loadState(state) {
+
+            if (state.cp) {
+
+                customProjects = state.cp;
+
+                for (const id in customProjects) {
+
+                    projectData[id] = customProjects[id].data;
+
+                    if (!document.querySelector(`#select-project option[value="${id}"]`)) {
+
+                        const opt = document.createElement('option');
+
+                        opt.value = id;
+
+                        opt.innerHTML = customProjects[id].name;
+
+                        document.getElementById('select-project').appendChild(opt);
+
+                    }
+
+                }
+
+            }
+
+
+
+            if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
+
+            if(state.z) { currentZoom = state.z; changeZoom(0, false); }
+
+            
+
+            if (state.db) {
+
+                stateDB = state.db;
+
+            } else {
+
+                stateDB = {};
+
+            }
+
+
+
+            if(state.p) document.getElementById('select-project').value = state.p;
+
+            if(state.m) document.getElementById('select-month').value = state.m;
+
+            if(state.w) document.getElementById('select-week').value = state.w;
+
+            
+
+            activeKey = document.getElementById('select-project').value + "_" + document.getElementById('select-month').value + "_" + document.getElementById('select-week').value;
+
+
+
+            changeProject(false); 
+
+        }
+
+
+
+        window.onload = async () => {
+
+            defaultGridHTML = document.getElementById('default-grid-template').innerHTML;
+
+            activeKey = document.getElementById('select-project').value + "_" + document.getElementById('select-month').value + "_" + document.getElementById('select-week').value;
+
+
+
+            const params = new URLSearchParams(window.location.search);
+
+            const npointId = params.get('id');
+
+            const bytebinId = params.get('bin');
+
+            
+
+            if (npointId) {
+
+                try {
+
+                    const res = await fetch('https://api.npoint.io/' + npointId);
+
+                    const state = await res.json();
+
+                    loadState(state);
+
+                    window.history.replaceState({}, document.title, window.location.pathname);
+
+                } catch(e) { changeProject(false); }
+
+            } else if (bytebinId) {
+
+                try {
+
+                    const res = await fetch('https://bytebin.lucko.me/' + bytebinId);
+
+                    const state = await res.json();
+
+                    loadState(state);
+
+                    window.history.replaceState({}, document.title, window.location.pathname);
+
+                } catch(e) { changeProject(false); }
+
+            } else {
+
+                const localSave = localStorage.getItem('hamco_dashboard_master') 
+
+                    || localStorage.getItem('hamco_dashboard_v8') 
+
+                    || localStorage.getItem('hamco_dashboard_v7') 
+
+                    || localStorage.getItem('hamco_dashboard_save');
+
+
+
+                if (localSave) {
+
+                    try {
+
+                        loadState(JSON.parse(localSave));
+
+                    } catch(e) {
+
+                        changeProject(false);
+
+                    }
+
+                } else {
+
+                    changeProject(false); 
+
+                    const cb = document.getElementById('manager-comments');
+
+                    if(cb) cb.innerHTML = "";
+
+                }
+
+            }
+
+        }
+
+
+
+        function saveStateForUndo() {
+
+            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+
+                if(!el.id) el.id = 'edit_' + index;
+
+                customEdits[el.id] = el.innerHTML;
+
+            });
+
+
+
+            undoStack.push({
+
+                dash: document.getElementById('dashboard-container').innerHTML,
+
+                proj: document.getElementById('select-project').value,
+
+                month: document.getElementById('select-month').value,
+
+                week: document.getElementById('select-week').value,
+
+                font: document.getElementById('select-font').value,
+
+                zoom: currentZoom,
+
+                db: JSON.parse(JSON.stringify(stateDB)),
+
+                ak: activeKey
+
+            });
+
+            redoStack = []; 
+
+            document.getElementById('btn-undo').disabled = false; 
+
+            document.getElementById('btn-redo').disabled = true;
+
+        }
+
+
+
+        function undo() {
+
+            if (!undoStack.length) return;
+
+            
+
+            redoStack.push({
+
+                dash: document.getElementById('dashboard-container').innerHTML,
+
+                proj: document.getElementById('select-project').value,
+
+                month: document.getElementById('select-month').value,
+
+                week: document.getElementById('select-week').value,
+
+                font: document.getElementById('select-font').value,
+
+                zoom: currentZoom,
+
+                db: JSON.parse(JSON.stringify(stateDB)),
+
+                ak: activeKey
+
+            });
+
+
+
+            const s = undoStack.pop();
+
+            
+
+            document.getElementById('dashboard-container').innerHTML = s.dash;
+
+            document.getElementById('select-project').value = s.proj;
+
+            document.getElementById('select-month').value = s.month;
+
+            document.getElementById('select-week').value = s.week;
+
+            document.getElementById('select-font').value = s.font;
+
+            
+
+            stateDB = s.db;
+
+            activeKey = s.ak;
+
+            currentZoom = s.zoom;
+
+            document.getElementById('dashboard-container').style.zoom = currentZoom;
+
+            
+
+            document.getElementById('btn-undo').disabled = !undoStack.length; 
+
+            document.getElementById('btn-redo').disabled = false;
+
+            
+
+            if(handlesOn) {
+
+                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
+
+            }
+
+        }
+
+
+
+        function redo() {
+
+            if (!redoStack.length) return;
+
+            
+
+            undoStack.push({
+
+                dash: document.getElementById('dashboard-container').innerHTML,
+
+                proj: document.getElementById('select-project').value,
+
+                month: document.getElementById('select-month').value,
+
+                week: document.getElementById('select-week').value,
+
+                font: document.getElementById('select-font').value,
+
+                zoom: currentZoom,
+
+                db: JSON.parse(JSON.stringify(stateDB)),
+
+                ak: activeKey
+
+            });
+
+
+
+            const s = redoStack.pop();
+
+            
+
+            document.getElementById('dashboard-container').innerHTML = s.dash;
+
+            document.getElementById('select-project').value = s.proj;
+
+            document.getElementById('select-month').value = s.month;
+
+            document.getElementById('select-week').value = s.week;
+
+            document.getElementById('select-font').value = s.font;
+
+            
+
+            stateDB = s.db;
+
+            activeKey = s.ak;
+
+            currentZoom = s.zoom;
+
+            document.getElementById('dashboard-container').style.zoom = currentZoom;
+
+            
+
+            document.getElementById('btn-undo').disabled = false; 
+
+            document.getElementById('btn-redo').disabled = !redoStack.length;
+
+
+
+            if(handlesOn) {
+
+                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html> 
+
