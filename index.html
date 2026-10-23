@@ -351,7 +351,11 @@
                 <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">📊 Action & Follow-up Center</h1>
                 <p style="font-size: 13px; color: #64748b;">Track, assign, and resolve project red flags.</p>
             </div>
-            <button onclick="closeMonitoringCenter()" class="btn-action-green" style="background: #ef4444; border-color: #dc2626; font-size: 13px;">✖ Close Report</button>
+            <div style="display: flex; gap: 8px;">
+                <button onclick="saveMonitoringState(true, true)" class="btn-action-green" style="background: #2563eb; border-color: #1d4ed8; font-size: 13px;">💾 Save Actions</button>
+                <button onclick="clearMonitoringState()" class="btn-action-green" style="background: #f59e0b; border-color: #d97706; font-size: 13px;">🗑️ Clear Data</button>
+                <button onclick="closeMonitoringCenter()" class="btn-action-green" style="background: #ef4444; border-color: #dc2626; font-size: 13px;">✖ Close Report</button>
+            </div>
         </div>
         
         <!-- Projects will be injected here -->
@@ -580,13 +584,13 @@
                     <div class="mon-grid-row" data-rfid="${flag.id}">
                         <div class="mon-flag-text">${flag.text}</div>
                         <div>
-                            <input type="text" class="mon-input mon-pm" placeholder="Enter Manager" value="${s.pm}" onchange="saveMonitoringState()">
+                            <input type="text" class="mon-input mon-pm" placeholder="Enter Manager" value="${s.pm}" onchange="saveMonitoringState(false, false)">
                         </div>
                         <div>
-                            <input type="text" class="mon-input mon-resp" placeholder="Name or team" value="${s.resp}" onchange="saveMonitoringState()">
+                            <input type="text" class="mon-input mon-resp" placeholder="Name or team" value="${s.resp}" onchange="saveMonitoringState(false, false)">
                         </div>
                         <div>
-                            <select class="mon-select mon-status" onchange="saveMonitoringState()">
+                            <select class="mon-select mon-status" onchange="saveMonitoringState(false, false)">
                                 <option value="open" ${s.status === 'open' ? 'selected' : ''}>Open</option>
                                 <option value="in-progress" ${s.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
                                 <option value="addressed" ${s.status === 'addressed' ? 'selected' : ''}>Addressed</option>
@@ -595,11 +599,11 @@
                         <div class="mon-timeline-container">
                             <div class="mon-date-row">
                                 <span>Reported:</span>
-                                <input type="date" class="mon-date-input mon-date-reported" value="${s.reported}" onchange="saveMonitoringState()">
+                                <input type="date" class="mon-date-input mon-date-reported" value="${s.reported}" onchange="saveMonitoringState(false, false)">
                             </div>
                             <div class="mon-date-row">
                                 <span>Resolved:</span>
-                                <input type="date" class="mon-date-input mon-date-resolved" value="${s.resolved}" onchange="saveMonitoringState()">
+                                <input type="date" class="mon-date-input mon-date-resolved" value="${s.resolved}" onchange="saveMonitoringState(false, false)">
                             </div>
                             <div class="mon-date-row" style="margin-top: 4px;">
                                 <span>Time Taken:</span>
@@ -631,10 +635,10 @@
             `;
 
             // Run calculation immediately on load to populate duration badges
-            saveMonitoringState(false);
+            saveMonitoringState(false, false);
         }
 
-        function saveMonitoringState(triggerSave = true) {
+        function saveMonitoringState(triggerSave = true, showAlert = false) {
             const state = {};
             document.querySelectorAll('.mon-grid-row').forEach(row => {
                 const rfId = row.dataset.rfid;
@@ -663,6 +667,17 @@
             stateDB[activeKey].monitoring = state;
             
             if(triggerSave) saveLayout(false);
+            if(showAlert) alert('✅ Monitoring actions saved successfully!');
+        }
+
+        function clearMonitoringState() {
+            if (confirm("Are you sure you want to clear all action and follow-up data for this project period? This cannot be undone.")) {
+                if (stateDB[activeKey] && stateDB[activeKey].monitoring) {
+                    stateDB[activeKey].monitoring = {};
+                    saveLayout(false);
+                    openMonitoringCenter();
+                }
+            }
         }
 
         function closeMonitoringCenter() {
