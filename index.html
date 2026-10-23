@@ -140,13 +140,29 @@
         [contenteditable="true"] li { margin-bottom: 4px; display: list-item; list-style-position: outside; }
 
         /* ================= MONITORING OVERLAY ================= */
-        .monitoring-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8fafc; z-index: 9999; padding: 40px; overflow-y: auto; display: none; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .mon-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
-        .mon-table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
-        .mon-table th, .mon-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 12px; vertical-align: top; }
-        .mon-table th { background: #1e293b; color: white; font-weight: 700; text-transform: uppercase; font-size: 11px; }
-        .mon-rf-list { margin: 0; padding-left: 16px; color: #ef4444; list-style-type: disc; }
-        .mon-rf-list li { margin-bottom: 6px; line-height: 1.35; }
+        .monitoring-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f1f5f9; z-index: 9999; padding: 40px; overflow-y: auto; display: none; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mon-header-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #e2e8f0; }
+
+        .mon-project-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); overflow: hidden; }
+        .mon-card-header { padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .mon-card-title { font-size: 16px; font-weight: 800; color: #1e3a8a; display: flex; align-items: center; gap: 8px; }
+        .mon-card-subtitle { font-size: 11px; color: #64748b; margin-top: 4px; }
+        .mon-flag-count { font-size: 12px; color: #64748b; font-weight: 600; }
+
+        .mon-grid-header { display: grid; grid-template-columns: 2.5fr 1fr 1.5fr 1fr 2fr; gap: 16px; padding: 12px 20px; background: #f8fafc; font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; }
+        .mon-grid-row { display: grid; grid-template-columns: 2.5fr 1fr 1.5fr 1fr 2fr; gap: 16px; padding: 16px 20px; border-bottom: 1px solid #e2e8f0; align-items: start; }
+        .mon-grid-row:last-child { border-bottom: none; }
+
+        .mon-flag-text { font-size: 12px; font-weight: 700; color: #334155; line-height: 1.5; }
+        .mon-flag-text::before { content: "•"; color: #ef4444; font-weight: bold; margin-right: 6px; font-size: 16px; vertical-align: -2px; }
+
+        .mon-checkbox-wrapper { display: flex; flex-direction: column; gap: 4px; }
+        .mon-checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #64748b; cursor: pointer; }
+        .mon-checkbox { width: 16px; height: 16px; cursor: pointer; accent-color: #0ea5e9; }
+
+        .mon-input, .mon-select, .mon-textarea { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 12px; color: #334155; outline: none; transition: border-color 0.2s; }
+        .mon-input:focus, .mon-select:focus, .mon-textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.1); }
+        .mon-textarea { resize: vertical; min-height: 50px; }
 
         /* ================= VIEWER MODE STYLES ================= */
         .viewer-mode .card-controls,
@@ -331,26 +347,16 @@
 
     <!-- ================= MONITORING OVERLAY ================= -->
     <div id="monitoring-overlay" class="monitoring-overlay">
-        <div class="mon-header">
+        <div class="mon-header-main">
             <div>
-                <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">📊 PMO Dashboard Monitoring Center</h1>
-                <p style="font-size: 13px; color: #64748b;">Global overview of red flags across all tracked projects.</p>
+                <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">📊 Action & Follow-up Center</h1>
+                <p style="font-size: 13px; color: #64748b;">Track, assign, and resolve project red flags.</p>
             </div>
-            <button onclick="closeMonitoringCenter()" class="btn-action-green" style="background: #ef4444; border-color: #dc2626; font-size: 14px;">✖ Close Report</button>
+            <button onclick="closeMonitoringCenter()" class="btn-action-green" style="background: #ef4444; border-color: #dc2626; font-size: 13px;">✖ Close Report</button>
         </div>
-        <table class="mon-table">
-            <thead>
-                <tr>
-                    <th style="width: 15%;">Project Name</th>
-                    <th style="width: 10%;">Responsible</th>
-                    <th style="width: 15%;">Last Updated</th>
-                    <th style="width: 5%;">Total</th>
-                    <th style="width: 55%;">Key Gaps & Red Flags</th>
-                </tr>
-            </thead>
-            <tbody id="mon-tbody">
-            </tbody>
-        </table>
+        
+        <!-- Projects will be injected here -->
+        <div id="mon-projects-container"></div>
     </div>
 
     <!-- PURE TEMPLATE -->
@@ -525,8 +531,8 @@
             document.getElementById('dashboard-container').style.display = 'none';
             document.getElementById('monitoring-overlay').style.display = 'block';
             
-            const tbody = document.getElementById('mon-tbody');
-            tbody.innerHTML = "";
+            const container = document.getElementById('mon-projects-container');
+            container.innerHTML = "";
 
             const allProjects = {...projectData};
             for (const cId in customProjects) {
@@ -534,61 +540,94 @@
             }
 
             for (const pId in allProjects) {
-                if(deletedProjects.includes(pId)) continue; 
+                if(typeof deletedProjects !== 'undefined' && deletedProjects.includes(pId)) continue; 
 
                 let pName = allProjects[pId].title.replace("WEEKLY PROJECT UPDATES ", "");
-                let responsible = allProjects[pId].responsible || "TBD";
+                let location = allProjects[pId].location || "TBD";
                 let lastUpdated = "Default Data";
-                let redFlagsHTML = "";
-                let totalFlags = 0;
+                let redFlagsArray = [];
 
-                // Scan all saved weeks/months for this project in stateDB to find the active red flags card
+                // Scan saved stateDB to find active red flags for this project
                 let foundCardHTML = null;
                 for (const key in stateDB) {
                     if (key.startsWith(pId + "_")) {
                         foundCardHTML = stateDB[key].html;
-                        lastUpdated = key.replace(pId + "_", "").replace("_", " "); 
+                        lastUpdated = key.replace(pId + "_", "").replace("_", "-W"); // Format as Year-Month-Week
                     }
                 }
 
                 if (foundCardHTML) {
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = foundCardHTML;
-                    // Extract directly from the KEY GAPS & RED FLAGS card container
                     const rfCard = tempDiv.querySelector('#card-red-flags') || tempDiv.querySelector('.light-card');
                     if (rfCard) {
                         const items = rfCard.querySelectorAll('.red-flag-item div[contenteditable="true"]');
-                        totalFlags = items.length;
                         items.forEach(item => {
-                            if(item.innerText.trim() !== "") {
-                                redFlagsHTML += `<li>${item.innerText}</li>`;
+                            if(item.innerText.trim() !== "" && item.innerText !== "Click to edit new red flag...") {
+                                redFlagsArray.push(item.innerText);
                             }
                         });
                     }
                 } 
                 
-                // Fallback to initial data array if no saved state exists yet
-                if (totalFlags === 0 && allProjects[pId].redFlags) {
-                    const flags = allProjects[pId].redFlags;
-                    totalFlags = flags.length;
-                    flags.forEach(f => {
-                        redFlagsHTML += `<li>${f}</li>`;
-                    });
+                // Fallback to initial data array
+                if (redFlagsArray.length === 0 && allProjects[pId].redFlags) {
+                    redFlagsArray = allProjects[pId].redFlags;
                 }
 
-                if(totalFlags === 0 || redFlagsHTML === "") {
-                    redFlagsHTML = "<li style='color:#10b981; list-style-type: none; margin-left:-16px;'>No red flags reported.</li>";
+                if (redFlagsArray.length === 0 || (redFlagsArray.length === 1 && redFlagsArray[0].includes("No red flags"))) {
+                    continue; // Skip projects with no actual red flags
                 }
 
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="font-weight: 800; color: #1e3a8a;">${pName}</td>
-                        <td style="font-weight: 600;">${responsible}</td>
-                        <td style="color: #64748b;">${lastUpdated}</td>
-                        <td style="font-weight: 800; font-size: 14px;">${totalFlags}</td>
-                        <td><ul class="mon-rf-list">${redFlagsHTML}</ul></td>
-                    </tr>
+                let rowsHTML = "";
+                redFlagsArray.forEach((flag, idx) => {
+                    rowsHTML += `
+                        <div class="mon-grid-row">
+                            <div class="mon-flag-text">${flag}</div>
+                            <div class="mon-checkbox-wrapper">
+                                <label class="mon-checkbox-label">
+                                    <input type="checkbox" class="mon-checkbox" id="chk-${pId}-${idx}"> Team informed
+                                </label>
+                            </div>
+                            <div>
+                                <input type="text" class="mon-input" placeholder="Name or team">
+                            </div>
+                            <div>
+                                <select class="mon-select">
+                                    <option value="open">Open</option>
+                                    <option value="addressed">Addressed</option>
+                                </select>
+                            </div>
+                            <div>
+                                <textarea class="mon-textarea" placeholder="Update, next step or resolution..."></textarea>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML += `
+                    <div class="mon-project-card">
+                        <div class="mon-card-header">
+                            <div>
+                                <div class="mon-card-title">▦ ${pName}</div>
+                                <div class="mon-card-subtitle">${location} · ${lastUpdated}</div>
+                            </div>
+                            <div class="mon-flag-count">${redFlagsArray.length} red flags</div>
+                        </div>
+                        <div class="mon-grid-header">
+                            <div>RED FLAG / FOLLOW-UP</div>
+                            <div>COMMUNICATED</div>
+                            <div>RESPONSIBLE PERSON</div>
+                            <div>STATUS</div>
+                            <div>COMMENTS</div>
+                        </div>
+                        ${rowsHTML}
+                    </div>
                 `;
+            }
+
+            if (container.innerHTML === "") {
+                container.innerHTML = `<div style="text-align:center; padding: 40px; color: #64748b; font-weight: bold;">No active red flags found across projects.</div>`;
             }
         }
 
