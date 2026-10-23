@@ -534,31 +534,42 @@
             }
 
             for (const pId in allProjects) {
+                if(deletedProjects.includes(pId)) continue; 
+
                 let pName = allProjects[pId].title.replace("WEEKLY PROJECT UPDATES ", "");
                 let responsible = allProjects[pId].responsible || "TBD";
                 let lastUpdated = "Default Data";
                 let redFlagsHTML = "";
                 let totalFlags = 0;
 
-                let latestSavedHTML = null;
+                // Scan all saved weeks/months for this project in stateDB to find the active red flags card
+                let foundCardHTML = null;
                 for (const key in stateDB) {
                     if (key.startsWith(pId + "_")) {
-                        latestSavedHTML = stateDB[key].html;
+                        foundCardHTML = stateDB[key].html;
                         lastUpdated = key.replace(pId + "_", "").replace("_", " "); 
                     }
                 }
 
-                if (latestSavedHTML) {
+                if (foundCardHTML) {
                     const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = latestSavedHTML;
-                    const items = tempDiv.querySelectorAll('.red-flag-item');
-                    totalFlags = items.length;
-                    items.forEach(item => {
-                        const textDiv = item.querySelector('div[contenteditable]');
-                        if(textDiv) redFlagsHTML += `<li>${textDiv.innerText}</li>`;
-                    });
-                } else {
-                    const flags = allProjects[pId].redFlags || [];
+                    tempDiv.innerHTML = foundCardHTML;
+                    // Extract directly from the KEY GAPS & RED FLAGS card container
+                    const rfCard = tempDiv.querySelector('#card-red-flags') || tempDiv.querySelector('.light-card');
+                    if (rfCard) {
+                        const items = rfCard.querySelectorAll('.red-flag-item div[contenteditable="true"]');
+                        totalFlags = items.length;
+                        items.forEach(item => {
+                            if(item.innerText.trim() !== "") {
+                                redFlagsHTML += `<li>${item.innerText}</li>`;
+                            }
+                        });
+                    }
+                } 
+                
+                // Fallback to initial data array if no saved state exists yet
+                if (totalFlags === 0 && allProjects[pId].redFlags) {
+                    const flags = allProjects[pId].redFlags;
                     totalFlags = flags.length;
                     flags.forEach(f => {
                         redFlagsHTML += `<li>${f}</li>`;
