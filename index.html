@@ -604,4 +604,909 @@
                 redFlags: [
                     `With time elapsed at 32.46% and overall budget utilization rate  at 7.18%.  Expenditure stands at $1,331,730 against a total budget of $18,542,033.34, reflecting 7% delivery.`,
                     `In the forecast to delivery percentage, an over-forecasting trend is noticed, with a total forecasted value of -1,218,415.97 USD over the past 10 months.`,
-                    `Between July and October 2026, the project entered its planned peak delivery phase ($3,470,428.11). However, actual realized delivery remained critically low ($163,741.14). The project exhibits substantial operational and
+                    `Between July and October 2026, the project entered its planned peak delivery phase ($3,470,428.11). However, actual realized delivery remained critically low ($163,741.14). The project exhibits substantial operational and financial underperformance (4.7%).`,
+                    `For Fiscal year 2026-2027, the grand total planned target is $253,999.28 compared to an achieved figure of $17,700.72, producing a variance gap of $-236,298.56,  reflecting 6.96% delivery, which indicates underperformance in delivery.`,
+                    `There are 11 Open  high-level risks out of 14 total high risks, an average of 166 days has passed since they were last updated.`,
+                    `There are 14 Open  medium to high level risks out of 15  medium to high level risks, an average of 156 days has passed since they were last updated.`,
+                    `There are 2 Open low-to-medium level risks for which an average of 224 days has passed since they were last updated.`,
+                    `Immediate review of project bottlenecks, disbursement lags, and recalibration of remaining targets, along with adjusting the forecasting methodology for the upcoming months will be necessary to manage delivery expectations.`,
+                    `During FY 2025–26 (Jul 2025 – Jun 2026), project implementation experienced significant delays across most key operational areas. Out of 45 activities with active targets planned for FY 2025–26, 32 activities (71.1%) were delayed, 11 activities (24.4%) were completed, and 2 activities (4.4%) were in progress. All the delayed activities were carried forward into FY 2026–27.`,
+                    `The infrastructure component (Component 2: Agriculture Production and Rural Livelihood Support  —  Subcomponent 2.2: Productive Community Infrastructure Developed.).... From Assessment to Design to procurement and Implementation i s yet to be integrated to the Project dashboard.`,
+                    `The project shall provide all the necessary information and data. Currently they are in communication with Rahel Eshetu BIHONEGN.`,
+                    `In the OneUNOPS project, the schedule was last updated on 16 April 2026. 6 out of 8 activities of the inception stage have percentage completions varying from 2% to 50%. Almost all % completion statuses of other activities are 0%.`,
+                    `1.1: Building Strong and Inclusive CBOs - 5 activities with final end dates of 02 Sep 2026 - 0% completions with 12 months past due.`,
+                    `1.2 Development of Community Driven Development Plans - 5 activities with final end dates of 30 Sep 2026 - 0% completions with 12 months past due.`,
+                    `2.1 Investments for Increased Agriculture Production and Rural Livelihoods - 3 activities were expected to start on 19 March 2026 with 1 activity planned to be completed on 30 Sep 2026 with 12 months past due and is at 0% completion. The other two activities will be completed on 06 Aug 2027.`,
+                    `Several activities currently do not reflect their exact status. Under Sub-activity 2.2 (Productive Community Infrastructure), 4 activities have passed their start dates with 0% progress. For the 44 km Magwi–Paloaka road, 3 activities have missed their start dates, and under Sub-component 3.1 (Project Management and Monitoring), 7 activities have passed their start dates at 0% completion. Across these, 5 activities have already missed their final due dates.`,
+                    `The revised schedule with exact status of each activity has to be uploaded.`,
+                    `Timely and regular updates to the dashboard are critical for compliance and project reporting.`
+                ]
+            }
+        };
+
+        function getTodayStr() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        // ================= GLOBAL EVENT DELEGATION (CRITICAL FIX) =================
+        document.addEventListener('click', function(e) {
+            if (isViewer) return; 
+
+            if (e.target.classList.contains('rf-checkbox')) {
+                toggleChecklist(e.target);
+                return;
+            }
+
+            if (e.target.classList.contains('delete-bullet-btn')) {
+                deleteSingleRedFlag(e.target);
+                return;
+            }
+
+            if (e.target.classList.contains('add-rf-btn')) {
+                addRedFlag(e);
+                return;
+            }
+
+            if (e.target.classList.contains('delete-card-btn')) {
+                const card = e.target.closest('.light-card');
+                if(card) deleteBlock(card.id, e);
+                return;
+            }
+
+            if (e.target.classList.contains('span-btn') && e.target.hasAttribute('data-action')) {
+                const action = e.target.getAttribute('data-action');
+                const card = e.target.closest('.light-card');
+                if(card) {
+                    setSpan(card.id, action === 'span-2' ? 2 : 1, true);
+                }
+                return;
+            }
+        });
+
+        // ================= PMO LOGIN SYSTEM =================
+        function loginPMO() {
+            if(isPMO) {
+                alert("You are already logged in with PMO Privileges.");
+                return;
+            }
+            const code = prompt("🔒 Enter Secure PMO Code to enable checklist features:\n(For testing, use 'PMO2026')");
+            if(code === "PMO2026") {
+                isPMO = true;
+                const btn = document.getElementById('btn-pmo-login');
+                btn.innerHTML = "🔓 PMO Access Active";
+                btn.style.background = "#10b981";
+                btn.style.borderColor = "#059669";
+                btn.style.color = "white";
+                alert("Access Granted: You can now check/uncheck Red Flag resolution boxes.");
+            } else if (code) {
+                alert("❌ Invalid Access Code. You are restricted to view/edit only.");
+            }
+        }
+
+        function toggleChecklist(boxEl) {
+            if(!isPMO) {
+                alert("⛔ Action Restricted: Only authorized PMO personnel (PMOE, PMOS, PMOSS) can mark red flags as resolved. Click 'PMO Login' to authenticate.");
+                return;
+            }
+            saveStateForUndo();
+            const textEl = boxEl.nextElementSibling;
+            if(boxEl.classList.contains('checked')) {
+                boxEl.classList.remove('checked');
+                boxEl.removeAttribute('data-resolved-date');
+                if(textEl) textEl.classList.remove('checked-text');
+            } else {
+                boxEl.classList.add('checked');
+                boxEl.setAttribute('data-resolved-date', getTodayStr());
+                if(textEl) textEl.classList.add('checked-text');
+            }
+            saveCurrentViewToDB();
+        }
+
+        // ================= MONITORING CENTER LOGIC =================
+        function openMonitoringCenter() {
+            try {
+                document.getElementById('dashboard-container').style.display = 'none';
+                document.getElementById('monitoring-overlay').style.display = 'block';
+                
+                const tbody = document.getElementById('mon-tbody');
+                tbody.innerHTML = "";
+
+                const allProjects = {...projectData};
+                for (const cId in customProjects) {
+                    if(!allProjects[cId]) allProjects[cId] = customProjects[cId].data;
+                }
+
+                for (const pId in allProjects) {
+                    if(deletedProjects.includes(pId)) continue; 
+
+                    let pName = (allProjects[pId].title || "Unknown").replace("WEEKLY PROJECT UPDATES ", "");
+                    let responsible = allProjects[pId].responsible || "TBD";
+                    let lastUpdated = "Default Data";
+                    let redFlagsHTML = "";
+                    let totalFlags = 0;
+                    let resolvedFlags = 0;
+                    let totalDaysTaken = 0;
+                    let resolvedCountForAvg = 0;
+
+                    let latestSavedHTML = null;
+                    for (const key in stateDB) {
+                        if (key.startsWith(pId + "_")) {
+                            latestSavedHTML = stateDB[key].html;
+                            lastUpdated = key.replace(pId + "_", "").replace("_", " "); 
+                        }
+                    }
+
+                    if (latestSavedHTML) {
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = latestSavedHTML;
+                        
+                        const redFlagCard = tempDiv.querySelector('#card-red-flags');
+                        if (redFlagCard) {
+                            const items = redFlagCard.querySelectorAll('.red-flag-item');
+                            totalFlags = items.length;
+                            items.forEach(item => {
+                                const textDiv = item.querySelector('.rf-text') || item.querySelector('div[contenteditable="true"]');
+                                const box = item.querySelector('.rf-checkbox');
+                                
+                                let resolvedClass = "";
+                                if(box && box.classList.contains('checked')) {
+                                    resolvedClass = "resolved-bullet";
+                                    resolvedFlags++;
+                                    const created = box.getAttribute('data-created-date');
+                                    const resolved = box.getAttribute('data-resolved-date');
+                                    if(created && resolved) {
+                                        const diffTime = Math.abs(new Date(resolved) - new Date(created));
+                                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                                        totalDaysTaken += diffDays;
+                                        resolvedCountForAvg++;
+                                    }
+                                }
+                                
+                                if(textDiv) redFlagsHTML += `<li class="${resolvedClass}">${textDiv.innerText}</li>`;
+                            });
+                        }
+                    } else {
+                        const flags = allProjects[pId].redFlags || [];
+                        totalFlags = flags.length;
+                        flags.forEach(f => {
+                            redFlagsHTML += `<li>${f}</li>`;
+                        });
+                    }
+
+                    if(totalFlags === 0 || redFlagsHTML === "") {
+                        redFlagsHTML = "<li style='color:#10b981; list-style-type: none; margin-left:-16px;'>No red flags reported.</li>";
+                    }
+
+                    let remaining = totalFlags - resolvedFlags;
+                    let avgDays = resolvedCountForAvg > 0 ? (totalDaysTaken / resolvedCountForAvg).toFixed(1) + " days" : "N/A";
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td style="font-weight: 800; color: #1e3a8a;">${pName}</td>
+                            <td style="font-weight: 600;">${responsible}</td>
+                            <td style="color: #64748b;">${lastUpdated}</td>
+                            <td style="font-weight: 800; font-size: 14px;">${totalFlags}</td>
+                            <td><span class="mon-badge-red">${remaining} Rem</span><br><span class="mon-badge-green" style="margin-top:6px; display:inline-block;">${resolvedFlags} Rslvd</span></td>
+                            <td style="font-family: var(--font-mono);">${avgDays}</td>
+                            <td><ul class="mon-rf-list">${redFlagsHTML}</ul></td>
+                        </tr>
+                    `;
+                }
+            } catch(e) {
+                console.error("Monitoring Error:", e);
+            }
+        }
+
+        function closeMonitoringCenter() {
+            document.getElementById('monitoring-overlay').style.display = 'none';
+            document.getElementById('dashboard-container').style.display = 'block';
+        }
+
+        function setRing(id, pctStr) {
+            const circle = document.getElementById(id);
+            if(circle) {
+                let numericPct = parseFloat(String(pctStr).replace('%', ''));
+                if (isNaN(numericPct)) numericPct = 0;
+                const circumference = 175.93; 
+                const offset = circumference - (Math.min(Math.max(numericPct, 0), 100) / 100 * circumference);
+                circle.style.strokeDashoffset = offset;
+            }
+        }
+
+        function changeFont(isUserTriggered = false) {
+            if(isUserTriggered) saveStateForUndo();
+            const font = document.getElementById('select-font').value;
+            document.body.style.fontFamily = font;
+            document.documentElement.style.setProperty('--font-sans', font);
+        }
+
+        function changeZoom(delta, isUserTriggered = false) {
+            if(isUserTriggered) saveStateForUndo();
+            currentZoom += delta;
+            if(currentZoom < 0.5) currentZoom = 0.5;
+            if(currentZoom > 2.0) currentZoom = 2.0;
+            document.getElementById('dashboard-container').style.zoom = currentZoom;
+        }
+
+        function buildDropdown() {
+            const selectEl = document.getElementById('select-project');
+            const currentVal = selectEl.value;
+            selectEl.innerHTML = ""; 
+
+            const standards = [
+                { id: 'nimule', name: 'Nimule One Stop Border Post' },
+                { id: 'flood', name: 'Flood Mitigation Project' },
+                { id: 'kassala_iv', name: 'Kassala IV' },
+                { id: 'kassala_procase', name: 'Kassala Procase' },
+                { id: 'kassala_dialysis', name: 'Kassala Dialysis' },
+                { id: 'adwa', name: 'Adwa Catholic General Hospital' },
+                { id: 'efsr', name: 'EFSR Project' },
+                { id: 'sslrp', name: 'SSLRP Livelihood Project' }
+            ];
+
+            standards.forEach(s => {
+                if (!deletedProjects.includes(s.id)) {
+                    let opt = document.createElement('option');
+                    opt.value = s.id; 
+                    opt.innerHTML = customProjects[s.id] ? customProjects[s.id].name : s.name;
+                    selectEl.appendChild(opt);
+                }
+            });
+
+            for (const cId in customProjects) {
+                if (!deletedProjects.includes(cId) && !standards.some(std => std.id === cId)) {
+                    let opt = document.createElement('option');
+                    opt.value = cId; opt.innerHTML = customProjects[cId].name;
+                    selectEl.appendChild(opt);
+                }
+            }
+
+            if (selectEl.querySelector(`option[value="${currentVal}"]`)) {
+                selectEl.value = currentVal;
+            } else if (selectEl.options.length > 0) {
+                selectEl.value = selectEl.options[0].value;
+            }
+        }
+
+        function addNewProject() {
+            const name = prompt("Enter new project name:");
+            if(name) {
+                const id = 'proj_' + Math.random().toString(36).substr(2, 5);
+                const newProjData = {
+                    title: "WEEKLY PROJECT UPDATES " + name.toUpperCase(),
+                    subTitle: name + " Construction Project",
+                    location: "TBD",
+                    delayBadge: "NEW PROJECT",
+                    plannedWindow: "",
+                    timePct: 0, finPct: 0,
+                    remDays: "TBD Days Rem", elapsedDays: "0 Days Elapsed",
+                    budgetTotal: "Total: $0.00", budgetExp: "Exp: $0.00",
+                    designHead: "PHASE STATUS", designStatus: "PENDING", designDesc: "Not yet started.",
+                    pipe: ["Pending", "Pending", "Pending", "Pending"],
+                    recommendation: "New project added. Awaiting first status report.",
+                    responsible: "TBD",
+                    redFlags: ["No data submitted yet."]
+                };
+                
+                projectData[id] = newProjData;
+                customProjects[id] = { name: name, data: newProjData };
+
+                buildDropdown();
+                document.getElementById('select-project').value = id;
+                changeProject(true);
+            }
+        }
+
+        function editProjectName() {
+            const selectEl = document.getElementById('select-project');
+            const currentId = selectEl.value;
+            const currentOption = selectEl.options[selectEl.selectedIndex];
+            
+            const newName = prompt("Edit project name:", currentOption.text);
+            if (newName && newName.trim() !== "") {
+                saveStateForUndo();
+                if (projectData[currentId]) {
+                    projectData[currentId].title = "WEEKLY PROJECT UPDATES " + newName.toUpperCase();
+                    projectData[currentId].subTitle = newName + " Construction Project";
+                    document.getElementById('l-main-title').innerHTML = projectData[currentId].title;
+                    document.getElementById('l-sub-title').innerHTML = projectData[currentId].subTitle;
+                }
+                if (customProjects[currentId]) {
+                    customProjects[currentId].name = newName;
+                } else {
+                    customProjects[currentId] = { name: newName, data: projectData[currentId] };
+                }
+                buildDropdown();
+                document.getElementById('select-project').value = currentId;
+                saveLayout(false);
+            }
+        }
+
+        function deleteCurrentProject() {
+            const selectEl = document.getElementById('select-project');
+            const currentId = selectEl.value;
+            const currentOption = selectEl.options[selectEl.selectedIndex];
+
+            if (selectEl.options.length <= 1) {
+                alert("Cannot delete the only remaining project.");
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete "${currentOption.text}"?`)) {
+                saveStateForUndo();
+                
+                deletedProjects.push(currentId); 
+
+                for (const k in stateDB) {
+                    if (k.startsWith(currentId + "_")) {
+                        delete stateDB[k];
+                    }
+                }
+
+                buildDropdown();
+                changeProject(true);
+                saveLayout(false);
+            }
+        }
+
+        function deleteSingleRedFlag(btnElement) {
+            saveStateForUndo();
+            const item = btnElement.closest('.red-flag-item');
+            if (item) {
+                item.remove();
+                saveCurrentViewToDB();
+            }
+        }
+
+        function saveCurrentViewToDB() {
+            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                if(!el.id) el.id = 'edit_' + index;
+                customEdits[el.id] = el.innerHTML;
+            });
+            stateDB[activeKey] = {
+                e: JSON.parse(JSON.stringify(customEdits)),
+                html: document.getElementById('main-content-grid').innerHTML,
+                l: JSON.parse(JSON.stringify(cardLayouts)),
+                b: customBlockCount
+            };
+        }
+
+        function changeProject(isUserTriggered = false) {
+            if(isUserTriggered && !isViewer) {
+                saveStateForUndo();
+                saveCurrentViewToDB();
+                
+                const tempState = {
+                    p: document.getElementById('select-project').value,
+                    m: document.getElementById('select-month').value,
+                    w: document.getElementById('select-week').value,
+                    f: document.getElementById('select-font').value, 
+                    z: currentZoom, 
+                    db: stateDB,
+                    cp: customProjects,
+                    dp: deletedProjects 
+                };
+                localStorage.setItem('hamco_dashboard_master', JSON.stringify(tempState));
+            }
+            
+            const pId = document.getElementById('select-project').value;
+            const m = document.getElementById('select-month').value;
+            const w = document.getElementById('select-week').value;
+            activeKey = pId + "_" + m + "_" + w;
+
+            if(defaultGridHTML) {
+                document.getElementById('main-content-grid').innerHTML = defaultGridHTML;
+            }
+            
+            customEdits = {}; 
+            cardLayouts = {};
+            customBlockCount = 0;
+
+            const p = projectData[pId] || projectData['nimule'];
+            const hasData = (m === 'October' && w === 'Week 3') || (p && p.delayBadge === "NEW PROJECT");
+
+            if (p) {
+                document.getElementById('l-main-title').innerHTML = p.title.replace('—', '').trim();
+                document.getElementById('l-sub-title').innerHTML = p.subTitle;
+                document.getElementById('l-location-tag').innerHTML = p.location;
+                document.getElementById('l-period-tag').innerHTML = `${m} 2026 - ${w}`;
+                
+                document.getElementById('l-rem-days').innerHTML = hasData ? p.remDays : "--";
+                document.getElementById('l-elapsed-days').innerHTML = hasData ? p.elapsedDays : "Not yet updated for this period.";
+                document.getElementById('l-budget-total').innerHTML = hasData ? p.budgetTotal : "Total: --";
+                document.getElementById('l-budget-exp').innerHTML = hasData ? p.budgetExp : "Exp: --";
+                document.getElementById('l-design-head').innerHTML = hasData ? p.designHead : "PHASE STATUS";
+                document.getElementById('l-design-status').innerHTML = hasData ? p.designStatus : "PENDING";
+                document.getElementById('l-design-desc').innerHTML = hasData ? p.designDesc : "Awaiting weekly update.";
+                document.getElementById('l-delay-tag').innerHTML = hasData ? p.delayBadge : "No data submitted.";
+                document.getElementById('l-recommendation').innerHTML = hasData ? p.recommendation : "No recommendation submitted for this period.";
+
+                const timelineWinEl = document.getElementById('l-timeline-window');
+                if(timelineWinEl) {
+                    timelineWinEl.innerHTML = hasData ? (p.plannedWindow || "") : "";
+                }
+
+                document.getElementById('l-ring-time-val').innerHTML = hasData ? p.timePct + '%' : '0%';
+                document.getElementById('l-ring-fin-val').innerHTML = hasData ? p.finPct + '%' : '0%';
+                setTimeout(() => { 
+                    setRing('l-ring-time', hasData ? p.timePct : 0); 
+                    setRing('l-ring-fin', hasData ? p.finPct : 0); 
+                }, 50);
+                
+                for(let i=0; i<4; i++) {
+                    const pipeEl = document.getElementById(`pipe-${i+1}`);
+                    if(pipeEl) pipeEl.innerHTML = hasData ? p.pipe[i] : "-";
+                }
+
+                const rfContainer = document.getElementById('red-flags-container');
+                if (rfContainer) {
+                    rfContainer.innerHTML = ''; 
+                    if (hasData && p.redFlags && p.redFlags.length > 0) {
+                        p.redFlags.forEach((rf, idx) => {
+                            rfContainer.innerHTML += `<div class="red-flag-item"><div class="rf-checkbox" data-created-date="${getTodayStr()}"></div><div id="rf-${idx+1}" class="rf-text" contenteditable="true">${rf}</div><button class="delete-bullet-btn" title="Delete Bullet">×</button></div>`;
+                        });
+                    } else {
+                        rfContainer.innerHTML = `<div class="red-flag-item"><div class="rf-checkbox" data-created-date="${getTodayStr()}"></div><div id="rf-1" class="rf-text" contenteditable="true" style="color: #ef4444; font-weight: bold;">No red flags or data submitted for this period yet.</div><button class="delete-bullet-btn" title="Delete Bullet">×</button></div>`;
+                    }
+                }
+            }
+
+            if (stateDB[activeKey]) {
+                const saved = stateDB[activeKey];
+                customBlockCount = saved.b || 0;
+                cardLayouts = saved.l || {};
+                customEdits = saved.e || {};
+                if (saved.html) {
+                    document.getElementById('main-content-grid').innerHTML = saved.html;
+                }
+                applyCustomEdits();
+            }
+
+            const cBox = document.getElementById('manager-comments');
+            if(cBox) {
+                if(!stateDB[activeKey] || !customEdits['manager-comments']) {
+                    cBox.innerHTML = "";
+                }
+            }
+
+            if(handlesOn && !isViewer) {
+                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
+            }
+
+            if(isViewer) {
+                document.querySelectorAll('[contenteditable="true"]').forEach(el => el.setAttribute('contenteditable', 'false'));
+            }
+        }
+
+        let draggedCard = null;
+
+        document.addEventListener("dragstart", function(event) {
+            if(handlesOn && !isViewer && event.target.classList.contains('light-card')) {
+                draggedCard = event.target;
+                setTimeout(() => event.target.classList.add('dragging'), 0);
+            }
+        });
+
+        document.addEventListener("dragend", function(event) {
+            if(handlesOn && !isViewer && event.target.classList.contains('light-card')) {
+                event.target.classList.remove('dragging');
+                draggedCard = null;
+                saveStateForUndo();
+            }
+        });
+
+        document.addEventListener("dragover", function(event) {
+            if(handlesOn && draggedCard) {
+                event.preventDefault(); 
+            }
+        });
+
+        document.addEventListener("drop", function(event) {
+            if(handlesOn && draggedCard && !isViewer) {
+                event.preventDefault();
+                const container = document.getElementById('main-content-grid');
+                const targetCard = event.target.closest('.light-card');
+                
+                if (targetCard && targetCard !== draggedCard && targetCard.parentNode === container) {
+                    const rect = targetCard.getBoundingClientRect();
+                    const isAfter = (event.clientY - rect.top) > (rect.height / 2);
+                    
+                    if (isAfter) {
+                        container.insertBefore(draggedCard, targetCard.nextSibling);
+                    } else {
+                        container.insertBefore(draggedCard, targetCard);
+                    }
+                    saveStateForUndo();
+                }
+            }
+        });
+
+        function toggleHandles() {
+            handlesOn = !handlesOn;
+            const btn = document.getElementById('btn-handles');
+            const grids = document.querySelectorAll('.light-main-grid');
+            const cards = document.querySelectorAll('#main-content-grid .light-card');
+            
+            if (handlesOn) { 
+                btn.innerHTML = '🛠️ Handles: ON'; 
+                grids.forEach(g => g.classList.remove('handles-off'));
+                cards.forEach(c => c.setAttribute('draggable', 'true'));
+            } else { 
+                btn.innerHTML = '🛠️ Handles: OFF'; 
+                grids.forEach(g => g.classList.add('handles-off'));
+                cards.forEach(c => c.removeAttribute('draggable'));
+            }
+        }
+
+        function setSpan(cardId, cols, isUserTriggered = true) {
+            if(isUserTriggered) saveStateForUndo();
+            const card = document.getElementById(cardId);
+            if(!card) return;
+            
+            card.classList.remove('col-span-1', 'col-span-2');
+            card.classList.add('col-span-' + cols);
+            cardLayouts[cardId] = cols;
+
+            if(cols === 2) {
+                card.style.gridColumn = '1 / -1';
+            } else {
+                card.style.gridColumn = 'span 1';
+            }
+
+            const btns = card.querySelectorAll('.span-btn');
+            btns.forEach((b, idx) => {
+                if (b.innerText === '❌' || b.innerText === '➕ Add Box') return; 
+                if (idx + 1 === cols) b.classList.add('active');
+                else b.classList.remove('active');
+            });
+        }
+
+        function deleteBlock(id, event) {
+            if(event) event.stopPropagation();
+            saveStateForUndo();
+            const el = document.getElementById(id);
+            if (el) el.remove();
+            saveCurrentViewToDB();
+        }
+
+        function addCustomBlock(isUserTriggered = false) {
+            if(isUserTriggered) saveStateForUndo();
+            
+            if (!handlesOn) toggleHandles();
+
+            customBlockCount++;
+            const container = document.getElementById('main-content-grid');
+            const id = 'custom-block-' + customBlockCount;
+            const newCard = document.createElement('div');
+            newCard.className = 'light-card col-span-2';
+            newCard.id = id;
+            newCard.style.gridColumn = '1 / -1'; 
+            if(handlesOn) newCard.setAttribute('draggable', 'true');
+            newCard.innerHTML = `
+                <div class="card-controls">
+                    <span>⠿ Drag Custom Block ${customBlockCount}</span>
+                    <div>
+                        <button class="span-btn" data-action="span-1">1 Col</button>
+                        <button class="span-btn active" data-action="span-2">2 Col</button>
+                        <button class="span-btn delete-card-btn" style="color: #ef4444; font-weight: bold; margin-left: 6px;" title="Delete Block">❌</button>
+                    </div>
+                </div>
+                <div class="light-card-title" id="cb-title-${customBlockCount}" contenteditable="true">📌 CUSTOM STATUS BLOCK</div>
+                <div id="cb-text-${customBlockCount}" contenteditable="true" style="font-size: 11px; color: #475569; min-height: 30px;">Click here to edit this custom project note.</div>
+            `;
+            const recBar = document.getElementById('card-rec');
+            if(recBar) {
+                container.insertBefore(newCard, recBar);
+            } else {
+                container.appendChild(newCard);
+            }
+            cardLayouts[id] = 2;
+        }
+
+        document.addEventListener('input', function(e) {
+            if (e.target && e.target.getAttribute('contenteditable') === 'true') {
+                if (!e.target.id) e.target.id = 'edit_' + Math.random().toString(36).substr(2, 5);
+                customEdits[e.target.id] = e.target.innerHTML;
+
+                if (e.target.id === 'l-ring-time-val') {
+                    setRing('l-ring-time', e.target.innerText);
+                }
+                if (e.target.id === 'l-ring-fin-val') {
+                    setRing('l-ring-fin', e.target.innerText);
+                }
+            }
+        });
+
+        function applyCustomEdits() {
+            for (const id in customEdits) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerHTML = customEdits[id];
+                    if (id === 'l-ring-time-val') setRing('l-ring-time', el.innerText);
+                    if (id === 'l-ring-fin-val') setRing('l-ring-fin', el.innerText);
+                }
+            }
+        }
+
+        function emailManagerComment() {
+            const commentBox = document.getElementById('manager-comments');
+            const commentText = commentBox.innerText.trim();
+            const projSelect = document.getElementById('select-project');
+            const projName = projSelect.options[projSelect.selectedIndex].text;
+
+            if(!commentText) {
+                alert("Please write a comment in the box before clicking Send.");
+                return;
+            }
+
+            alert("Opening your email app to instantly route this message to biruktawitm@unops.org...");
+            
+            const subject = encodeURIComponent(`Dashboard Comment: ${projName}`);
+            const body = encodeURIComponent(commentText);
+            window.location.href = `mailto:biruktawitm@unops.org?subject=${subject}&body=${body}`;
+        }
+
+        async function shareDashboard() {
+            const btn = document.getElementById('btn-share');
+            const isEditor = confirm("Create an EDITOR link?\n\nClick [OK] to allow editing.\nClick [Cancel] for a READ-ONLY viewer link.");
+
+            const ogText = btn.innerHTML;
+            btn.innerHTML = '⏳ Generating Short Link...';
+
+            saveCurrentViewToDB(); 
+            
+            const state = {
+                p: document.getElementById('select-project').value,
+                m: document.getElementById('select-month').value,
+                w: document.getElementById('select-week').value,
+                f: document.getElementById('select-font').value, 
+                z: currentZoom, 
+                db: stateDB,
+                cp: customProjects,
+                dp: deletedProjects
+            };
+
+            let shareUrl = window.location.href;
+
+            try {
+                const res = await fetch('https://api.npoint.io', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(state)
+                });
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    shareUrl = window.location.origin + window.location.pathname + '?id=' + data.id;
+                } else {
+                    throw new Error("npoint failed");
+                }
+            } catch (err) {
+                try {
+                    const res2 = await fetch('https://bytebin.lucko.me/post', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(state)
+                    });
+                    const data2 = await res2.json();
+                    shareUrl = window.location.origin + window.location.pathname + '?bin=' + data2.key;
+                } catch (err2) {
+                    alert("⚠️ Network error preventing short link creation. Please use 'Save' to save to your local machine instead.");
+                    btn.innerHTML = ogText;
+                    return;
+                }
+            }
+
+            if (!isEditor) {
+                shareUrl += '&mode=view';
+            }
+
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                alert("✅ Short Link Generated & Copied to Clipboard!\n\nLink: " + shareUrl);
+            } catch (err) {
+                alert("Link ready: " + shareUrl);
+            }
+            btn.innerHTML = ogText;
+        }
+
+        function saveLayout(showAlert = true) {
+            saveCurrentViewToDB();
+
+            const state = {
+                p: document.getElementById('select-project').value,
+                m: document.getElementById('select-month').value,
+                w: document.getElementById('select-week').value,
+                f: document.getElementById('select-font').value, 
+                z: currentZoom, 
+                db: stateDB,
+                cp: customProjects,
+                dp: deletedProjects
+            };
+
+            localStorage.setItem('hamco_dashboard_master', JSON.stringify(state));
+            if(showAlert) alert('✅ Dashboard saved successfully for this specific Project and Period!');
+        }
+
+        function loadState(state) {
+            if (state.dp) {
+                deletedProjects = state.dp;
+                deletedProjects.forEach(id => {
+                    if (projectData[id]) delete projectData[id];
+                    const opt = document.querySelector(`#select-project option[value="${id}"]`);
+                    if (opt) opt.remove();
+                });
+            }
+
+            if (state.cp) {
+                customProjects = state.cp;
+                for (const id in customProjects) {
+                    if (!projectData[id]) projectData[id] = customProjects[id].data;
+                }
+            }
+
+            buildDropdown();
+
+            if(state.f) { document.getElementById('select-font').value = state.f; changeFont(false); }
+            if(state.z) { currentZoom = state.z; changeZoom(0, false); }
+            
+            stateDB = state.db || {};
+
+            if(state.p && document.querySelector(`#select-project option[value="${state.p}"]`)) {
+                document.getElementById('select-project').value = state.p;
+            }
+            if(state.m) document.getElementById('select-month').value = state.m;
+            if(state.w) document.getElementById('select-week').value = state.w;
+            
+            activeKey = document.getElementById('select-project').value + "_" + document.getElementById('select-month').value + "_" + document.getElementById('select-week').value;
+
+            changeProject(false); 
+        }
+
+        window.onload = async () => {
+            defaultGridHTML = document.getElementById('default-grid-template').innerHTML;
+            buildDropdown();
+            activeKey = document.getElementById('select-project').value + "_" + document.getElementById('select-month').value + "_" + document.getElementById('select-week').value;
+
+            const params = new URLSearchParams(window.location.search);
+            const npointId = params.get('id');
+            const bytebinId = params.get('bin');
+            
+            if (params.get('mode') === 'view') {
+                isViewer = true;
+                document.body.classList.add('viewer-mode');
+                document.querySelectorAll('[contenteditable="true"]').forEach(el => el.setAttribute('contenteditable', 'false'));
+            }
+
+            if (npointId) {
+                try {
+                    const res = await fetch('https://api.npoint.io/' + npointId);
+                    const state = await res.json();
+                    loadState(state);
+                } catch(e) { changeProject(false); }
+            } else if (bytebinId) {
+                try {
+                    const res = await fetch('https://bytebin.lucko.me/' + bytebinId);
+                    const state = await res.json();
+                    loadState(state);
+                } catch(e) { changeProject(false); }
+            } else {
+                const localSave = localStorage.getItem('hamco_dashboard_master') 
+                    || localStorage.getItem('hamco_dashboard_v8') 
+                    || localStorage.getItem('hamco_dashboard_v7') 
+                    || localStorage.getItem('hamco_dashboard_save');
+
+                if (localSave) {
+                    try {
+                        loadState(JSON.parse(localSave));
+                    } catch(e) {
+                        changeProject(false);
+                    }
+                } else {
+                    changeProject(false); 
+                    const cb = document.getElementById('manager-comments');
+                    if(cb) cb.innerHTML = "";
+                }
+            }
+        }
+
+        function saveStateForUndo() {
+            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+                if(!el.id) el.id = 'edit_' + index;
+                customEdits[el.id] = el.innerHTML;
+            });
+
+            undoStack.push({
+                dash: document.getElementById('dashboard-container').innerHTML,
+                proj: document.getElementById('select-project').value,
+                month: document.getElementById('select-month').value,
+                week: document.getElementById('select-week').value,
+                font: document.getElementById('select-font').value,
+                zoom: currentZoom,
+                db: JSON.parse(JSON.stringify(stateDB)),
+                ak: activeKey,
+                dp: JSON.parse(JSON.stringify(deletedProjects))
+            });
+            redoStack = []; 
+            document.getElementById('btn-undo').disabled = false; 
+            document.getElementById('btn-redo').disabled = true;
+        }
+
+        function undo() {
+            if (!undoStack.length) return;
+            
+            redoStack.push({
+                dash: document.getElementById('dashboard-container').innerHTML,
+                proj: document.getElementById('select-project').value,
+                month: document.getElementById('select-month').value,
+                week: document.getElementById('select-week').value,
+                font: document.getElementById('select-font').value,
+                zoom: currentZoom,
+                db: JSON.parse(JSON.stringify(stateDB)),
+                ak: activeKey,
+                dp: JSON.parse(JSON.stringify(deletedProjects))
+            });
+
+            const s = undoStack.pop();
+            
+            document.getElementById('dashboard-container').innerHTML = s.dash;
+            document.getElementById('select-project').value = s.proj;
+            document.getElementById('select-month').value = s.month;
+            document.getElementById('select-week').value = s.week;
+            document.getElementById('select-font').value = s.font;
+            
+            stateDB = s.db;
+            activeKey = s.ak;
+            deletedProjects = s.dp || [];
+            buildDropdown();
+            currentZoom = s.zoom;
+            document.getElementById('dashboard-container').style.zoom = currentZoom;
+            
+            document.getElementById('btn-undo').disabled = !undoStack.length; 
+            document.getElementById('btn-redo').disabled = false;
+            
+            if(handlesOn && !isViewer) {
+                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
+            }
+        }
+
+        function redo() {
+            if (!redoStack.length) return;
+            
+            undoStack.push({
+                dash: document.getElementById('dashboard-container').innerHTML,
+                proj: document.getElementById('select-project').value,
+                month: document.getElementById('select-month').value,
+                week: document.getElementById('select-week').value,
+                font: document.getElementById('select-font').value,
+                zoom: currentZoom,
+                db: JSON.parse(JSON.stringify(stateDB)),
+                ak: activeKey,
+                dp: JSON.parse(JSON.stringify(deletedProjects))
+            });
+
+            const s = redoStack.pop();
+            
+            document.getElementById('dashboard-container').innerHTML = s.dash;
+            document.getElementById('select-project').value = s.proj;
+            document.getElementById('select-month').value = s.month;
+            document.getElementById('select-week').value = s.week;
+            document.getElementById('select-font').value = s.font;
+            
+            stateDB = s.db;
+            activeKey = s.ak;
+            deletedProjects = s.dp || [];
+            buildDropdown();
+            currentZoom = s.zoom;
+            document.getElementById('dashboard-container').style.zoom = currentZoom;
+            
+            document.getElementById('btn-undo').disabled = false; 
+            document.getElementById('btn-redo').disabled = !redoStack.length;
+
+            if(handlesOn && !isViewer) {
+                document.querySelectorAll('#main-content-grid .light-card').forEach(c => c.setAttribute('draggable', 'true'));
+            }
+        }
+    </script>
+</body>
+</html>
