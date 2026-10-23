@@ -145,24 +145,23 @@
 
         .mon-project-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); overflow: hidden; }
         .mon-card-header { padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-        .mon-card-title { font-size: 16px; font-weight: 800; color: #1e3a8a; display: flex; align-items: center; gap: 8px; }
+        .mon-card-title { font-size: 16px; font-weight: 800; color: #1e3a8a; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
         .mon-card-subtitle { font-size: 11px; color: #64748b; margin-top: 4px; }
         .mon-flag-count { font-size: 12px; color: #64748b; font-weight: 600; }
 
-        .mon-grid-header { display: grid; grid-template-columns: 2.5fr 1fr 1.5fr 1fr 2fr; gap: 16px; padding: 12px 20px; background: #f8fafc; font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; }
-        .mon-grid-row { display: grid; grid-template-columns: 2.5fr 1fr 1.5fr 1fr 2fr; gap: 16px; padding: 16px 20px; border-bottom: 1px solid #e2e8f0; align-items: start; }
+        .mon-grid-header { display: grid; grid-template-columns: 2.5fr 1fr 1.5fr 1fr 1.5fr; gap: 16px; padding: 12px 20px; background: #f8fafc; font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; }
+        .mon-grid-row { display: grid; grid-template-columns: 2.5fr 1fr 1.5fr 1fr 1.5fr; gap: 16px; padding: 16px 20px; border-bottom: 1px solid #e2e8f0; align-items: start; }
         .mon-grid-row:last-child { border-bottom: none; }
 
         .mon-flag-text { font-size: 12px; font-weight: 700; color: #334155; line-height: 1.5; }
         .mon-flag-text::before { content: "•"; color: #ef4444; font-weight: bold; margin-right: 6px; font-size: 16px; vertical-align: -2px; }
 
-        .mon-checkbox-wrapper { display: flex; flex-direction: column; gap: 4px; }
-        .mon-checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #64748b; cursor: pointer; }
-        .mon-checkbox { width: 16px; height: 16px; cursor: pointer; accent-color: #0ea5e9; }
-
-        .mon-input, .mon-select, .mon-textarea { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 12px; color: #334155; outline: none; transition: border-color 0.2s; }
-        .mon-input:focus, .mon-select:focus, .mon-textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.1); }
-        .mon-textarea { resize: vertical; min-height: 50px; }
+        .mon-input, .mon-select, .mon-date-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 12px; color: #334155; outline: none; transition: border-color 0.2s; }
+        .mon-input:focus, .mon-select:focus, .mon-date-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.1); }
+        
+        .mon-timeline-container { display: flex; flex-direction: column; gap: 8px; }
+        .mon-date-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #475569; font-weight: 600; }
+        .mon-duration-badge { background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 800; }
 
         /* ================= VIEWER MODE STYLES ================= */
         .viewer-mode .card-controls,
@@ -528,107 +527,142 @@
 
         // ================= MONITORING CENTER LOGIC =================
         function openMonitoringCenter() {
+            // Save current edits from dashboard before pulling red flags
+            saveCurrentViewToDB();
+            
             document.getElementById('dashboard-container').style.display = 'none';
             document.getElementById('monitoring-overlay').style.display = 'block';
             
             const container = document.getElementById('mon-projects-container');
             container.innerHTML = "";
 
-            const allProjects = {...projectData};
+            const pId = document.getElementById('select-project').value;
+            const m = document.getElementById('select-month').value;
+            const w = document.getElementById('select-week').value;
+            
+            let allProjects = {...projectData};
             for (const cId in customProjects) {
                 if(!allProjects[cId]) allProjects[cId] = customProjects[cId].data;
             }
 
-            for (const pId in allProjects) {
-                if(typeof deletedProjects !== 'undefined' && deletedProjects.includes(pId)) continue; 
+            const pData = allProjects[pId];
+            if (!pData) return;
 
-                let pName = allProjects[pId].title.replace("WEEKLY PROJECT UPDATES ", "");
-                let location = allProjects[pId].location || "TBD";
-                let lastUpdated = "Default Data";
-                let redFlagsArray = [];
+            let pName = pData.title.replace("WEEKLY PROJECT UPDATES ", "");
+            let location = pData.location || "TBD";
+            let periodText = `${m} - ${w}`;
 
-                // Scan saved stateDB to find active red flags for this project
-                let foundCardHTML = null;
-                for (const key in stateDB) {
-                    if (key.startsWith(pId + "_")) {
-                        foundCardHTML = stateDB[key].html;
-                        lastUpdated = key.replace(pId + "_", "").replace("_", "-W"); // Format as Year-Month-Week
+            let redFlagsArray = [];
+            
+            // Pull red flags strictly from the active dashboard UI to reflect real-time updates
+            const rfContainer = document.getElementById('red-flags-container');
+            if (rfContainer) {
+                rfContainer.querySelectorAll('.red-flag-item div[contenteditable="true"]').forEach((item) => {
+                    if(item.innerText.trim() !== "" && item.innerText !== "Click to edit new red flag..." && !item.innerText.includes("No red flags")) {
+                        redFlagsArray.push({ id: item.id, text: item.innerText });
                     }
-                }
-
-                if (foundCardHTML) {
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = foundCardHTML;
-                    const rfCard = tempDiv.querySelector('#card-red-flags') || tempDiv.querySelector('.light-card');
-                    if (rfCard) {
-                        const items = rfCard.querySelectorAll('.red-flag-item div[contenteditable="true"]');
-                        items.forEach(item => {
-                            if(item.innerText.trim() !== "" && item.innerText !== "Click to edit new red flag...") {
-                                redFlagsArray.push(item.innerText);
-                            }
-                        });
-                    }
-                } 
-                
-                // Fallback to initial data array
-                if (redFlagsArray.length === 0 && allProjects[pId].redFlags) {
-                    redFlagsArray = allProjects[pId].redFlags;
-                }
-
-                if (redFlagsArray.length === 0 || (redFlagsArray.length === 1 && redFlagsArray[0].includes("No red flags"))) {
-                    continue; // Skip projects with no actual red flags
-                }
-
-                let rowsHTML = "";
-                redFlagsArray.forEach((flag, idx) => {
-                    rowsHTML += `
-                        <div class="mon-grid-row">
-                            <div class="mon-flag-text">${flag}</div>
-                            <div class="mon-checkbox-wrapper">
-                                <label class="mon-checkbox-label">
-                                    <input type="checkbox" class="mon-checkbox" id="chk-${pId}-${idx}"> Team informed
-                                </label>
-                            </div>
-                            <div>
-                                <input type="text" class="mon-input" placeholder="Name or team">
-                            </div>
-                            <div>
-                                <select class="mon-select">
-                                    <option value="open">Open</option>
-                                    <option value="addressed">Addressed</option>
-                                </select>
-                            </div>
-                            <div>
-                                <textarea class="mon-textarea" placeholder="Update, next step or resolution..."></textarea>
-                            </div>
-                        </div>
-                    `;
                 });
+            }
 
-                container.innerHTML += `
-                    <div class="mon-project-card">
-                        <div class="mon-card-header">
-                            <div>
-                                <div class="mon-card-title">▦ ${pName}</div>
-                                <div class="mon-card-subtitle">${location} · ${lastUpdated}</div>
+            if (redFlagsArray.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding: 40px; color: #64748b; font-weight: bold;">No active red flags found for ${pName} during ${periodText}.</div>`;
+                return;
+            }
+
+            // Get saved monitoring states for this active key
+            const savedMonData = stateDB[activeKey]?.monitoring || {};
+
+            let rowsHTML = "";
+            redFlagsArray.forEach((flag) => {
+                const s = savedMonData[flag.id] || { pm: "", resp: "", status: "open", reported: "", resolved: "" };
+                
+                rowsHTML += `
+                    <div class="mon-grid-row" data-rfid="${flag.id}">
+                        <div class="mon-flag-text">${flag.text}</div>
+                        <div>
+                            <input type="text" class="mon-input mon-pm" placeholder="Enter Manager" value="${s.pm}" onchange="saveMonitoringState()">
+                        </div>
+                        <div>
+                            <input type="text" class="mon-input mon-resp" placeholder="Name or team" value="${s.resp}" onchange="saveMonitoringState()">
+                        </div>
+                        <div>
+                            <select class="mon-select mon-status" onchange="saveMonitoringState()">
+                                <option value="open" ${s.status === 'open' ? 'selected' : ''}>Open</option>
+                                <option value="in-progress" ${s.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="addressed" ${s.status === 'addressed' ? 'selected' : ''}>Addressed</option>
+                            </select>
+                        </div>
+                        <div class="mon-timeline-container">
+                            <div class="mon-date-row">
+                                <span>Reported:</span>
+                                <input type="date" class="mon-date-input mon-date-reported" value="${s.reported}" onchange="saveMonitoringState()">
                             </div>
-                            <div class="mon-flag-count">${redFlagsArray.length} red flags</div>
+                            <div class="mon-date-row">
+                                <span>Resolved:</span>
+                                <input type="date" class="mon-date-input mon-date-resolved" value="${s.resolved}" onchange="saveMonitoringState()">
+                            </div>
+                            <div class="mon-date-row" style="margin-top: 4px;">
+                                <span>Time Taken:</span>
+                                <span class="mon-duration-badge mon-duration">--</span>
+                            </div>
                         </div>
-                        <div class="mon-grid-header">
-                            <div>RED FLAG / FOLLOW-UP</div>
-                            <div>COMMUNICATED</div>
-                            <div>RESPONSIBLE PERSON</div>
-                            <div>STATUS</div>
-                            <div>COMMENTS</div>
-                        </div>
-                        ${rowsHTML}
                     </div>
                 `;
-            }
+            });
 
-            if (container.innerHTML === "") {
-                container.innerHTML = `<div style="text-align:center; padding: 40px; color: #64748b; font-weight: bold;">No active red flags found across projects.</div>`;
-            }
+            container.innerHTML = `
+                <div class="mon-project-card">
+                    <div class="mon-card-header">
+                        <div>
+                            <div class="mon-card-title">▦ ${pName}</div>
+                            <div class="mon-card-subtitle">${location} · Active View: ${periodText}</div>
+                        </div>
+                        <div class="mon-flag-count">${redFlagsArray.length} red flags</div>
+                    </div>
+                    <div class="mon-grid-header">
+                        <div>RED FLAG / FOLLOW-UP</div>
+                        <div>PROJECT MANAGER</div>
+                        <div>RESPONSIBLE PERSON</div>
+                        <div>STATUS</div>
+                        <div>TIMELINE</div>
+                    </div>
+                    ${rowsHTML}
+                </div>
+            `;
+
+            // Run calculation immediately on load to populate duration badges
+            saveMonitoringState(false);
+        }
+
+        function saveMonitoringState(triggerSave = true) {
+            const state = {};
+            document.querySelectorAll('.mon-grid-row').forEach(row => {
+                const rfId = row.dataset.rfid;
+                state[rfId] = {
+                    pm: row.querySelector('.mon-pm').value,
+                    resp: row.querySelector('.mon-resp').value,
+                    status: row.querySelector('.mon-status').value,
+                    reported: row.querySelector('.mon-date-reported').value,
+                    resolved: row.querySelector('.mon-date-resolved').value
+                };
+
+                // Calculate duration
+                const durationEl = row.querySelector('.mon-duration');
+                if (state[rfId].reported && state[rfId].resolved) {
+                    const d1 = new Date(state[rfId].reported);
+                    const d2 = new Date(state[rfId].resolved);
+                    const diffTime = Math.abs(d2 - d1);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                    durationEl.innerText = diffDays + " days";
+                } else {
+                    durationEl.innerText = "--";
+                }
+            });
+
+            if(!stateDB[activeKey]) stateDB[activeKey] = {};
+            stateDB[activeKey].monitoring = state;
+            
+            if(triggerSave) saveLayout(false);
         }
 
         function closeMonitoringCenter() {
@@ -755,11 +789,15 @@
         }
 
         function saveCurrentViewToDB() {
-            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+            document.querySelectorAll('#dashboard-container [contenteditable="true"]').forEach((el, index) => {
                 if(!el.id) el.id = 'edit_' + index;
                 customEdits[el.id] = el.innerHTML;
             });
+            
+            if(!stateDB[activeKey]) stateDB[activeKey] = {};
+            
             stateDB[activeKey] = {
+                ...stateDB[activeKey],
                 e: JSON.parse(JSON.stringify(customEdits)),
                 html: document.getElementById('main-content-grid').innerHTML,
                 l: JSON.parse(JSON.stringify(cardLayouts)),
@@ -1202,7 +1240,7 @@
         }
 
         function saveStateForUndo() {
-            document.querySelectorAll('[contenteditable="true"]').forEach((el, index) => {
+            document.querySelectorAll('#dashboard-container [contenteditable="true"]').forEach((el, index) => {
                 if(!el.id) el.id = 'edit_' + index;
                 customEdits[el.id] = el.innerHTML;
             });
